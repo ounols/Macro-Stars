@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 class ConcertListScene : public Scene {
+private:
+	enum STATE { NONE, INTRO, LIST, SUB_STROY, POINT_REWARD };
 public:
 	ConcertListScene();
 	~ConcertListScene();
@@ -16,8 +18,9 @@ private:
 	static std::string GetNumber(int x, int y, int width, int height);
 
 	void AddConcertTodo();
+	void AddPointRewardTodo();
 private:
-	bool isIntro = false;
+	STATE m_state = NONE;
 	bool isQuit = false;
 	bool isWait = false;
 };

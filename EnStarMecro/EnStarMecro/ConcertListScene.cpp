@@ -10,6 +10,8 @@ ConcertListScene::ConcertListScene() {
 
 	RESMGR->RegisterImage("img/ConcertScene/enter.jpg", "concert_enter");
 	RESMGR->RegisterImage("img/ConcertScene/concert_list_yellow.jpg", "concert_list_yellow");
+	RESMGR->RegisterImage("img/ConcertScene/get_all.jpg", "concert_list_get_all");
+	RESMGR->RegisterImage("img/ConcertScene/sub_story_open.jpg", "concert_sub_story_open");
 }
 
 
@@ -19,18 +21,39 @@ ConcertListScene::~ConcertListScene() {}
 bool ConcertListScene::CheckFirst() {
 
 	bool isScene = true;
-	isIntro = false;
+	m_state = NONE;
 	isWait = false;
 
 	isScene = isScene && RESMGR->CheckRGB(nullptr, 31, 65, 255, 197, 0, 5);
 	isScene = isScene && RESMGR->CheckRGB(nullptr, 433, 958, 228, 180, 42, 5);
 
-	if (isScene) return isScene;
+	if (isScene) {
+		m_state = LIST;
+		return isScene;
+	}
 
 	isScene = RESMGR->CheckRGB(nullptr, 31, 65, 255, 197, 0, 5);
 	isScene = isScene && RESMGR->CheckRGB(nullptr, 1035, 221, 222, 72, 73, 5);
 
-	if (isScene) isIntro = true;
+	if (isScene) {
+		m_state = INTRO;
+		return isScene;
+	}
+
+	isScene = RESMGR->CheckRGB(nullptr, 368, 67, 228, 181, 43, 5);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1740, 200, 224, 174, 41, 5);
+
+	if (isScene) {
+		m_state = POINT_REWARD;
+		return isScene;
+	}
+
+	isScene = RESMGR->CheckRGB(nullptr, 900, 850, 246, 246, 246);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1000, 850, 228, 181, 43, 5);
+
+	if (isScene) {
+		m_state = SUB_STROY;
+	}
 
 	return isScene;
 
@@ -39,12 +62,26 @@ bool ConcertListScene::CheckFirst() {
 
 bool ConcertListScene::CheckScene() {
 
-	if(isIntro) {
+	if(m_state == INTRO) {
 		auto points = RESMGR->FindImages(nullptr, "concert_enter", 0.99, 1, true, cvRect(1094, 886, 473, 114));
 		if (points.empty() || points.size() > 1) return false;
 
 		Sleep(1000);
 
+
+		return true;
+	}
+
+	if(m_state == POINT_REWARD) {
+		auto points = RESMGR->FindImages(nullptr, "concert_list_get_all", 0.99, 1, true, cvRect(350, 40, 190, 90));
+		if (points.empty()) return false;
+
+		return true;
+	}
+
+	if(m_state == SUB_STROY) {
+		auto points = RESMGR->FindImages(nullptr, "concert_sub_story_open", 0.98, 1, true, cvRect(538, 57, 886, 412));
+		if (points.empty()) return false;
 
 		return true;
 	}
@@ -64,7 +101,12 @@ bool ConcertListScene::ReadData() {
 
 	isQuit = false;
 
-	if(isIntro) {
+	if(m_state == INTRO) {
+		AddPointRewardTodo();
+		return true;
+	}
+
+	if(m_state == SUB_STROY || m_state == POINT_REWARD) {
 		return true;
 	}
 
@@ -123,18 +165,43 @@ void ConcertListScene::ActionDecision() {
 
 	if(isQuit) {
 		GAME->SetMouseClick(80, 70);
-		Sleep(2000);
+		Sleep(1000);
 		return;
 	}
 
-	if(isIntro) {
+	if(m_state == INTRO) {
 
 		if (PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
 			GAME->SetMouseClick(690, 960);
 			return;
 		}
 
+		Todo* todo = PRODUCER->GetTodo();
+		if (todo != nullptr && todo->todo_str == "point_reward") {
+			GAME->SetMouseClick(1628, 645);
+			return;
+		}
+
 		GAME->SetMouseClick(80, 70);
+		return;
+	}
+
+	if (m_state == POINT_REWARD) {
+		Todo* todo = PRODUCER->GetTodo();
+		if (todo != nullptr && todo->todo_str == "point_reward") {
+			PRODUCER->RemoveTodo(todo);
+			GAME->SetMouseClick(440, 84);
+			return;
+		}
+
+		GAME->SetMouseClick(80, 70);
+		Sleep(1000);
+
+		return;
+	}
+
+	if(m_state == SUB_STROY) {
+		GAME->SetMouseClick(762, 886);
 		return;
 	}
 
@@ -146,7 +213,7 @@ void ConcertListScene::ActionDecision() {
 	}
 
 	GAME->SetMouseClick(80, 70);
-
+	Sleep(1000);
 
 }
 
@@ -229,4 +296,18 @@ void ConcertListScene::AddConcertTodo() {
 			isWait = true;
 	}
 
+}
+
+
+void ConcertListScene::AddPointRewardTodo() {
+
+	if (!RESMGR->CheckRGB(nullptr, 1700, 570, 222, 33, 53, 5)) {
+		return;
+	}
+
+	Todo* todo = new Todo();
+	todo->targetScene = this;
+	todo->todo_str = "point_reward";
+
+	PRODUCER->AddTodo(todo);
 }

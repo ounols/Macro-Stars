@@ -210,6 +210,7 @@ std::string ResMgr::Image2String(IplImage* src, int height_range, int string_wid
 		strFinalString = strFinalString + char(int(fltCurrentChar));        // append current char to full string
 	}
 	//cv::imshow("ÀÌÁø", matTestingNumbers);
+	//cvWaitKey();
 	std::cout  << "numbers read = " << strFinalString << std::endl;       // show the full string
 
 	return strFinalString;

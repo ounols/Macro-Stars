@@ -4,7 +4,7 @@
 
 class ConcertPrepareScene : public Scene {
 private:
-	enum DECISION { NONE, OK, NO, WAIT, NEED_DIA, CHANGE_MID };
+	enum DECISION { NONE, OK, NO, WAIT, NEED_DIA, CHANGE_MID, LEVEL_UP };
 public:
 	ConcertPrepareScene();
 	~ConcertPrepareScene();

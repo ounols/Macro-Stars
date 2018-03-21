@@ -229,6 +229,13 @@ void SelectProduceScene::ActionSelectProduce() {
 	switch (produce_todo->type) {
 
 	case ProduceTodo::DAILY:
+
+		if (produce_todo->isForLevelUp) {
+			GAME->SetMouseClick(1300, pos_y[max] + 110);
+			m_usedAP = 60;
+			break;
+		}
+
 		/*if(currentAP > 60) {
 			GAME->SetMouseClick(1300, pos_y[max] + 110);
 			m_usedAP = 60;
@@ -236,6 +243,7 @@ void SelectProduceScene::ActionSelectProduce() {
 			GAME->SetMouseClick(1300, pos_y[0] + 110);
 			m_usedAP = 30;
 		}
+
 
 		break;
 	case ProduceTodo::LIMIT:

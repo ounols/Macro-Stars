@@ -34,5 +34,6 @@ bool UnkownScene::CheckScene() {
 void UnkownScene::ActionDecision() {
 
 	GAME->SetMouseClick(100, 75);
+	Sleep(2000);
 
 }

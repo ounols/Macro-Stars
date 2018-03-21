@@ -5,6 +5,7 @@
 #include "ProducerAI.h"
 #include "SceneMgr.h"
 #include "MainScene.h"
+#include "ProduceTodo.h"
 
 
 ConcertPrepareScene::ConcertPrepareScene() {
@@ -56,10 +57,10 @@ bool ConcertPrepareScene::CheckScene() {
 	isGiveUp = false;
 
 	if(isIntro) {
-		auto points = RESMGR->FindImages(nullptr, "concert_enter_now", 0.99, 1, true, cvRect(1100, 695, 567, 113));
+		auto points = RESMGR->FindImages(nullptr, "concert_enter_now", 0.98, 1, true, cvRect(1100, 695, 567, 113));
 		if (points.empty()) {
 
-			points = RESMGR->FindImages(nullptr, "concert_enter_normal", 0.99, 1, true, cvRect(1100, 695, 567, 113));
+			points = RESMGR->FindImages(nullptr, "concert_enter_normal", 0.98, 1, true, cvRect(1100, 695, 567, 113));
 			if(points.empty()) {
 				return false;
 			}
@@ -266,6 +267,28 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 		}
 		break;
 
+		case LEVEL_UP: 
+		{
+			{
+				auto todo = PRODUCER->GetTodo<ProduceTodo>();
+
+				//프로듀싱 할일 삭제
+				if (todo != nullptr) {
+					PRODUCER->RemoveTodo(todo);
+				}
+
+			}
+
+			ProduceTodo* todo_new = new ProduceTodo();
+			todo_new->isForLevelUp = true;
+			todo_new->type = ProduceTodo::DAILY;
+			PRODUCER->AddTodo(todo_new);
+
+			todo->SetWait();
+			isQuitConcert = true;
+		}
+		break;
+
 		case NONE:
 		case NO: 
 		{
@@ -398,7 +421,7 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	//1차적으론 가장 먼저 올 LP 쿨타임 시간이 콘서트 마감 시간보다 늦을 경우
 	if (todo->achieveTime <= LPTime) {
-		long deltaTime = timeGetTime() - LPTime;
+		long deltaTime = LPTime - timeGetTime();
 
 		std::cout << "시간 내로 불가능. 매우 촉박함" << std::endl;
 		std::cout << "콘서트 남은 시간 : " << ProducerAI::Millisecond2Min(deltaTime) << std::endl;
@@ -440,6 +463,36 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	//어...시간내로 못끝내나..?
 	//ㄱ...그럼 레벨 업으로 LP 꽁으로 채울 수 있지 않을까...? (차후 추가)
+	int currentEXP = PRODUCER->GetCurrentEXP();
+	int totalEXP = PRODUCER->GetTotalEXP();
+
+	std::cout << "현재 경험치 : " << currentEXP << " / " << totalEXP << std::endl;
+
+	//현존하는 프로듀스 중 한번 당 가장 많이 경험치를 주는 프로듀스를 기준으로
+	float produceAPCount = 60;
+
+	int needProduceCount = ceil((totalEXP - currentEXP) / (produceAPCount * 10.f));
+	int currentProduceCount = PRODUCER->GetAP().current / produceAPCount;
+
+	std::cout << "필요한 프로듀스 횟수 : " << needProduceCount << ", 현재 AP로 획득 가능한 프로듀스 수 : " << currentProduceCount << "\n";
+
+	//현재 AP로 레벨업이 가능하다면
+	if(currentProduceCount - needProduceCount >= 0) {
+		long concertTime = todo->achieveTime - timeGetTime();
+
+		std::cout << "AP 충전하는데 걸리는 시간 : " << needProduceCount * 5 << "분, 콘서트 남은 기간 : " << ProducerAI::Millisecond2Min(concertTime) << "분\n";
+
+		//한 프로듀스를 진행하는데 걸리는 시간이 성능에도 큰 영향을 받으므로
+		//평균 5분으로 지정
+		//프로듀스를 진행하는 시간보다 콘서트 기간이 더 긴 경우
+		if(needProduceCount * 5 <= ProducerAI::Millisecond2Min(concertTime)) {
+			//레벨업으로 LP 충전 가능
+			std::cout << "레벨업으로 커버 가능\n";
+			return LEVEL_UP;
+		}
+
+	}
+
 	//ㅇ..아니면 나의 의지도와 콘서트 규모에 따라 돈으로 쳐발쳐발할지 생각을 하자
 
 	bool isNeedDia = false;
@@ -486,6 +539,32 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 		//isQuitConcert = true;
 		return NO;
 	}
+
+
+
+	{
+		int needDiaForAP = 0;
+		int needDiaForLP = scarceWaitLP * 10;
+
+		//한 프로듀스를 진행하는데 걸리는 시간이 성능에도 큰 영향을 받으므로
+		//평균 5분으로 지정
+		//프로듀스를 진행하는 시간보다 콘서트 기간이 더 긴 경우
+		if (needProduceCount * 5 <= ProducerAI::Millisecond2Min(concertTime)) {
+			//레벨업으로 LP 충전 가능
+			std::cout << "레벨업으로 커버 가능한 AP를 소지함.\n";
+
+			needDiaForAP = (needProduceCount - currentProduceCount) * (produceAPCount / 2.f);
+			std::cout << needDiaForAP << "개의 다이아를 사용하면 레벨업 가능\n";
+
+			//AP로 레벨업 하는게 더 효율적이라면
+			if (needDiaForLP > needDiaForAP) {
+				std::cout << "레벨업이 다이아 " << needDiaForLP - needDiaForAP << "개 차이로 저렴함\n";
+				return LEVEL_UP;
+			}
+			
+		}
+	}
+
 
 	// 다이아를 쓰기로 결정하고 시간 쿨타임 보정이 아직 먹히는 경우
 	if (scarceLP - scarceWaitLP > 0) {
@@ -564,6 +643,9 @@ void ConcertPrepareScene::ActionPrepare() {
 	}
 
 	if (todo == nullptr || m_decision == WAIT || isQuitConcert) {
+		if(m_decision == WAIT) {
+			todo->SetWait();
+		}
 		GAME->SetMouseClick(102, 77);
 		return;
 	}
@@ -592,14 +674,14 @@ void ConcertPrepareScene::ActionPrepare() {
 	}
 
 	int needLP = todo->needLPCount;
-	todo->usedLP = 1;
+	todo->usedLP = (todo->isMidnight ? 3 : 1);
 
 	if(needLP >= 3) {
 		GAME->SetMouseClick(1724, 764);
-		todo->usedLP = 3;
+		todo->usedLP = (todo->isMidnight ? 9 : 3);
 	}else if(needLP >= 2) {
 		GAME->SetMouseClick(1724, 620);
-		todo->usedLP = 2;
+		todo->usedLP = (todo->isMidnight ? 6 : 2);
 	}else if(needLP <= 0) {
 		PRODUCER->RemoveTodo(todo);
 		GAME->SetMouseClick(102, 77);

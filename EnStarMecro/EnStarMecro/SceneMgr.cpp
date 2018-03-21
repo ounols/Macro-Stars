@@ -50,8 +50,8 @@ void SceneMgr::SetScenes() {
 	m_scenes.push_back(new KakaoPopUpScene());
 
 
-	m_scenes.push_back(new ReconnectScene());
 	m_scenes.push_back(new UnkownScene());
+	m_scenes.push_back(new ReconnectScene());
 
 }
 

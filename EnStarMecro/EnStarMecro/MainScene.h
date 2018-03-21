@@ -20,7 +20,7 @@ private:
 	void ReadPopUp();
 	void ActionPopUp();
 
-	static std::string GetNumber(int x, int y, int width, int height, bool isDilate, bool isErode, int minScalar = 230, int scale = 2);
+	static std::string GetNumber(int x, int y, int width, int height, bool isDilate, bool isErode, int minScalar = 230, int maxScalar = 255, int scale = 2);
 	static std::string GetNumber(int x, int y, int width, int height);
 
 	void AddTodo() const;

@@ -12,6 +12,9 @@ public:
 	void ActionDecision() override;
 
 private:
+	std::string GetNumber(int x, int y, int width, int height);
+
+private:
 	bool isPopUp = false;
 };
 

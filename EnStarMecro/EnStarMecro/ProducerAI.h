@@ -55,6 +55,14 @@ public:
 		return m_rank;
 	}
 
+	int GetCurrentEXP() const {
+		return m_currentEXP;
+	}
+
+	int GetTotalEXP() const {
+		return m_totalEXP;
+	}
+
 	void SetAP(EnsembleUnit ap);
 	void SetLP(EnsembleUnit lp);
 	void SetRank(int rank = -1, int currentEXP = -1, int totalEXP = -1);

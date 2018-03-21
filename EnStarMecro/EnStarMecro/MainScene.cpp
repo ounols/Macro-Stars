@@ -94,9 +94,8 @@ bool MainScene::ReadData() {
 	//ap
 	std::string ap_str = GetNumber(1254, 30, 152, 38);
 	int ap_slash;
-	bool isAPOverSet = false;
 
-	std::string ap_cooltime_str = GetNumber(1425, 20, 88, 30, false, false, 190, 3);
+	std::string ap_cooltime_str = GetNumber(1425, 20, 88, 30, false, false, 190, 255, 3);
 
 	//46랭크 이후로 ap최대치가 3자리수
 	//랭크가 46 미만이라면
@@ -106,11 +105,8 @@ bool MainScene::ReadData() {
 		ap_slash = ap_str.size() - 4;
 	}
 
-	//숫자의 오버치가 파란 부분이므로 인식을 못함
-	//근데 가끔 인식해서 이상한거 나오더라...흐긓ㄱ
-	if (ap_slash <= 0)	isAPOverSet = true;
 
-	if(ap_str[ap_slash] == '7') {
+	if((ap_slash = ap_str.find("/")) != std::string::npos) {
 
 		EnsembleUnit ap;
 
@@ -118,13 +114,9 @@ bool MainScene::ReadData() {
 		ap.current = std::stoi(ap_str.substr(0, ap_slash));
 		ap.achieveTime = PRODUCER->GetAP().achieveTime;
 
-		if (ap.max - ap.current <= 0 || isAPOverSet) {
+		if (ap.max - ap.current <= 0) {
 
 			ap.achieveTime = GAME->GetUpdatedTime();
-
-			if(isAPOverSet) {
-				ap.current = ap.max + 1;
-			}
 
 		} else if (ap_cooltime_str.size() >= 4) {
 
@@ -141,17 +133,15 @@ bool MainScene::ReadData() {
 
 	//lp
 	std::string lp_str = GetNumber(1660, 30, 103, 38);
-	int lp_slash = lp_str.size() - 3;
+	int lp_slash;
 	bool isLPOverSet = false;
 
 
-	std::string lp_cooltime_str = GetNumber(1785, 20, 88, 30, false, false, 190, 3);
+	std::string lp_cooltime_str = GetNumber(1785, 20, 88, 30, false, false, 190, 255, 3);
 
 
-	//숫자의 오버치가 파란 부분이므로 인식을 못함
-	if (lp_slash <= 0)	isAPOverSet = true;
 
-	if(lp_str[lp_slash] == '7') {
+	if((lp_slash = lp_str.find("/")) != std::string::npos) {
 		EnsembleUnit lp;
 
 		lp.max = std::stoi(lp_str.substr(lp_slash + 1));
@@ -194,10 +184,21 @@ bool MainScene::ReadData() {
 	//======================================================
 	//아이템 및 일부 갱신사항 갱신
 
+	//콘서트 보상 갱신
+	if (RESMGR->CheckRGB(nullptr, 1806, 276, 221, 34, 53, 7)) {
+		m_pos = cvPoint(1482, 385);
+		return true;
+	}
 
 	//선물함 갱신 요망
 	if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
 		m_pos = cvPoint(83, 393);
+		return true;
+	}
+
+	//경험치 갱신 요망
+	if(PRODUCER->GetTotalEXP() <= 0) {
+		m_pos = cvPoint(1050, 90);
 		return true;
 	}
 
@@ -327,7 +328,17 @@ void MainScene::ReadPopUp() {
 
 		std::cout << "[전학생 서류]\n";
 
-		//인포 확인 후 나가기
+		//인포 확인
+		std::string exp_str = GetNumber(968, 520, 142, 40, false, false, 0, 90, 4);
+		int exp_slash = -1;
+		if ((exp_slash = exp_str.find("/")) != std::string::npos) {
+
+			int exp_max = std::stoi(exp_str.substr(exp_slash + 1));
+			int exp_current = std::stoi(exp_str.substr(0, exp_slash));
+
+			PRODUCER->SetRank(-1, exp_current, exp_max);
+		}
+
 
 		m_pos = cancel_pos;
 		return;
@@ -379,7 +390,7 @@ void MainScene::ActionPopUp() {
 }
 
 
-std::string MainScene::GetNumber(int x, int y, int width, int height, bool isDilate, bool isErode, int minScalar, int scale) {
+std::string MainScene::GetNumber(int x, int y, int width, int height, bool isDilate, bool isErode, int minScalar, int maxScalar, int scale) {
 
 	IplImage* img = (IplImage*)cvClone(GAME->GetScreenImage());
 
@@ -408,16 +419,18 @@ std::string MainScene::GetNumber(int x, int y, int width, int height, bool isDil
 		REALLOC(img, dst);
 
 		dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
-		int color = 180;
+
 		CvScalar scalar_min = cvScalar(minScalar, minScalar, minScalar);
-		CvScalar scalar_max = cvScalar(255, 255, 255);
+		CvScalar scalar_max = cvScalar(maxScalar, maxScalar, maxScalar);
 
 		cvInRangeS(img, scalar_min, scalar_max, dst);
 		REALLOC(img, dst);
 	}
 
+	//cvShowImage("이진", img);
+	//cvWaitKey();
 
-	std::string str = RESMGR->Image2String(img);
+	std::string str = RESMGR->Image2String(img, 20 * scale);
 	cvReleaseImage(&img);
 
 	return str;

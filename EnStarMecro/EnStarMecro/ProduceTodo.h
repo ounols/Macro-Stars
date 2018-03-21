@@ -14,10 +14,12 @@ public:
 
 	bool isStarted = false;
 	int usedAP = 0;
+	bool isForLevelUp = false;
 
 
 	bool isAvailable() override {
 
+		if (isForLevelUp) return true;
 
 		//이미 진행 중인 프로듀스면 그대로 진행이 가능
 		if (isStarted) return true;
