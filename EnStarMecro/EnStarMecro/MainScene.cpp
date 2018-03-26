@@ -264,12 +264,13 @@ void MainScene::ActionDecision() {
 	// 프로듀스를 해야한다면
 	if(target->GetName().find("Produce") != std::string::npos) {
 		GAME->SetMouseClick(PRODUCE_POS.x, PRODUCE_POS.y);
+		SCENE->LockScene();
 	}
 
 	
 
 
-	Sleep(1000);
+	//Sleep(1000);
 
 }
 

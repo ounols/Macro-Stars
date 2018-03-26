@@ -6,6 +6,7 @@
 #include "SceneMgr.h"
 #include "MainScene.h"
 #include "ProduceTodo.h"
+#include "CoverTodo.h"
 
 
 ConcertPrepareScene::ConcertPrepareScene() {
@@ -24,6 +25,8 @@ ConcertPrepareScene::ConcertPrepareScene() {
 
 	RESMGR->RegisterImage("img/ConcertScene/set_midnight.jpg", "concert_set_midnight");
 	RESMGR->RegisterImage("img/ConcertScene/set_normal.jpg", "concert_set_normal");
+	RESMGR->RegisterImage("img/ConcertScene/midnight_bae.jpg", "concert_midnight_bae");
+	RESMGR->RegisterImage("img/ConcertScene/switch_appearance.jpg", "concert_switch_appearance");
 
 
 
@@ -86,7 +89,7 @@ bool ConcertPrepareScene::ReadData() {
 		ReadIntro();
 		return true;
 	}
-
+	ReadLP();
 	ReadPrepare();
 	return true;
 
@@ -146,6 +149,13 @@ void ConcertPrepareScene::ReadPrepare() {
 		if (!points.empty()) {
 			isMidnightScene = true;
 		}
+
+		if(!isMidnightScene) {
+			auto points = RESMGR->FindImages(nullptr, "concert_midnight_bae", 0.99, 1, true, cvRect(723, 728, 65, 65));
+			if (!points.empty()) {
+				isMidnightScene = true;
+			}
+		}
 	}
 
 	
@@ -187,7 +197,7 @@ void ConcertPrepareScene::ReadPrepare() {
 	}
 
 	//필요한 LP 등 계산
-	if (todo->attribute != UNKOWN && todo->totalAudience > -1) {
+	if (todo->attribute != UNKOWN && todo->totalAudience > -1 && todo->type != ConcertTodo::NODATA) {
 		SetConcertTodo(todo);
 	}
 
@@ -220,6 +230,31 @@ void ConcertPrepareScene::ReadPrepare() {
 }
 
 
+void ConcertPrepareScene::ReadLP() {
+
+	std::string lp_str = GetNumber(1064, 73, 96, 28);
+
+	int lp_slash;
+
+
+
+	if ((lp_slash = lp_str.find("/")) != std::string::npos) {
+		EnsembleUnit lp;
+
+		lp.max = std::stoi(lp_str.substr(lp_slash + 1));
+		lp.current = std::stoi(lp_str.substr(0, lp_slash));
+		lp.achieveTime = PRODUCER->GetLP().achieveTime;
+
+		if (lp.max - lp.current <= 0) {
+			lp.achieveTime = GAME->GetUpdatedTime();
+		}
+
+		PRODUCER->SetLP(lp);
+	}
+
+}
+
+
 void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 
 	int needLP = CheckNeedLP(todo->totalAudience, todo->attribute, todo->isMidnight);
@@ -235,7 +270,6 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 
 	switch (dec) {
 		case WAIT:
-		case NEED_DIA:
 		case OK: 
 		{
 			//바로 진행 가능
@@ -267,6 +301,11 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 		}
 		break;
 
+		case NEED_DIA: {
+			m_decision = dec;
+		}
+		break;
+
 		case LEVEL_UP: 
 		{
 			{
@@ -283,6 +322,12 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 			todo_new->isForLevelUp = true;
 			todo_new->type = ProduceTodo::DAILY;
 			PRODUCER->AddTodo(todo_new);
+
+			if(PRODUCER->GetTodo<CoverTodo>() == nullptr) {
+				CoverTodo* todo_cover = new CoverTodo();
+				todo_cover->targetScene = SCENE->GetScene<ResultProduceScene>();
+				PRODUCER->AddTodo(todo_cover);
+			}
 
 			todo->SetWait();
 			isQuitConcert = true;
@@ -634,7 +679,6 @@ void ConcertPrepareScene::ActionPrepare() {
 	ConcertTodo* todo = PRODUCER->GetFirstTodo<ConcertTodo>();
 
 
-
 	if (todo != nullptr && todo->isGiveUp) {
 		GAME->SetMouseClick(1100, 988);
 		PRODUCER->RemoveTodo(todo);
@@ -643,6 +687,7 @@ void ConcertPrepareScene::ActionPrepare() {
 	}
 
 	if (todo == nullptr || m_decision == WAIT || isQuitConcert) {
+
 		if(m_decision == WAIT) {
 			todo->SetWait();
 		}
@@ -653,14 +698,17 @@ void ConcertPrepareScene::ActionPrepare() {
 
 	if(isNeedInfomation) {
 		GAME->SetMouseClick(1712, 225);
+		SCENE->LockScene();
 		return;
 	}
 
 	switch (m_decision) {
 	case NEED_DIA: {
-
+		CoverTodo* todo_cover = new CoverTodo();
+		todo_cover->targetScene = SCENE->GetScene<ResultProduceScene>();
+		PRODUCER->AddTodo(todo_cover);
+		break;
 	}
-	return;
 
 
 	case CHANGE_MID: {
@@ -673,24 +721,92 @@ void ConcertPrepareScene::ActionPrepare() {
 	default: break;
 	}
 
+	bool isSwitchActive[2] = { false };
+
+	{
+		auto points = RESMGR->FindImages(nullptr, "concert_switch_appearance", 0.98, 1, true, cvRect(1558, 602, 235, 89));
+		if (!points.empty()) {
+			isSwitchActive[0] = true;
+		}
+
+		points = RESMGR->FindImages(nullptr, "concert_switch_appearance", 0.98, 1, true, cvRect(1558, 750, 235, 89));
+		if (!points.empty()) {
+			isSwitchActive[1] = true;
+		}
+	}
+
 	int needLP = todo->needLPCount;
 	todo->usedLP = (todo->isMidnight ? 3 : 1);
 
 	if(needLP >= 3) {
-		GAME->SetMouseClick(1724, 764);
+		if(!isSwitchActive[1]) {
+			GAME->SetMouseClick(1724, 764);
+		}
 		todo->usedLP = (todo->isMidnight ? 9 : 3);
 	}else if(needLP >= 2) {
-		GAME->SetMouseClick(1724, 620);
+		if (isSwitchActive[1]) {
+			GAME->SetMouseClick(1724, 764);
+		}
+		if (!isSwitchActive[0]) {
+			GAME->SetMouseClick(1724, 620);
+		}
 		todo->usedLP = (todo->isMidnight ? 6 : 2);
 	}else if(needLP <= 0) {
 		PRODUCER->RemoveTodo(todo);
 		GAME->SetMouseClick(102, 77);
 		return;
+	}else {
+		if (isSwitchActive[0]) {
+			GAME->SetMouseClick(1724, 620);
+		}
 	}
 	
 	Sleep(500);
 
 	GAME->SetMouseClick(1595, 988);
+	SCENE->LockScene();
 
+}
+
+
+std::string ConcertPrepareScene::GetNumber(int x, int y, int width, int height) {
+
+	IplImage* img = (IplImage*)cvClone(GAME->GetScreenImage());
+
+	CUT_IMAGE(img, cvRect(x, y, width, height));
+
+	RESIZE_IMAGE(img, cvSize(img->width * 2, img->height * 2));
+	IplImage* img_over = (IplImage*)cvClone(img);
+
+	//cvShowImage("이진", img);
+	//cvWaitKey();
+
+	{
+		IplImage* dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
+
+		cvCvtColor(img, dst, CV_RGB2GRAY);
+		REALLOC(img, dst);
+
+		dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
+
+		CvScalar scalar_min = cvScalar(225, 225, 225);
+		CvScalar scalar_max = cvScalar(255, 255, 255);
+
+		cvInRangeS(img, scalar_min, scalar_max, dst);
+		REALLOC(img, dst);
+
+		ResMgr::__MaskImage(img_over, cvScalar(250, 230, 96), 35, img);
+	}
+
+	//cvShowImage("이진", img);
+	//cvWaitKey();
+
+	std::string str = RESMGR->Image2String(img);
+	//cvWaitKey();
+
+	cvReleaseImage(&img);
+	cvReleaseImage(&img_over);
+
+	return str;
 
 }

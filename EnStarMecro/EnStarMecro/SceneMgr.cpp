@@ -14,6 +14,7 @@
 #include "ConcertResultScene.h"
 #include "UnkownScene.h"
 #include "KakaoPopUpScene.h"
+#include "CoverUnitScene.h"
 
 IMPLEMENT_SINGLETON(SceneMgr);
 
@@ -36,6 +37,7 @@ SceneMgr::~SceneMgr() {
 void SceneMgr::SetScenes() {
 	
 	m_scenes.push_back(new LoadingScene());
+	m_scenes.push_back(new CoverUnitScene());
 	m_scenes.push_back(new NomalProduceScene());
 	m_scenes.push_back(new FeverScene());
 	m_scenes.push_back(new DIFScene());
@@ -66,6 +68,34 @@ void SceneMgr::SetPrevScene(Scene* prev_scene) {
 }
 
 
+void SceneMgr::SetCurrentScene(Scene* current_scene) {
+	m_currentScene = current_scene;
+}
+
+
+void SceneMgr::UpdateLockState() {
+
+	if (!m_isLocked) return;
+
+	m_lockedCount++;
+
+	if(m_currentScene != m_prevScene || m_lockedCount > 30) {
+		m_isLocked = false;
+		m_lockedCount = 0;
+	}
+
+}
+
+
 std::vector<Scene*> SceneMgr::GetScenes() const {
 	return m_scenes;
+}
+
+
+void SceneMgr::LockScene() {
+	m_isLocked = true;
+	m_currentScene = m_prevScene;
+	m_lockedCount = 0;
+
+
 }

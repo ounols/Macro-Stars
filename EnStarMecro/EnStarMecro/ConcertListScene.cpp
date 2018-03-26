@@ -213,7 +213,7 @@ void ConcertListScene::ActionDecision() {
 	}
 
 	GAME->SetMouseClick(80, 70);
-	Sleep(1000);
+	SCENE->LockScene();
 
 }
 

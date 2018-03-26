@@ -91,10 +91,12 @@ bool ResMgr::TrainKNN(const char* classifications_path, const char* images_path)
 																				// train //////////////////////////////////////////////////////////////////////////////
 
 	cv::Ptr<cv::ml::KNearest>  kNearest(cv::ml::KNearest::create());            // instantiate the KNN object
-	m_kNearest = kNearest;
+	m_kNearest = cv::Ptr<cv::ml::KNearest>(cv::ml::KNearest::create());
+
+
 																				// finally we get to the call to train, note that both parameters have to be of type Mat (a single Mat)
 																				// even though in reality they are multiple images / numbers
-	return m_kNearest->train(matTrainingImagesAsFlattenedFloats, cv::ml::ROW_SAMPLE, matClassificationInts);
+	return m_kNearest->train(matTrainingImagesAsFlattenedFloats, 0, matClassificationInts);
 
 }
 

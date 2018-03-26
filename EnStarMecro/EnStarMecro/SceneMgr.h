@@ -17,11 +17,22 @@ public:
 
 	Scene* GetPrevScene() const;
 	void SetPrevScene(Scene* prev_scene);
+	void SetCurrentScene(Scene* current_scene);
+	void UpdateLockState();
 
 	std::vector<Scene*> GetScenes() const;
+
+	void LockScene();
+	bool isLocked() const {
+		return m_isLocked;
+	}
 private:
 	std::vector<Scene*> m_scenes;
 	Scene* m_prevScene = nullptr;
+	Scene* m_currentScene = nullptr;
+
+	bool m_isLocked = false;
+	int m_lockedCount = 0;
 
 };
 

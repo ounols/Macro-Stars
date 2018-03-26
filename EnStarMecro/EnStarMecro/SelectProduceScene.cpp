@@ -72,6 +72,7 @@ void SelectProduceScene::ActionDecision() {
 
 	if (todo == nullptr || todo->targetScene == nullptr) {
 		GAME->SetMouseClick(1839, 1000);
+		SCENE->LockScene();
 		return;
 	}
 
@@ -95,6 +96,7 @@ void SelectProduceScene::ActionDecision() {
 	}
 	else {
 		GAME->SetMouseClick(1839, 1000);
+		SCENE->LockScene();
 	}
 
 

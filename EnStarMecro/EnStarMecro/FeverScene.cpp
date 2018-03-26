@@ -121,8 +121,8 @@ bool FeverScene::ReadData() {
 void FeverScene::ActionDecision() {
 
 	if(isCleared) {
-		GAME->SetMouseDown(pos_x, pos_y, 1000);
-		GAME->SetMouseUp(pos_x, pos_y);
+		GAME->SetMouseDown(300, 300, 2000);
+		GAME->SetMouseUp(300, 300);
 		return;
 	}
 

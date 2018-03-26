@@ -18,6 +18,7 @@ public:
 private:
 	void ReadIntro();
 	void ReadPrepare();
+	void ReadLP();
 
 	void SetConcertTodo(ConcertTodo* todo);
 	int CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, bool isMidnight);
@@ -25,6 +26,8 @@ private:
 
 	void ActionIntro();
 	void ActionPrepare();
+
+	std::string GetNumber(int x, int y, int width, int height);
 
 private:
 	bool isIntro = false;

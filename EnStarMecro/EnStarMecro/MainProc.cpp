@@ -22,7 +22,7 @@ MainProc::MainProc() {
 	//임시
 	//namedWindow("sample", cv::WINDOW_GUI_NORMAL);
 	//namedWindow("이진", cv::WINDOW_AUTOSIZE);
-	PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
+	PRODUCER->SetStatus(ProducerAI::NOMAL);
 
 	//ProduceTodo* todo = new ProduceTodo();
 	//todo->type = ProduceTodo::LIMIT;
@@ -74,10 +74,11 @@ MainProc::~MainProc() {
 
 void MainProc::Update() {
 
-	if(GetAsyncKeyState(VK_ESCAPE)) {
+	if(GetAsyncKeyState(VK_ESCAPE) && GetAsyncKeyState(VK_BACK)) {
 		b_isQuit = true;
 		return;
 	}
+
 
 	if(GetAsyncKeyState(VK_END)) {
 		b_isPause = !b_isPause;
@@ -138,10 +139,18 @@ void MainProc::Update() {
 		return;
 	}
 
+	if (!currentScene->GetIsIgnorePrevScene())
+		SCENE->SetCurrentScene(currentScene);
+
 	if(!Scene::isScene<UnkownScene>(currentScene)) {
 		m_unkownCount = 0;
 	}else {
 		m_unkownCount++;
+	}
+
+	SCENE->UpdateLockState();
+	if(SCENE->isLocked()) {
+		return;
 	}
 
 

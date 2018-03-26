@@ -2,6 +2,7 @@
 #include "ResMgr.h"
 #include "ProducerAI.h"
 #include "GameClientMgr.h"
+#include "SceneMgr.h"
 
 
 ConcertUnitScene::ConcertUnitScene() {
@@ -117,22 +118,25 @@ void ConcertUnitScene::ActionDecision() {
 
 	if(PRODUCER->GetConcertDance().team[0] <= 0) {
 		GAME->SetMouseClick(1800, 216);
+		Sleep(1000);
 		return;
 	}
 
 	if (PRODUCER->GetConcertVocal().team[0] <= 0) {
 		GAME->SetMouseClick(1800, 365);
+		Sleep(1000);
 		return;
 	}
 
 
 	if (PRODUCER->GetConcertPerformance().team[0] <= 0) {
 		GAME->SetMouseClick(1800, 524);
+		Sleep(1000);
 		return;
 	}
 
 	GAME->SetMouseClick(90, 77);
-	Sleep(2000);
+	SCENE->LockScene();
 
 }
 

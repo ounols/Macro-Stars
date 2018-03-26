@@ -54,5 +54,6 @@ bool ConcertResultScene::ReadData() {
 void ConcertResultScene::ActionDecision() {
 
 	GAME->SetMouseClick(1480, 930);
+	SCENE->LockScene();
 
 }

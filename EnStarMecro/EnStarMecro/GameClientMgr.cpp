@@ -63,7 +63,7 @@ void GameClientMgr::GetGameHWND() {
 	}
 
 	//nox 플레이어 확인 시작
-	gameHwnd = FindWindowA("Qt5QWindowIcon", nullptr);
+	gameHwnd = FindWindowA("Qt5QWindowIcon", "녹스 플레이어");
 	if (gameHwnd != nullptr) {
 		m_client = NOX;
 		m_isSupportExecOut = false;

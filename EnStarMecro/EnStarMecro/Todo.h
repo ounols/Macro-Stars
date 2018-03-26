@@ -8,7 +8,6 @@ public:
 	virtual ~Todo() {
 	}
 
-
 	virtual bool isAvailable() { return true; }
 	virtual void Update() {}
 	Scene* targetScene = nullptr;
