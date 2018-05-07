@@ -12,5 +12,6 @@ public:
 
 private:
 	bool isPopUp = false;
+	bool isLogo = false;
 };
 

@@ -120,6 +120,12 @@ bool SelectProduceScene::CheckSelectChapter() {
 	//isScene = isScene && RESMGR->CheckRGB(nullptr, 22, 44, 255, 196, 0, 5);
 	//isScene = isScene && RESMGR->CheckRGB(nullptr, 685, 50, 2, 82, 134);
 
+	//한정 프로듀스가 아닌 경우
+	if(PRODUCER->GetStatus() != ProducerAI::NOMAL && RESMGR->CheckRGB(nullptr, 100, 625, 244, 244, 244, 10)) {
+		PRODUCER->SetStatus(ProducerAI::NOMAL);
+		PRODUCER->GetTodo<ProduceTodo>()->type = ProduceTodo::DAILY;
+	}
+
 	m_state = SelectChapter;
 
 	return isScene;
@@ -185,7 +191,7 @@ void SelectProduceScene::ActionSelectChapter() {
 		default: break;
 	}
 
-	GAME->SetMouseClick(980, 592);
+	GAME->SetMouseClick(730, 592);
 
 	Sleep(1000);
 
@@ -202,8 +208,13 @@ void SelectProduceScene::ActionSelectProduce() {
 
 	auto points = RESMGR->FindImages(nullptr, "select_produce_clear", 0.969, 4, true, cvRect(900, 247, 190, 655));
 	if (points.empty()) {
-		std::cout << "Cannot Start Completed Produce.\n";
-		GAME->SetMouseClick(1839, 1000);
+		std::cout << "No Completed Produce.\n";
+
+		GAME->SetMouseClick(1683, 350);
+		Sleep(1000);
+		GAME->SetMouseClick(1300, 350);
+		m_usedAP = 8;
+
 		return;
 	}
 

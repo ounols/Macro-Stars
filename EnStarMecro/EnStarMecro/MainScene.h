@@ -29,7 +29,7 @@ private:
 	bool isPopUp;
 	bool isHide;
 
-	const CvPoint PRODUCE_POS = cvPoint(1340, 700);
+	const CvPoint PRODUCE_POS = cvPoint(1200, 700);
 	CvPoint m_pos;
 };
 

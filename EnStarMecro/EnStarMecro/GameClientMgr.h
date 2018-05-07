@@ -48,10 +48,28 @@ public:
 
 	long GetUpdatedTime() const;
 
+
+	bool GetIsGunstars() const;
+	void SetIsGunstars(bool is_gunstars);
+
+
+	bool GetIsAutoReboot() const;
+	void SetIsAutoReboot(bool is_auto_reboot);
+	bool GetIsVpn() const;
+	void SetIsVpn(bool is_vpn);
+
+	std::string GetGunStarsPath() const;
+	void SetGunStarsPath(const std::string& gun_stars_path);
 private:
 	void EditNoneScreen(cv::Mat img);
 	void EditNoxScreen(cv::Mat img);
 	void EditADBScreen();
+
+	void SetADB();
+	void SetHWND();
+
+public:
+	bool isQuit = false;
 
 private:
 	CLIENT m_client = NONE;
@@ -73,6 +91,12 @@ private:
 	bool m_isEmpty = true;
 
 	long m_updatedTime = 0;
+
+	//юс╫ц
+	bool isGunstars = false;
+	std::string GunStarsPath = "";
+	bool isVPN = false;
+	bool isAutoReboot = false;
 
 };
 

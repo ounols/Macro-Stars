@@ -3,6 +3,7 @@
 #include "ProducerAI.h"
 #include "SceneMgr.h"
 #include "ResultProduceScene.h"
+#include "CoverTodo.h"
 
 class ProduceTodo : public Todo {
 
@@ -19,7 +20,9 @@ public:
 
 	bool isAvailable() override {
 
-		if (isForLevelUp) return true;
+		if (isForLevelUp) {
+			return true;
+		}
 
 		//이미 진행 중인 프로듀스면 그대로 진행이 가능
 		if (isStarted) return true;
@@ -49,6 +52,15 @@ public:
 	void Update() override {
 
 		if (targetScene == nullptr) targetScene = SCENE->GetScene<ResultProduceScene>();
+
+		if(isForLevelUp) {
+			auto todo = PRODUCER->GetTodo<CoverTodo>();
+			if (todo == nullptr) {
+				todo = new CoverTodo();
+				todo->targetScene = SCENE->GetScene<ResultProduceScene>();
+				PRODUCER->AddTodo(todo);
+			}
+		}
 
 	}
 

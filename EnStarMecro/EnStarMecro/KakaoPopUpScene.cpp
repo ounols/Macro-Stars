@@ -21,8 +21,8 @@ bool KakaoPopUpScene::CheckFirst() {
 
 	bool isScene = true;
 
-	isScene = isScene && RESMGR->CheckRGB(nullptr, 388, 657, 66, 66, 66);
-	isScene = isScene && RESMGR->CheckRGB(nullptr, 1530, 412, 66, 66, 66);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 384, 441, 40, 40, 40, 3);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1521, 441, 40, 40, 40, 3);
 
 	if (isScene) return isScene;
 
@@ -63,7 +63,7 @@ void KakaoPopUpScene::ActionDecision() {
 		return;
 	}
 
-	GAME->SetMouseClick(1430, 620);
+	GAME->SetMouseClick(657, 611);
 	Sleep(1000);
 
 }

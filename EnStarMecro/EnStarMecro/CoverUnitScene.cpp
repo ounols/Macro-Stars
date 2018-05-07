@@ -3,6 +3,8 @@
 #include "ProducerAI.h"
 #include "CoverTodo.h"
 #include "GameClientMgr.h"
+#include "MainScene.h"
+#include "ConcertTodo.h"
 
 
 CoverUnitScene::CoverUnitScene() {
@@ -11,6 +13,7 @@ CoverUnitScene::CoverUnitScene() {
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_ap.jpg", "cover_pop_ap");
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_lp.jpg", "cover_pop_lp");
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_use_item.jpg", "cover_pop_use_item");
+	RESMGR->RegisterImage("img/CoverUnitScene/pop_charge_lp.jpg", "cover_pop_charge_lp");
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_buy_item.jpg", "cover_pop_buy_item");
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_limited_item.jpg", "cover_pop_limited_item");
 
@@ -18,6 +21,7 @@ CoverUnitScene::CoverUnitScene() {
 	RESMGR->RegisterImage("img/CoverUnitScene/item_dia.jpg", "cover_item_dia");
 	RESMGR->RegisterImage("img/CoverUnitScene/item_sportdrink.jpg", "cover_item_sportdrink");
 	RESMGR->RegisterImage("img/CoverUnitScene/item_yogurt.jpg", "cover_item_yogurt");
+	RESMGR->RegisterImage("img/CoverUnitScene/item_limit.jpg", "cover_item_limit");
 
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_lp_sale.jpg", "cover_pop_lp_sale");
 	RESMGR->RegisterImage("img/CoverUnitScene/pop_lp_sale_buy.jpg", "cover_pop_lp_sale_buy");
@@ -89,6 +93,14 @@ bool CoverUnitScene::CheckScene() {
 		return true;
 	}
 
+	//LP 충전
+	points = RESMGR->FindImages(nullptr, "cover_pop_charge_lp", 0.98, 1, true, rect);
+	if (!points.empty()) {
+		m_state = USE_ITEM;
+		std::cout << "LP 충전 (아이템 사용)\n";
+		return true;
+	}
+
 	//아이템 구매
 	points = RESMGR->FindImages(nullptr, "cover_pop_buy_item", 0.98, 1, true, rect);
 	if (!points.empty()) {
@@ -148,6 +160,9 @@ void CoverUnitScene::ReadCoverAP() {
 	m_pos = cvPoint(958, 850);
 
 	if(todo == nullptr) {
+		Todo* todo = new Todo();
+		todo->targetScene = SCENE->GetScene<MainScene>();
+		PRODUCER->AddTodo(todo);
 		return;
 	}
 
@@ -201,12 +216,27 @@ void CoverUnitScene::ReadCoverLP() {
 	}
 
 
+	//중요 이벤트가 아니라면 
+	if(PRODUCER->GetStatus() != ProducerAI::EVENT_IMPORTANT) {
+		
+		//기간이 남은 아이템인가?
+		auto points = RESMGR->FindImages(nullptr, "cover_item_limit", 0.98, 1, true, cvRect(663, 443, 146, 50));
+		if (points.empty()) {
+			std::cout << "중요 이벤트에만 사용함. 고로 넘김\n";
+			auto concert_todo = PRODUCER->GetTodo<ConcertTodo>();
+			concert_todo->isGiveUp = true;
+			return;
+		}
+
+	}
+
+
 	auto points = RESMGR->FindImages(nullptr, "cover_item_dia", 0.98, 1, true, rect);
 	if (!points.empty()) {
 
 		//기간 한정 세일이 진행 중인지 확인
 		auto point_limited = RESMGR->FindImages(nullptr, "cover_pop_lp_sale", 0.98, 1, true, cvRect(390, 150, 310, 130));
-		if(!point_limited.empty()) {
+		if(!point_limited.empty() && PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) {
 			std::cout << "한정 이벤트 물품 세일 중이기에 사러 감.\n";
 			m_pos = cvPoint(456, 198);
 			return;

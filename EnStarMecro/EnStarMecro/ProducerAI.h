@@ -77,6 +77,8 @@ public:
 	T* GetTodo() const;
 	template<class T>
 	T* GetFirstTodo() const;
+	template<class T>
+	std::vector<T*> GetAllTodo() const;
 	bool isTodoEmpty() const;
 	int GetTodoSize() const;
 	std::vector<Todo*> GetTodoList() const;
@@ -86,6 +88,10 @@ public:
 	static long GetMillisecond(int min, int second);
 	static int Millisecond2Min(long millisecond);
 	static int Millisecond2Second(long millisecond);
+
+
+	int GetIsChacked() const;
+	void SetIsChacked(int is_chacked);
 
 private:
 	EnsembleUnit m_ap;
@@ -103,6 +109,7 @@ private:
 	std::vector<Todo*> m_todoList;
 	std::vector<TodoWithCondition> m_todoWithConditionList;
 
+	int isChacked = 0;
 };
 
 
@@ -130,4 +137,19 @@ T* ProducerAI::GetFirstTodo() const {
 	}
 
 	return nullptr;
+}
+
+
+template <class T>
+std::vector<T*> ProducerAI::GetAllTodo() const {
+
+	std::vector<T*> todos;
+
+	for (auto todo : m_todoList) {
+		if (dynamic_cast<T*>(todo)) {
+			todos.push_back(static_cast<T*>(todo));
+		}
+	}
+
+	return todos;
 }

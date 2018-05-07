@@ -297,11 +297,40 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 
 			}
 
+			////임시 추가
+			//if (!todo->isMidnight && isMidnightAvailable) {
+			//	if(todo->type == ConcertTodo::GUERRILLA) {
+			//		//심야를 진행하겠다면
+			//		m_decision = CHANGE_MID;
+			//		todo->isMidnight = true;
+			//		todo->totalAudience = -1;
+			//		todo->isWait = false;
+			//		isNeedDiamond = false;
+			//		int needLP_mid = needLP * 3;
+			//		todo->needLPCount = needLP_mid;
+			//		break;
+			//	}
+			//}
+
 			m_decision = dec;
 		}
 		break;
 
 		case NEED_DIA: {
+			////임시 추가
+			//if (!todo->isMidnight && isMidnightAvailable) {
+			//	if (todo->type == ConcertTodo::GUERRILLA) {
+			//		//심야를 진행하겠다면
+			//		m_decision = CHANGE_MID;
+			//		todo->isMidnight = true;
+			//		todo->totalAudience = -1;
+			//		todo->isWait = false;
+			//		isNeedDiamond = false;
+			//		int needLP_mid = needLP * 3;
+			//		todo->needLPCount = needLP_mid;
+			//		break;
+			//	}
+			//}
 			m_decision = dec;
 		}
 		break;
@@ -436,10 +465,10 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	int currentLP = PRODUCER->GetLP().current;
 	int scarceLP = 0;	//부족한 LP
 	int scarceWaitLP = 0;	//시간을 지내서 얻는 최선의 부족한 LP
+	int waitCount = 0;
 
 	long concertTime = todo->achieveTime - timeGetTime();
 	std::cout << "콘서트 남은 시간 : " << ProducerAI::Millisecond2Min(concertTime) << "분 " << ProducerAI::Millisecond2Second(concertTime) << "초\n";
-
 
 	if (needLPCount - currentLP > 0) {
 		scarceLP = needLPCount - currentLP;
@@ -478,6 +507,7 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 		for (int i = 1; i <= scarceLP; i++) {
 			scarceWaitLP = scarceLP - i;
+			waitCount = i;
 
 			//콘서트가 LP i개를 마저 못채우고 끝날 경우
 			if (deltaAchieveTime <= i * ProducerAI::GetMillisecond(30, 00)) {
@@ -492,15 +522,25 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	//만약 시간 내로 콘서트를 끝낼 수 있다면
 	if (scarceWaitLP <= 0) {
-		//기다령
-		//todo->SetWait();
-		//isQuitConcert = true;
-		std::cout << "시간 내로 가능. 잠시 기다림." << std::endl;
-		if(isLPOver) {
-			std::cout << "그러나 이미 LP가 최대치를 넘었기에 바로 진행" << std::endl;
-			return OK;
-		}
-		return WAIT;
+
+		//if(PRODUCER->GetLP().current >= 1) {
+		//	scarceWaitLP = scarceLP;
+		//}else {
+			//기다령
+			//todo->SetWait();
+			//isQuitConcert = true;
+			std::cout << "시간 내로 가능. 잠시 기다림." << std::endl;
+			if (isLPOver) {
+				std::cout << "그러나 이미 LP가 최대치를 넘었기에 바로 진행" << std::endl;
+				return OK;
+			}
+			return WAIT;
+		//}
+
+
+
+
+
 	}
 
 	std::cout << "시간이 최대한 지나고 난 뒤 필요한 LP는 " << scarceWaitLP << "개가 된다." << std::endl;
@@ -613,15 +653,22 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	// 다이아를 쓰기로 결정하고 시간 쿨타임 보정이 아직 먹히는 경우
 	if (scarceLP - scarceWaitLP > 0) {
-		//기다령
-		//todo->SetWait();
-		//isQuitConcert = true;
-		std::cout << "최대한 LP를 아끼면 " << scarceWaitLP << "개가 남고 나머지는 다이아로 매꿈. 따라서 잠시 기다림." << std::endl;
-		if (isLPOver) {
-			std::cout << "그러나 이미 LP가 최대치를 넘었기에 바로 진행" << std::endl;
-			return OK;
-		}
-		return WAIT;
+
+		//if (PRODUCER->GetLP().current >= 1) {
+		//	scarceWaitLP = scarceLP;
+		//} else {
+			//기다령
+			//todo->SetWait();
+			//isQuitConcert = true;
+			std::cout << "최대한 LP를 아끼면 " << scarceWaitLP << "개가 남고 나머지는 다이아로 매꿈. 따라서 잠시 기다림." << std::endl;
+			if (isLPOver) {
+				std::cout << "그러나 이미 LP가 최대치를 넘었기에 바로 진행" << std::endl;
+				return OK;
+			}
+			return WAIT;
+		//}
+
+
 	}
 
 	std::cout << "남은 LP " << scarceWaitLP << "개를 다이아로 매꿈" << std::endl;
@@ -641,6 +688,7 @@ void ConcertPrepareScene::ActionIntro() {
 	switch (type) {
 		case ConcertTodo::NONE: 
 			GAME->SetMouseClick(1156, 900);
+			SCENE->LockScene();
 		break;
 		case ConcertTodo::BIG:
 			deltaTime = ProducerAI::GetMillisecond(60, 00);
@@ -666,6 +714,7 @@ void ConcertPrepareScene::ActionIntro() {
 
 
 			GAME->SetMouseClick(1497, 900);
+			SCENE->LockScene();
 			break;
 		}
 		default: break;
@@ -698,12 +747,14 @@ void ConcertPrepareScene::ActionPrepare() {
 
 	if(isNeedInfomation) {
 		GAME->SetMouseClick(1712, 225);
+		Sleep(1000);
 		SCENE->LockScene();
 		return;
 	}
 
 	switch (m_decision) {
 	case NEED_DIA: {
+		if (PRODUCER->GetTodo<CoverTodo>() != nullptr) break;
 		CoverTodo* todo_cover = new CoverTodo();
 		todo_cover->targetScene = SCENE->GetScene<ResultProduceScene>();
 		PRODUCER->AddTodo(todo_cover);

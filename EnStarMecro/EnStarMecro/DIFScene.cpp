@@ -104,6 +104,9 @@ bool DIFScene::CheckBattle() {
 
 		}
 
+		SCENE->SetCurrentScene(this);
+		SCENE->SetPrevScene(this);
+
 		Sleep(5000);
 		GAME->SetMouseClick(1800, 110);
 	}

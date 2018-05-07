@@ -8,10 +8,12 @@ ConcertListScene::ConcertListScene() {
 	m_name = "ConcertListScene";
 
 
-	RESMGR->RegisterImage("img/ConcertScene/enter.jpg", "concert_enter");
+	RESMGR->RegisterImage("img/ConcertScene/event_rule.jpg", "concert_event_rule");
 	RESMGR->RegisterImage("img/ConcertScene/concert_list_yellow.jpg", "concert_list_yellow");
 	RESMGR->RegisterImage("img/ConcertScene/get_all.jpg", "concert_list_get_all");
 	RESMGR->RegisterImage("img/ConcertScene/sub_story_open.jpg", "concert_sub_story_open");
+	RESMGR->RegisterImage("img/ConcertScene/rank_reward.jpg", "concert_rank_reward");
+	RESMGR->RegisterImage("img/ConcertScene/bt_get.jpg", "concert_bt_get");
 }
 
 
@@ -48,7 +50,15 @@ bool ConcertListScene::CheckFirst() {
 		return isScene;
 	}
 
-	isScene = RESMGR->CheckRGB(nullptr, 900, 850, 246, 246, 246);
+	isScene = RESMGR->CheckRGB(nullptr, 760, 90, 248, 242, 229, 5);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1740, 351, 224, 174, 41, 5);
+
+	if (isScene) {
+		m_state = RANK_REWARD;
+		return isScene;
+	}
+
+	isScene = RESMGR->CheckRGB(nullptr, 900, 850, 246, 246, 246, 5);
 	isScene = isScene && RESMGR->CheckRGB(nullptr, 1000, 850, 228, 181, 43, 5);
 
 	if (isScene) {
@@ -63,7 +73,7 @@ bool ConcertListScene::CheckFirst() {
 bool ConcertListScene::CheckScene() {
 
 	if(m_state == INTRO) {
-		auto points = RESMGR->FindImages(nullptr, "concert_enter", 0.99, 1, true, cvRect(1094, 886, 473, 114));
+		auto points = RESMGR->FindImages(nullptr, "concert_event_rule", 0.99, 1, true, cvRect(1003, 23, 284, 119));
 		if (points.empty() || points.size() > 1) return false;
 
 		Sleep(1000);
@@ -74,6 +84,13 @@ bool ConcertListScene::CheckScene() {
 
 	if(m_state == POINT_REWARD) {
 		auto points = RESMGR->FindImages(nullptr, "concert_list_get_all", 0.99, 1, true, cvRect(350, 40, 190, 90));
+		if (points.empty()) return false;
+
+		return true;
+	}
+
+	if (m_state == RANK_REWARD) {
+		auto points = RESMGR->FindImages(nullptr, "concert_rank_reward", 0.99, 1, true, cvRect(750, 180, 213, 70));
 		if (points.empty()) return false;
 
 		return true;
@@ -107,6 +124,26 @@ bool ConcertListScene::ReadData() {
 	}
 
 	if(m_state == SUB_STROY || m_state == POINT_REWARD) {
+		return true;
+	}
+
+	if(m_state == RANK_REWARD) {
+		auto points = RESMGR->FindImages(nullptr, "concert_bt_get", 0.98, 1, true, cvRect(1098, 260, 252, 769));
+		if (points.empty()) {
+			isQuit = true;
+			{
+				SYSTEMTIME oTime;
+				GetLocalTime(&oTime);
+				std::stringstream str;
+				str << "img/Saved/EVENT_RESULT_" << (int)oTime.wYear << (int)oTime.wMonth << (int)oTime.wDay << ".jpg";
+				cvSaveImage(str.str().c_str(), GAME->GetScreenImage());
+				std::cout << str.str() << " is " << "Saved." << std::endl;
+			}
+			return true;
+		}
+
+		m_point = cvPoint(points[0].x + 1098, points[0].y + 260);
+
 		return true;
 	}
 
@@ -182,6 +219,11 @@ void ConcertListScene::ActionDecision() {
 			return;
 		}
 
+		if(RESMGR->CheckRGB(nullptr, 1712, 238, 222, 33, 53, 5)) {
+			GAME->SetMouseClick(1630, 286);
+			return;
+		}
+
 		GAME->SetMouseClick(80, 70);
 		return;
 	}
@@ -197,6 +239,11 @@ void ConcertListScene::ActionDecision() {
 		GAME->SetMouseClick(80, 70);
 		Sleep(1000);
 
+		return;
+	}
+
+	if(m_state == RANK_REWARD) {
+		GAME->SetMouseClick(m_point.x, m_point.y);
 		return;
 	}
 

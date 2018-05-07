@@ -4,7 +4,7 @@
 
 class ReconnectScene : public Scene {
 private:
-	enum STATE { RECONNECT, QUIT_CONCERT, UNKOWN, UNKOWN_EXIT };
+	enum STATE { RECONNECT, QUIT_CONCERT, UNKOWN, UNKOWN_EXIT, SERVER_ERROR };
 public:
 	ReconnectScene();
 	~ReconnectScene();
@@ -18,6 +18,7 @@ private:
 	void ActionReconnect() const;
 	void ActionQuitConcert() const;
 	void ActionUnkown() const;
+	void ActionServerError() const;
 
 private:
 	STATE m_state = RECONNECT;

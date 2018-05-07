@@ -11,6 +11,7 @@ ReconnectScene::ReconnectScene() {
 	RESMGR->RegisterImage("img/ReconnectScene/ok_red.jpg", "reconnect_ok_red");
 	RESMGR->RegisterImage("img/ReconnectScene/ok_blue.jpg", "reconnect_ok_blue");
 	RESMGR->RegisterImage("img/ReconnectScene/already.jpg", "reconnect_already");
+	RESMGR->RegisterImage("img/ReconnectScene/server_setting.jpg", "reconnect_server_setting");
 	RESMGR->RegisterImage("img/ReconnectScene/the_concert.jpg", "reconnect_concert");
 	RESMGR->RegisterImage("img/ReconnectScene/bt_blue_side_01.jpg", "reconnect_bt_blue_side_01");
 	RESMGR->RegisterImage("img/ReconnectScene/bt_red_side_01.jpg", "reconnect_bt_red_side_01");
@@ -58,6 +59,16 @@ bool ReconnectScene::CheckScene() {
 		return true;
 	}
 
+	//서버 설정
+	points.clear();
+
+	points = RESMGR->FindImages(nullptr, "reconnect_server_setting", 0.99, 1, true, cvRect(752, 430, 218, 131));
+	if (!points.empty()) {
+		m_state = SERVER_ERROR;
+		m_unkownPos = points[0];
+		return true;
+	}
+
 	//unkonwn
 	points.clear();
 
@@ -100,6 +111,9 @@ void ReconnectScene::ActionDecision() {
 		case QUIT_CONCERT:
 			ActionQuitConcert();
 		break;
+		case SERVER_ERROR:
+			ActionServerError();
+			break;
 		case UNKOWN:
 		case UNKOWN_EXIT:
 			ActionUnkown();
@@ -149,5 +163,20 @@ void ReconnectScene::ActionUnkown() const {
 
 	std::cout << "touch blue button\n";
 	GAME->SetMouseClick(550 + m_unkownPos.x + 150, 634 + m_unkownPos.y + 70);
+
+}
+
+
+void ReconnectScene::ActionServerError() const {
+
+	std::cout << "ActionServerError\n";
+	GAME->SetMouseClick(960, 700);
+	Sleep(2000);
+	if(GAME->GetIsGunstars()) {
+		std::string str = "start ";
+		str.append(GAME->GetGunStarsPath());
+		system(str.c_str());
+		GAME->isQuit = true;
+	}
 
 }

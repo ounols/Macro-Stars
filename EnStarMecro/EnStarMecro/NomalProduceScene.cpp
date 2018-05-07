@@ -259,6 +259,13 @@ void NomalProduceScene::ReadPopUp() {
 		return;
 	}
 
+	//닫기버튼을 찾음
+	points = RESMGR->FindImages(nullptr, "main_pop_close", 0.98, 1, true, cvRect(1455, 63, 320, 320));
+	if(!points.empty()) {
+		m_popPos = cvPoint(1455 + points[0].x + 41, 63 + points[0].y + 37);
+		points.clear();
+	}
+
 	//현재 상태에 따라 프로듀스 일시정지 할지 확인
 	points = RESMGR->FindImages(nullptr, "produce_pause", 0.99, 1, true, cvRect(733, 634, 530, 110));
 	if (!points.empty()) {
@@ -270,7 +277,6 @@ void NomalProduceScene::ReadPopUp() {
 		}
 
 		//프로듀스 메뉴에서 나가기
-		m_popPos = cvPoint(1530, 310);
 		return;
 	}
 

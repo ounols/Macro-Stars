@@ -15,6 +15,7 @@ private:
 	std::string GetNumber(int x, int y, int width, int height);
 
 private:
+	bool isLevelUp = false;
 	bool isPopUp = false;
 };
 

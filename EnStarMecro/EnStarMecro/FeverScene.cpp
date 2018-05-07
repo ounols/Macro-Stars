@@ -46,7 +46,7 @@ bool FeverScene::CheckFirst() {
 	isCleared = false;
 
 
-	isScene = isScene && RESMGR->CheckRGB(nullptr, 1850, 970, 34, 170, 204, 5);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1836, 1020, 34, 153, 187, 5);
 	isScene = isScene && RESMGR->CheckRGB(nullptr, 40, 904, 34, 170, 220, 5);
 
 	if (isScene) return isScene;
@@ -76,6 +76,7 @@ bool FeverScene::ReadData() {
 
 	//어떠한 팝업이 존재할 경우
 	if(isSkiped) {
+
 		//스킵하시겠습니까? 팝업이 떴을 시
 		auto skip_bt = RESMGR->FindImages(nullptr, "fever_skip", 0.99, 1, true, cvRect(974, 648, 390, 135));
 
@@ -104,6 +105,13 @@ bool FeverScene::ReadData() {
 	//특훈이 모두 진행된 상태라면
 	if(left_bt.empty()) {
 		isCleared = true;
+		return true;
+	}
+
+	//스킵이 불가능한 경우
+	if (RESMGR->CheckRGB(nullptr, 1835, 856, 174, 174, 174, 10)) {
+		pos_x = 1490;
+		pos_y = 960;
 		return true;
 	}
 

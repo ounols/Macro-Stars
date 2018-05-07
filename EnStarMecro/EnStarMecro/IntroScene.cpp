@@ -10,8 +10,9 @@ IntroScene::IntroScene() {
 	
 	m_name = "IntroScene";
 
-	RESMGR->RegisterImage("img/IntroScene/title_video.jpg", "intro_title_video");
+	RESMGR->RegisterImage("img/IntroScene/title_live_2d.jpg", "intro_title_live_2d");
 	RESMGR->RegisterImage("img/IntroScene/kakao_close.jpg", "intro_kakao_close");
+	RESMGR->RegisterImage("img/IntroScene/logo.jpg", "intro_logo");
 
 }
 
@@ -23,9 +24,15 @@ bool IntroScene::CheckFirst() {
 
 	bool isScene = true;
 	isPopUp = false;
+	isLogo = false;
 
-	isScene = isScene && RESMGR->CheckRGB(nullptr, 48, 63, 26, 170, 205);
-	isScene = isScene && RESMGR->CheckRGB(nullptr, 1770, 370, 246, 242, 231);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 48, 63, 26, 170, 205, 3);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1770, 370, 246, 242, 231, 3);
+
+	if (isScene) return isScene;
+
+	isScene = RESMGR->CheckRGB(nullptr, 700, 475, 223, 104, 100, 2);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1546, 735, 255, 255, 255);
 
 	if (isScene) return isScene;
 
@@ -42,11 +49,20 @@ bool IntroScene::CheckFirst() {
 bool IntroScene::CheckScene() {
 
 	if(!isPopUp) {
-		auto points = RESMGR->FindImages(nullptr, "intro_title_video", 0.99, 1, true, cvRect(1665, 884, 230, 100));
+		auto points = RESMGR->FindImages(nullptr, "intro_title_live_2d", 0.99, 1, true, cvRect(1557, 966, 342, 107));
+		if (!points.empty()) return true;
+
+		points = RESMGR->FindImages(nullptr, "intro_logo", 0.98, 1, true, cvRect(390, 278, 471, 471));
 		if (points.empty()) return false;
+
+		isLogo = true;
+
 	} else {
 		auto points = RESMGR->FindImages(nullptr, "intro_kakao_close", 0.98, 1, true, cvRect(1800, 30, 80, 74));
-		if (points.empty()) return false;
+		if (!points.empty()) return true;
+		
+
+		return false;
 	}
 
 	return true;
@@ -56,12 +72,15 @@ bool IntroScene::CheckScene() {
 
 void IntroScene::ActionDecision() {
 
+	if (isLogo) return;
+
 	if(!isPopUp) {
-
 		GAME->SetMouseClick(500, 500);
-
 	}else {
 		GAME->SetMouseClick(1850, 70);
+		Sleep(1000);
+		GAME->SendAdbCommand("adb shell am force-stop org.hola");
+		Sleep(1000);
 	}
 
 }

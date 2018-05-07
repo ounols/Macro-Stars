@@ -1,6 +1,9 @@
 #include "ProducerAI.h"
 #include <Windows.h>
 #include <iostream>
+#include "ConcertTodo.h"
+#include <fstream>
+#include "GameClientMgr.h"
 
 IMPLEMENT_SINGLETON(ProducerAI);
 
@@ -42,6 +45,55 @@ void ProducerAI::Update() {
 	long ap_coolTime = m_ap.achieveTime - currentTime;
 	long lp_coolTime = m_lp.achieveTime - currentTime;
 
+	if(GAME->GetIsAutoReboot()){
+		SYSTEMTIME oTime;
+		GetLocalTime(&oTime);
+		oTime.wHour = (oTime.wHour + 9) % 24;
+		if (oTime.wMinute / 10 == 1 && 
+			oTime.wHour != 5 && oTime.wHour != 7 && oTime.wHour != 11 && oTime.wHour != 17 && oTime.wHour != 24) {
+			std::ifstream reboot_in("reboot.dat");
+
+			if (!reboot_in.is_open()) {
+				std::ofstream reboot("reboot.dat");
+				reboot << "군대 싫어 시펄";
+				reboot.close();
+			}
+
+			reboot_in.close();
+		}else if(oTime.wMinute / 10 == 1 && (oTime.wHour == 5 || oTime.wHour == 7 || oTime.wHour == 11 || oTime.wHour == 17 || oTime.wHour == 24)) {
+			std::ifstream reboot_in("reboot.dat");
+
+			if (reboot_in.is_open()) {
+				reboot_in.close();
+				std::remove("reboot.dat");
+				std::cout << "Remove reboot.dat\n";
+				Sleep(1000);
+
+				GAME->SendAdbCommand("adb shell am force-stop com.kakaogames.estarskr");
+				Sleep(2000);
+
+				if(oTime.wHour == 7) {
+					GAME->isQuit = true;
+
+					return;
+				}
+
+				if (GAME->GetIsGunstars()) {
+					std::string str = "start ";
+					str.append(GAME->GetGunStarsPath());
+					system(str.c_str());
+				} else {
+					GAME->SendAdbCommand("adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
+					Sleep(2000);
+				}
+				GAME->isQuit = true;
+				return;
+			}
+
+			reboot_in.close();
+		}
+	}
+
 	if(ap_coolTime <= 0) {
 		if(m_ap.current + 1 >= m_ap.max) {
 			m_ap.achieveTime = currentTime + ap_coolTime;
@@ -69,6 +121,14 @@ void ProducerAI::Update() {
 	for(const auto& todo : swaped) {
 		if (todo == nullptr) continue;
 		todo->Update();
+	}
+
+	//콘서트가 중복으로 있을 시 모두 제거하고 다시 확인
+	auto concert_todos = GetAllTodo<ConcertTodo>();
+	if (concert_todos.size() > 1) {
+		for (auto todo : concert_todos) {
+			RemoveTodo(todo);
+		}
 	}
 
 }
@@ -245,4 +305,14 @@ int ProducerAI::Millisecond2Second(long millisecond) {
 
 	return (millisecond / 1000) % 60;
 
+}
+
+
+int ProducerAI::GetIsChacked() const {
+	return isChacked;
+}
+
+
+void ProducerAI::SetIsChacked(int is_chacked) {
+	isChacked = is_chacked;
 }

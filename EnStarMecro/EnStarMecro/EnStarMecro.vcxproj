@@ -156,15 +156,20 @@
     <ClCompile Include="ConcertUnitScene.cpp" />
     <ClCompile Include="CoverUnitScene.cpp" />
     <ClCompile Include="DIFScene.cpp" />
+    <ClCompile Include="EasyVPNScene.cpp" />
     <ClCompile Include="FeverScene.cpp" />
     <ClCompile Include="GameClientMgr.cpp" />
+    <ClCompile Include="HolaScene.cpp" />
     <ClCompile Include="IntroScene.cpp" />
+    <ClCompile Include="KakaoLoginScene.cpp" />
     <ClCompile Include="KakaoPopUpScene.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="MainProc.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="main_console.cpp" />
     <ClCompile Include="NomalProduceScene.cpp" />
+    <ClCompile Include="OpenVPNScene.cpp" />
+    <ClCompile Include="PlayStoreScene.cpp" />
     <ClCompile Include="ProducerAI.cpp" />
     <ClCompile Include="ReconnectScene.cpp" />
     <ClCompile Include="ResMgr.cpp" />
@@ -172,7 +177,9 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
     <ClCompile Include="SelectProduceScene.cpp" />
+    <ClCompile Include="TalkProduceScene.cpp" />
     <ClCompile Include="Todo.cpp" />
+    <ClCompile Include="UltraSurfScene.cpp" />
     <ClCompile Include="UnkownScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,26 +191,37 @@
     <ClInclude Include="CoverTodo.h" />
     <ClInclude Include="CoverUnitScene.h" />
     <ClInclude Include="DIFScene.h" />
+    <ClInclude Include="EasyVPNScene.h" />
     <ClInclude Include="FeverScene.h" />
     <ClInclude Include="GameClientMgr.h" />
+    <ClInclude Include="HolaScene.h" />
     <ClInclude Include="IntroScene.h" />
+    <ClInclude Include="KakaoLoginScene.h" />
     <ClInclude Include="KakaoPopUpScene.h" />
     <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="MacroDef.h" />
     <ClInclude Include="MainProc.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="NomalProduceScene.h" />
+    <ClInclude Include="OpenVPNScene.h" />
+    <ClInclude Include="PlayStoreScene.h" />
     <ClInclude Include="ProducerAI.h" />
     <ClInclude Include="ProduceTodo.h" />
     <ClInclude Include="ReconnectScene.h" />
     <ClInclude Include="ResMgr.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ResultProduceScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMgr.h" />
     <ClInclude Include="SelectProduceScene.h" />
+    <ClInclude Include="TalkProduceScene.h" />
     <ClInclude Include="Todo.h" />
+    <ClInclude Include="UltraSurfScene.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnkownScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EnStarMecro.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

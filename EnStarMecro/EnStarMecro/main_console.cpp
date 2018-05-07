@@ -21,10 +21,11 @@
 #include <opencv2/core/version.hpp>
 
 #include <vld.h>
+#include "GameClientMgr.h"
+#include <fstream>
 
 
-
-void main() {
+int main(int argc, char* argv[]) {
 
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
@@ -32,11 +33,40 @@ void main() {
 
 	MainProc* main_proc = new MainProc();
 
+	for(int i = 1; i < argc; i++) {
+		if(std::string(argv[i]) == "GunStars") {
+			main_proc->SetGunStars(true);
+			GAME->SetGunStarsPath(std::string(argv[i + 1]));
+			std::cout << "\nGunstars : " << GAME->GetGunStarsPath() << "\n";
+		}
+
+		if (std::string(argv[i]) == "Market") {
+			main_proc->SetMarket(true);
+			std::cout << "\nSetting Open Market\n";
+		}
+
+		if (std::string(argv[i]) == "VPN") {
+			GAME->SetIsVpn(true);
+			std::cout << "\nSetting VPN\n";
+		}
+
+		if (std::string(argv[i]) == "auto_reboot") {
+			GAME->SetIsAutoReboot(true);
+			std::cout << "\nSetting auto reboot\n";
+			SYSTEMTIME oTime;
+			GetLocalTime(&oTime);
+			oTime.wHour = (oTime.wHour + 9) % 24;
+
+			std::cout << "time : " << oTime.wHour << "½Ã " << oTime.wMinute << "ºÐ\n";
+
+		}
+	}
+
 	while(!main_proc->b_isQuit) {
 		main_proc->Update();
 	}
 
 	SAFE_DELETE(main_proc);
 
-	
+	return 0;
 }

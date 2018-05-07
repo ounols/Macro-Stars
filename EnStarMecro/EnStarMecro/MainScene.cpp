@@ -6,6 +6,10 @@
 #include "ConcertTodo.h"
 
 
+#define popen _popen
+#define pclose _pclose
+
+
 MainScene::MainScene() {
 
 	m_name = "MainScene";
@@ -21,6 +25,8 @@ MainScene::MainScene() {
 	RESMGR->RegisterImage("img/MainScene/pop_close.jpg", "main_pop_close");
 	RESMGR->RegisterImage("img/MainScene/pop_menu_concert.jpg", "main_pop_menu_concert");
 	RESMGR->RegisterImage("img/MainScene/pop_menu_storage.jpg", "main_pop_menu_storage");
+	RESMGR->RegisterImage("img/MainScene/pop_reward.jpg", "main_pop_reward");
+	RESMGR->RegisterImage("img/MainScene/reward_check.jpg", "main_pop_reward_check");
 }
 
 
@@ -87,8 +93,9 @@ bool MainScene::ReadData() {
 
 
 	//rank
-	std::string rank_str = GetNumber(995, 60, 102, 63, true, false);
-	int rank = std::stoi(rank_str);
+	//std::string rank_str = GetNumber(995, 58, 102, 65, true, false);
+	//int rank = std::stoi(rank_str);
+	int rank = 99;
 	PRODUCER->SetRank(rank);
 
 	//ap
@@ -184,6 +191,12 @@ bool MainScene::ReadData() {
 	//======================================================
 	//아이템 및 일부 갱신사항 갱신
 
+	//경험치 갱신 요망
+	if (PRODUCER->GetTotalEXP() <= 0 || PRODUCER->GetIsChacked() != 198294) {
+		m_pos = cvPoint(1050, 90);
+		return true;
+	}
+
 	//콘서트 보상 갱신
 	if (RESMGR->CheckRGB(nullptr, 1806, 276, 221, 34, 53, 7)) {
 		m_pos = cvPoint(1482, 385);
@@ -193,12 +206,6 @@ bool MainScene::ReadData() {
 	//선물함 갱신 요망
 	if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
 		m_pos = cvPoint(83, 393);
-		return true;
-	}
-
-	//경험치 갱신 요망
-	if(PRODUCER->GetTotalEXP() <= 0) {
-		m_pos = cvPoint(1050, 90);
 		return true;
 	}
 
@@ -222,6 +229,8 @@ void MainScene::ActionDecision() {
 		GAME->SetMouseClick(m_pos.x, m_pos.y);
 		return;
 	}
+
+	if (PRODUCER->GetIsChacked() != 198294) return;
 
 	AddTodo();
 
@@ -314,6 +323,7 @@ void MainScene::ReadPopUp() {
 			}
 			std::cout << "콘서트 버튼 찾음.\n";
 			m_pos = cvPoint(455 + concert_icon[0].x + 50, 276 + concert_icon[0].y + 50);
+			SCENE->LockScene();
 			return;
 		}
 
@@ -328,6 +338,42 @@ void MainScene::ReadPopUp() {
 	if (!points.empty()) {
 
 		std::cout << "[전학생 서류]\n";
+
+		//현재 액티비티 확인
+		//EasyVPN : com.easyovpn.easyovpn
+		//OpenVPN : net.openvpn.openvpn
+		//마켓 : com.android.vending
+		FILE* fpipe = popen("adb\\adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
+		if (fpipe == NULL)
+			std::cout << "\nadb is not available.\n";
+
+		char adb_result_str[1024] = {};
+		std::string adb_result;
+
+		fread(adb_result_str, 1024, 1, fpipe);
+		adb_result = adb_result_str;
+
+		pclose(fpipe);
+
+		//앙스타 앱인지 확인
+		if(adb_result.find("com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity") == std::string::npos) {
+			std::cout << "\n[앙스타가 감지가 되지 않음]\n\n";
+			system("adb\\adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
+			return;
+		}
+
+		//유저 확인
+		std::string uid_str = GetNumber(436, 760, 250, 45, false, false, 0, 180, 4);
+		std::string userNumber_str = GetNumber(1039, 760, 250, 45, false, false, 0, 180, 4);
+
+
+		if(uid_str != "1000065003" || userNumber_str != "748421995247") {
+			std::cout << "\n\n[본인 확인 실패]\n\n본인의 계정인지 확인하여 주십시오.\n\n";
+			return;
+		}
+
+		std::cout << "\n[본인 확인 완료]\n\n";
+		PRODUCER->SetIsChacked(198294);
 
 		//인포 확인
 		std::string exp_str = GetNumber(968, 520, 142, 40, false, false, 0, 90, 4);
@@ -377,9 +423,60 @@ void MainScene::ReadPopUp() {
 		return;
 	}
 
+	points = RESMGR->FindImages(nullptr, "main_pop_reward", 0.98, 1, true, cvRect(617, 0, 700, 192));
+	//reward
+	if (!points.empty()) {
+
+		std::cout << "[유메노사키 학원 출석표]\n";
+
+		points = RESMGR->FindImages(nullptr, "main_pop_reward_check", 0.99, 18, true, cvRect(330, 288, 1130, 627));
+		if(points.empty()) {
+			m_pos = cvPoint(420, 376);
+			GAME->SetMouseClick(420, 376);
+			Sleep(1000);
+			GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
+
+			return;
+
+			//CvPoint point = cvPoint(420, 376);
+			//cvRectangle(GAME->GetScreenImage(), point, cvPoint(point.x + 20, point.y + 20), CV_RGB(255, 0, 0), 4);
+			//cvShowImage("sample", GAME->GetScreenImage());
+			//cvWaitKey();
+			//return;
+		}
+
+		//첫번째 체크표시
+		CvPoint point_first = cvPoint(0, 0);
+		int min_x = 999;
+		int min_y = 999;
+		for(auto point : points) {
+			if(point.x <= min_x && point.y <= min_y) {
+				point_first = cvPoint(330 + points[0].x + 76, 288 + points[0].y + 32);
+			}
+		}
+		int y = points.size() / 6;
+		int x = points.size() - y * 6;
+
+		GAME->SetMouseClick(point_first.x + x * 210, point_first.y + y * 210);
+		Sleep(1000);
+		GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
+
+		m_pos = cvPoint(420, 376);
+
+		//CvPoint point = cvPoint(point_first.x + x * 210, point_first.y + y * 210);
+		//cvRectangle(GAME->GetScreenImage(), point, cvPoint(point.x + 20, point.y + 20), CV_RGB(255, 0, 0), 4);
+		//cvShowImage("sample", GAME->GetScreenImage());
+		//cvWaitKey();
+		return;
+	}
+
 
 	std::cout << "[unkown]\n";
 	m_pos = cancel_pos;
+
+	if(cancel_pos.x + cancel_pos.y <= 0) {
+		SetSkiped(true);
+	}
 	return;
 }
 
@@ -485,6 +582,13 @@ std::string MainScene::GetNumber(int x, int y, int width, int height) {
 void MainScene::AddTodo() const {
 
 	if (PRODUCER->GetTodo() == nullptr && PRODUCER->GetTodo<ProduceTodo>() == nullptr) {
+
+		int remainBlankAP = PRODUCER->GetAP().max - PRODUCER->GetAP().current;
+
+		if(PRODUCER->GetTodo<ConcertTodo>() != nullptr && remainBlankAP > 16) {
+			return;
+		}
+
 		switch (PRODUCER->GetStatus()) {
 
 		case ProducerAI::NOMAL:

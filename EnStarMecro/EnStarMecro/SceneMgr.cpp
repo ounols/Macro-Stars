@@ -15,6 +15,13 @@
 #include "UnkownScene.h"
 #include "KakaoPopUpScene.h"
 #include "CoverUnitScene.h"
+#include "PlayStoreScene.h"
+#include "EasyVPNScene.h"
+#include "OpenVPNScene.h"
+#include "UltraSurfScene.h"
+#include "HolaScene.h"
+#include "KakaoLoginScene.h"
+#include "TalkProduceScene.h"
 
 IMPLEMENT_SINGLETON(SceneMgr);
 
@@ -39,6 +46,7 @@ void SceneMgr::SetScenes() {
 	m_scenes.push_back(new LoadingScene());
 	m_scenes.push_back(new CoverUnitScene());
 	m_scenes.push_back(new NomalProduceScene());
+	m_scenes.push_back(new TalkProduceScene());
 	m_scenes.push_back(new FeverScene());
 	m_scenes.push_back(new DIFScene());
 	m_scenes.push_back(new ResultProduceScene());
@@ -50,10 +58,18 @@ void SceneMgr::SetScenes() {
 	m_scenes.push_back(new ConcertListScene());
 	m_scenes.push_back(new ConcertResultScene());
 	m_scenes.push_back(new KakaoPopUpScene());
+	m_scenes.push_back(new KakaoLoginScene());
 
 
 	m_scenes.push_back(new UnkownScene());
 	m_scenes.push_back(new ReconnectScene());
+
+	m_scenes.push_back(new PlayStoreScene());
+	m_scenes.push_back(new EasyVPNScene());
+	m_scenes.push_back(new OpenVPNScene());
+	m_scenes.push_back(new UltraSurfScene());
+	m_scenes.push_back(new HolaScene());
+
 
 }
 

@@ -1,8 +1,10 @@
 #pragma once
 #include "Scene.h"
+#include <opencv2/opencv.hpp>
+
 class ConcertListScene : public Scene {
 private:
-	enum STATE { NONE, INTRO, LIST, SUB_STROY, POINT_REWARD };
+	enum STATE { NONE, INTRO, LIST, SUB_STROY, POINT_REWARD, RANK_REWARD };
 public:
 	ConcertListScene();
 	~ConcertListScene();
@@ -23,5 +25,6 @@ private:
 	STATE m_state = NONE;
 	bool isQuit = false;
 	bool isWait = false;
+	CvPoint m_point;
 };
 

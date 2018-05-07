@@ -15,6 +15,7 @@ ResultProduceScene::ResultProduceScene() {
 	RESMGR->RegisterImage("img/ResultProduceScene/form_side_01.jpg", "result_produce_form_side_01");
 	RESMGR->RegisterImage("img/ResultProduceScene/level_up_ok.jpg", "result_produce_ok");
 	RESMGR->RegisterImage("img/ResultProduceScene/convert_to_point_arrow.jpg", "result_produce_convert_to_point_arrow");
+	RESMGR->RegisterImage("img/ResultProduceScene/bt_close.jpg", "result_produce_bt_close");
 
 }
 
@@ -27,6 +28,7 @@ ResultProduceScene::~ResultProduceScene() {
 bool ResultProduceScene::CheckFirst() {
 
 	bool isScene = true;
+	isLevelUp = false;
 	isPopUp = false;
 
 
@@ -41,7 +43,19 @@ bool ResultProduceScene::CheckFirst() {
 	isScene = isScene && RESMGR->CheckRGB(nullptr, 1474, 210, 1, 6, 11);
 
 
-	if (isScene) isPopUp = true;
+	if (isScene) {
+		isLevelUp = true;
+		return isScene;
+	}
+
+	isScene = RESMGR->CheckRGB(nullptr, 449, 158, 214, 163, 60);
+	isScene = isScene && RESMGR->CheckRGB(nullptr, 1477, 260, 239, 235, 232);
+
+
+	if (isScene) {
+		isPopUp = true;
+		return isScene;
+	}
 
 	return isScene;
 
@@ -53,8 +67,10 @@ bool ResultProduceScene::CheckScene() {
 	std::vector<CvPoint> points;
 
 
-	if(isPopUp) {
-		points = RESMGR->FindImages(nullptr, "result_produce_ok", 0.99, 1, true ,cvRect(815, 850, 300, 100));
+	if (isLevelUp) {
+		points = RESMGR->FindImages(nullptr, "result_produce_ok", 0.99, 1, true, cvRect(815, 850, 300, 100));
+	} else if (isPopUp) {
+		points = RESMGR->FindImages(nullptr, "result_produce_bt_close", 0.99, 1, true, cvRect(806, 863, 300, 113));
 	} else {
 		points = RESMGR->FindImages(nullptr, "result_produce_form_side_01", 0.99, 1, true, cvRect(532, 30, 122, 132));
 	}
@@ -67,11 +83,15 @@ bool ResultProduceScene::CheckScene() {
 
 bool ResultProduceScene::ReadData() {
 
-	if (isPopUp) {
+	if (isLevelUp) {
 		auto todo = PRODUCER->GetTodo<ProduceTodo>();
 		if(todo != nullptr) {
 			PRODUCER->RemoveTodo(todo);
 		}
+		return true;
+	}
+
+	if(isPopUp) {
 		return true;
 	}
 
@@ -94,6 +114,10 @@ bool ResultProduceScene::ReadData() {
 
 
 void ResultProduceScene::ActionDecision() {
+
+	if(isPopUp) {
+		GAME->SetMouseClick(955, 912);
+	}
 
 	GAME->SetMouseClick(963, 873);
 

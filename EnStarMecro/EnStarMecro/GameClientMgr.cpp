@@ -43,44 +43,10 @@ void GameClientMgr::GetGameHWND() {
 	system("adb\\adb connect 127.0.0.1:62001");	//녹스 연결
 
 	//ADB 설정
-	FILE* fpipe = popen("adb\\adb devices", "r");
-	if (fpipe == NULL)
-		std::cout << "\nadb is not available.\n";
+	SetADB();
 
-	char adb_result_str[1024] = {};
-	std::string adb_result;
-
-	fread(adb_result_str, 1024, 1, fpipe);
-	adb_result = adb_result_str;
-
-	pclose(fpipe);
-
-	if(adb_result.size() > 27) {
-		m_isADB = true;
-		std::cout << adb_result;
-		std::cout << "[ADB가 사용 가능한 디바이스입니다.]\n";
-		m_client = UNKOWN;
-	}
-
-	//nox 플레이어 확인 시작
-	gameHwnd = FindWindowA("Qt5QWindowIcon", "녹스 플레이어");
-	if (gameHwnd != nullptr) {
-		m_client = NOX;
-		m_isSupportExecOut = false;
-		m_currentTouchEvent = 8;
-		std::cout << "[NOX 플레이어를 인식하였습니다.]\n\n";
-		return;
-	}
-
-	//블루스택 확인 시작
-	gameHwnd = FindWindowA("BS2CHINAUI", nullptr);
-	if (gameHwnd != nullptr) {
-		m_client = BLUESTACK;
-		m_isSupportExecOut = false;
-		m_currentTouchEvent = -1;
-		std::cout << "[블루스택을 인식하였습니다.]\n\n";
-		return;
-	}
+	//핸들 설정
+	SetHWND();
 
 }
 
@@ -98,13 +64,17 @@ void GameClientMgr::UpdateScreenImage() {
 
 		m_screenImage = cvLoadImage("img/temp/temp.png");
 
+		SetADB();
+		SetHWND();
+
 		return;
 	}
 
 	Mat screenMat;
 	
 	if(!m_isADB) {
-		screenMat = hwnd2Mat(gameHwnd);
+		if(m_client != BLUESTACK)
+			screenMat = hwnd2Mat(gameHwnd);
 
 		if (screenMat.data == nullptr) {
 			if (m_screenImage != nullptr) {
@@ -129,6 +99,7 @@ void GameClientMgr::UpdateScreenImage() {
 		EditNoneScreen(screenMat);
 		break;
 	case BLUESTACK:
+		SetADB();
 		break;
 	default:
 		break;
@@ -351,6 +322,46 @@ long GameClientMgr::GetUpdatedTime() const {
 }
 
 
+bool GameClientMgr::GetIsGunstars() const {
+	return isGunstars;
+}
+
+
+void GameClientMgr::SetIsGunstars(bool is_gunstars) {
+	isGunstars = is_gunstars;
+}
+
+
+bool GameClientMgr::GetIsAutoReboot() const {
+	return isAutoReboot;
+}
+
+
+void GameClientMgr::SetIsAutoReboot(bool is_auto_reboot) {
+	isAutoReboot = is_auto_reboot;
+}
+
+
+bool GameClientMgr::GetIsVpn() const {
+	return isVPN;
+}
+
+
+void GameClientMgr::SetIsVpn(bool is_vpn) {
+	isVPN = is_vpn;
+}
+
+
+std::string GameClientMgr::GetGunStarsPath() const {
+	return GunStarsPath;
+}
+
+
+void GameClientMgr::SetGunStarsPath(const std::string& gun_stars_path) {
+	GunStarsPath = gun_stars_path;
+}
+
+
 void GameClientMgr::EditNoneScreen(cv::Mat img) {
 
 	IplImage* noneImg = &IplImage(img);
@@ -545,5 +556,55 @@ void GameClientMgr::EditADBScreen() {
 
 	m_screenImage = screenImage;
 
+
+}
+
+
+void GameClientMgr::SetADB() {
+
+	//ADB 설정
+	FILE* fpipe = popen("adb\\adb devices", "r");
+	if (fpipe == NULL)
+		std::cout << "\nadb is not available.\n";
+
+	char adb_result_str[1024] = {};
+	std::string adb_result;
+
+	fread(adb_result_str, 1024, 1, fpipe);
+	adb_result = adb_result_str;
+
+	pclose(fpipe);
+
+	if (adb_result.size() > 27) {
+		m_isADB = true;
+		std::cout << adb_result;
+		std::cout << "[ADB가 사용 가능한 디바이스입니다.]\n";
+		m_client = UNKOWN;
+	}
+
+}
+
+
+void GameClientMgr::SetHWND() {
+
+	//nox 플레이어 확인 시작
+	gameHwnd = FindWindowA("Qt5QWindowIcon", "녹스 플레이어");
+	if (gameHwnd != nullptr) {
+		m_client = NOX;
+		m_isSupportExecOut = false;
+		m_currentTouchEvent = 8;
+		std::cout << "[NOX 플레이어를 인식하였습니다.]\n\n";
+		return;
+	}
+
+	//블루스택 확인 시작
+	gameHwnd = FindWindowA("BS2CHINAUI", nullptr);
+	if (gameHwnd != nullptr) {
+		m_client = BLUESTACK;
+		m_isSupportExecOut = false;
+		m_currentTouchEvent = -1;
+		std::cout << "[블루스택을 인식하였습니다.]\n\n";
+		return;
+	}
 
 }

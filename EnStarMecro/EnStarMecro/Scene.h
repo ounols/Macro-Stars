@@ -23,10 +23,14 @@ public:
 	}
 
 	bool GetIsIgnorePrevScene() const;
+	bool isSkiped() const;
+
+	void SetSkiped(bool skiped);
 
 protected:
 	std::string m_name = "Scene";
 	bool m_isIgnorePrevScene = false;
+	bool m_isSkiped = false;
 
 };
 
