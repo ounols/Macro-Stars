@@ -171,6 +171,7 @@
     <ClCompile Include="OpenVPNScene.cpp" />
     <ClCompile Include="PlayStoreScene.cpp" />
     <ClCompile Include="ProducerAI.cpp" />
+    <ClCompile Include="QuestScene.cpp" />
     <ClCompile Include="ReconnectScene.cpp" />
     <ClCompile Include="ResMgr.cpp" />
     <ClCompile Include="ResultProduceScene.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="PlayStoreScene.h" />
     <ClInclude Include="ProducerAI.h" />
     <ClInclude Include="ProduceTodo.h" />
+    <ClInclude Include="QuestScene.h" />
     <ClInclude Include="ReconnectScene.h" />
     <ClInclude Include="ResMgr.h" />
     <ClInclude Include="resource.h" />

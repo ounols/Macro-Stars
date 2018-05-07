@@ -22,6 +22,7 @@
 #include "HolaScene.h"
 #include "KakaoLoginScene.h"
 #include "TalkProduceScene.h"
+#include "QuestScene.h"
 
 IMPLEMENT_SINGLETON(SceneMgr);
 
@@ -51,6 +52,7 @@ void SceneMgr::SetScenes() {
 	m_scenes.push_back(new DIFScene());
 	m_scenes.push_back(new ResultProduceScene());
 	m_scenes.push_back(new MainScene());
+	m_scenes.push_back(new QuestScene());
 	m_scenes.push_back(new SelectProduceScene());
 	m_scenes.push_back(new IntroScene());
 	m_scenes.push_back(new ConcertPrepareScene());

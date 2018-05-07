@@ -27,6 +27,7 @@ MainScene::MainScene() {
 	RESMGR->RegisterImage("img/MainScene/pop_menu_storage.jpg", "main_pop_menu_storage");
 	RESMGR->RegisterImage("img/MainScene/pop_reward.jpg", "main_pop_reward");
 	RESMGR->RegisterImage("img/MainScene/reward_check.jpg", "main_pop_reward_check");
+	RESMGR->RegisterImage("img/MainScene/quest_script.jpg", "main_quest_script");
 }
 
 
@@ -210,7 +211,14 @@ bool MainScene::ReadData() {
 	}
 
 	//미션 갱신 요망
+	if (RESMGR->CheckRGB(nullptr, 1570, 608, 223, 33, 53, 7)) {
 
+		auto points = RESMGR->FindImages(nullptr, "main_quest_script", 0.97, 1, true, cvRect(450, 744, 270, 124));
+		if (!points.empty()) {
+			m_pos = cvPoint(800, 775);
+			return true;
+		}
+	}
 
 	//메뉴 갱신 요망
 

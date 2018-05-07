@@ -50,7 +50,7 @@ void ProducerAI::Update() {
 		GetLocalTime(&oTime);
 		oTime.wHour = (oTime.wHour + 9) % 24;
 		if (oTime.wMinute / 10 == 1 && 
-			oTime.wHour != 5 && oTime.wHour != 7 && oTime.wHour != 11 && oTime.wHour != 17 && oTime.wHour != 24) {
+			oTime.wHour != 5 && oTime.wHour != 7 && oTime.wHour != 11 && oTime.wHour != 17 && oTime.wHour != 0) {
 			std::ifstream reboot_in("reboot.dat");
 
 			if (!reboot_in.is_open()) {
@@ -60,7 +60,7 @@ void ProducerAI::Update() {
 			}
 
 			reboot_in.close();
-		}else if(oTime.wMinute / 10 == 1 && (oTime.wHour == 5 || oTime.wHour == 7 || oTime.wHour == 11 || oTime.wHour == 17 || oTime.wHour == 24)) {
+		}else if(oTime.wMinute / 10 == 1 && (oTime.wHour == 5 || oTime.wHour == 7 || oTime.wHour == 11 || oTime.wHour == 17 || oTime.wHour == 0)) {
 			std::ifstream reboot_in("reboot.dat");
 
 			if (reboot_in.is_open()) {
