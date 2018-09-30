@@ -44,7 +44,7 @@ bool QuestScene::ReadData() {
 	m_point = cvPoint(-1, -1);
 
 	//일일퀘스트인지 확인
-	if(RESMGR->CheckRGB(nullptr, 1737, 326, 244, 244, 244, 2)) {
+	if(RESMGR->CheckRGB(nullptr, 1753, 367, 244, 244, 244, 2)) {
 		m_point = cvPoint(1800, 364);
 		return true;
 	}

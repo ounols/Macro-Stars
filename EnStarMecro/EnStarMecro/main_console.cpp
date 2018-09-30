@@ -60,6 +60,11 @@ int main(int argc, char* argv[]) {
 			std::cout << "time : " << oTime.wHour << "½Ã " << oTime.wMinute << "ºĞ\n";
 
 		}
+
+		//if (std::string(argv[i]) == "http") {
+		//	main_proc->SetReport(true);
+		//	std::cout << "\nhttp on\n";
+		//}
 	}
 
 	while(!main_proc->b_isQuit) {

@@ -119,6 +119,12 @@ void MainProc::Update() {
 		return;
 	}
 
+	//http 보고
+	if (isReport)
+		MakeCurrentStateReport();
+
+	GetRemotedInfo();
+
 	//게임이 실행하는건지 확인
 	if(m_currentActivity != ENSTARS) {
 
@@ -291,6 +297,12 @@ void MainProc::SetMarket(bool enable) {
 }
 
 
+void MainProc::SetReport(bool enable) {
+	isReport = enable;
+	GAME->SetHttp(enable);
+}
+
+
 void MainProc::MakeBugReport() {
 	SYSTEMTIME oTime;
 	GetLocalTime(&oTime);
@@ -339,6 +351,130 @@ void MainProc::MakeBugReport() {
 	}
 
 	file.close();
+}
+
+
+void MainProc::MakeCurrentStateReport() {
+
+	SYSTEMTIME oTime;
+	GetLocalTime(&oTime);
+	std::stringstream name;
+	name << (int)oTime.wYear << "-" << (int)oTime.wMonth << "-" << (int)oTime.wDay << "\t" << (int)oTime.wHour << "h "
+		<< (int)oTime.wMinute << "m " << (int)oTime.wSecond << "s";
+
+
+	Scene* prev_scene = SCENE->GetPrevScene();
+	std::string prevSceneName = (prev_scene == nullptr) ? "NULLPTR" : prev_scene->GetName();
+
+	std::ofstream file("C:\\http\\report\\current.txt", std::ios::out);
+
+	file << "date : " << name.str() << std::endl;
+	file << "lastScene : " << prevSceneName << std::endl;
+	file << "unkown count : " << m_unkownAccrue << std::endl;
+
+	auto ap = PRODUCER->GetAP();
+	auto lp = PRODUCER->GetLP();
+	long currentTime = timeGetTime();
+
+	long ap_remain = ap.achieveTime - currentTime;
+	long lp_remain = lp.achieveTime - currentTime;
+
+	file << "\nlevel : " << PRODUCER->GetRank()
+		<< "\nAP : " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "min " << ProducerAI::Millisecond2Second(ap_remain) << "sec"
+		<< "\nLP : " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "min " << ProducerAI::Millisecond2Second(lp_remain) << "sec"
+		<< "\n\n";
+
+	file << "todo count : " << PRODUCER->GetTodoSize() << std::endl;
+
+	int index = 0;
+	for (auto todo : PRODUCER->GetTodoList()) {
+		Scene* scene = todo->targetScene;
+		file << "할일[" << index << "]\n\t목표 화면 : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
+		file << "\t현재 유효 여부 : " << (todo->isAvailable() ? "true" : "false") << std::endl;
+		file << "\t문자열 값 : " << todo->todo_str << std::endl;
+		file << "\t중요도 : " << todo->important << std::endl;
+		file << std::endl;
+
+		index++;
+	}
+
+	file.close();
+
+}
+
+
+void MainProc::GetRemotedInfo() {
+	SYSTEMTIME oTime;
+	GetLocalTime(&oTime);
+
+	if (remoteDate == oTime.wHour * 100 + oTime.wMinute) {
+		return;
+	}
+
+	std::ifstream file("C:\\http\\remote\\info.txt", std::ios::in);
+
+	if (!file.is_open()) return;
+
+
+	remoteDate = oTime.wHour * 100 + oTime.wMinute;
+
+	char buf[100];
+
+	std::cout << "\n[Read Remote Info]\n";
+
+	while(!file.eof()) {
+		file.getline(buf, 100);
+		std::string str = buf;
+		if(str.find("a_status") != std::string::npos) {
+
+			if(str.find("e_light") != std::string::npos && 
+				PRODUCER->GetStatus() != ProducerAI::EVENT_LIGHT) {
+				PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
+				auto todo = PRODUCER->GetTodo<ProduceTodo>();
+				if(todo != nullptr)
+					todo->type = ProduceTodo::LIMIT;
+			}
+
+			else if (str.find("e_normal") != std::string::npos &&
+				PRODUCER->GetStatus() != ProducerAI::EVENT_NOMAL) {
+				PRODUCER->SetStatus(ProducerAI::EVENT_NOMAL);
+				auto todo = PRODUCER->GetTodo<ProduceTodo>();
+				if (todo != nullptr)
+					todo->type = ProduceTodo::LIMIT;
+			}
+
+			else if (str.find("e_important") != std::string::npos &&
+				PRODUCER->GetStatus() != ProducerAI::EVENT_IMPORTANT) {
+				PRODUCER->SetStatus(ProducerAI::EVENT_IMPORTANT);
+				auto todo = PRODUCER->GetTodo<ProduceTodo>();
+				if (todo != nullptr)
+					todo->type = ProduceTodo::LIMIT;
+			}
+
+			else if (str.find("normal") != std::string::npos &&
+				PRODUCER->GetStatus() != ProducerAI::NOMAL) {
+				PRODUCER->SetStatus(ProducerAI::NOMAL);
+				auto todo = PRODUCER->GetTodo<ProduceTodo>();
+				if (todo != nullptr)
+					todo->type = ProduceTodo::DAILY;
+			}
+
+			continue;
+		}
+
+		if (str.find("a_getCurrent") != std::string::npos) {
+			
+			if (str.find("true") != std::string::npos && !isReport) {
+				SetReport(true);
+			}
+
+			else if (str.find("false") != std::string::npos && isReport) {
+				SetReport(false);
+			}
+
+		}
+
+	}
 }
 
 

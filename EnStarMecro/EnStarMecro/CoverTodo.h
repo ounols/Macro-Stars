@@ -19,6 +19,8 @@ public:
 
 	void Update() override {
 		
+		if (SCENE->isLocked()) return;
+
 		if (targetScene != nullptr && targetScene == SCENE->GetPrevScene()) {
 			PRODUCER->RemoveTodo(this);
 			return;

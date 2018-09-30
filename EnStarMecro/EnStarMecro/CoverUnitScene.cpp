@@ -176,6 +176,20 @@ void CoverUnitScene::ReadCoverAP() {
 			m_pos = cvPoint(1400, 390);
 		}
 	}
+
+	//메인화면에서 지원받는거라면 
+	if (isScene<MainScene>(todo->targetScene)) {
+
+		//기간이 남은 아이템인가?
+		auto points = RESMGR->FindImages(nullptr, "cover_item_limit", 0.99, 1, true, cvRect(663, 443, 146, 50));
+		if (points.empty()) {
+			std::cout << "중요 이벤트에만 사용함. 고로 넘김\n";
+			todo->Destroy();
+			m_pos = cvPoint(958, 850);
+			return;
+		}
+
+	}
 	
 
 	auto points = RESMGR->FindImages(nullptr, "cover_item_dia", 0.98, 1, true, rect);
@@ -216,15 +230,22 @@ void CoverUnitScene::ReadCoverLP() {
 	}
 
 
-	//중요 이벤트가 아니라면 
-	if(PRODUCER->GetStatus() != ProducerAI::EVENT_IMPORTANT) {
+	//중요 이벤트가 아니라면 그리고 메인화면에서 지원받는거라면 
+	if((PRODUCER->GetStatus() != ProducerAI::EVENT_IMPORTANT && PRODUCER->GetStatus() != ProducerAI::EVENT_NOMAL) ||
+		isScene<MainScene>(todo->targetScene)) {
 		
 		//기간이 남은 아이템인가?
-		auto points = RESMGR->FindImages(nullptr, "cover_item_limit", 0.98, 1, true, cvRect(663, 443, 146, 50));
+		auto points = RESMGR->FindImages(nullptr, "cover_item_limit", 0.99, 1, true, cvRect(663, 443, 146, 50));
 		if (points.empty()) {
 			std::cout << "중요 이벤트에만 사용함. 고로 넘김\n";
 			auto concert_todo = PRODUCER->GetTodo<ConcertTodo>();
-			concert_todo->isGiveUp = true;
+
+			if(concert_todo != nullptr)
+				concert_todo->isGiveUp = true;
+
+			todo->Destroy();
+			m_pos = cvPoint(700, 850);
+
 			return;
 		}
 

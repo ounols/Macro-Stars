@@ -69,7 +69,7 @@ void ProducerAI::Update() {
 				std::cout << "Remove reboot.dat\n";
 				Sleep(1000);
 
-				GAME->SendAdbCommand("adb shell am force-stop com.kakaogames.estarskr");
+				//GAME->SendAdbCommand("adb shell am force-stop com.kakaogames.estarskr");
 				Sleep(2000);
 
 				if(oTime.wHour == 7) {
@@ -83,7 +83,7 @@ void ProducerAI::Update() {
 					str.append(GAME->GetGunStarsPath());
 					system(str.c_str());
 				} else {
-					GAME->SendAdbCommand("adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
+					//GAME->SendAdbCommand("adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
 					Sleep(2000);
 				}
 				GAME->isQuit = true;

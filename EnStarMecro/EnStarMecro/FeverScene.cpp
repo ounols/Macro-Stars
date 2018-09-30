@@ -94,7 +94,9 @@ bool FeverScene::ReadData() {
 
 		}
 
-		//아니면 그냥 넘기기
+		//아니면 일시정지
+		pos_x = 1031;
+		pos_y = 696;
 
 		return true;
 	}
@@ -110,8 +112,9 @@ bool FeverScene::ReadData() {
 
 	//스킵이 불가능한 경우
 	if (RESMGR->CheckRGB(nullptr, 1835, 856, 174, 174, 174, 10)) {
-		pos_x = 1490;
-		pos_y = 960;
+		GAME->SetMouseClick(1830, 80);
+		pos_x = 1031;
+		pos_y = 696;
 		return true;
 	}
 

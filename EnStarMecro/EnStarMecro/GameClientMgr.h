@@ -51,6 +51,7 @@ public:
 
 	bool GetIsGunstars() const;
 	void SetIsGunstars(bool is_gunstars);
+	void SetHttp(bool enable);
 
 
 	bool GetIsAutoReboot() const;
@@ -97,6 +98,7 @@ private:
 	std::string GunStarsPath = "";
 	bool isVPN = false;
 	bool isAutoReboot = false;
+	bool isHttp = false;
 
 };
 

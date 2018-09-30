@@ -110,6 +110,10 @@ private:
 	std::vector<TodoWithCondition> m_todoWithConditionList;
 
 	int isChacked = 0;
+
+public:
+	//юс╫ц
+	bool b_isGetGift = false;
 };
 
 

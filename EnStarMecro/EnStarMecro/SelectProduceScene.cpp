@@ -119,11 +119,20 @@ bool SelectProduceScene::CheckSelectChapter() {
 
 	//isScene = isScene && RESMGR->CheckRGB(nullptr, 22, 44, 255, 196, 0, 5);
 	//isScene = isScene && RESMGR->CheckRGB(nullptr, 685, 50, 2, 82, 134);
-
+	
 	//한정 프로듀스가 아닌 경우
-	if(PRODUCER->GetStatus() != ProducerAI::NOMAL && RESMGR->CheckRGB(nullptr, 100, 625, 244, 244, 244, 10)) {
-		PRODUCER->SetStatus(ProducerAI::NOMAL);
-		PRODUCER->GetTodo<ProduceTodo>()->type = ProduceTodo::DAILY;
+
+	auto todo = PRODUCER->GetTodo<ProduceTodo>();
+
+	if(todo != nullptr) {
+		if (PRODUCER->GetStatus() != ProducerAI::NOMAL && RESMGR->CheckRGB(nullptr, 100, 625, 244, 244, 244, 10)) {
+			PRODUCER->SetStatus(ProducerAI::NOMAL);
+			todo->type = ProduceTodo::DAILY;
+		} else if (PRODUCER->GetStatus() == ProducerAI::NOMAL && RESMGR->CheckRGB(nullptr, 100, 625, 225, 174, 41, 10)) {
+			PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
+			todo->type = ProduceTodo::LIMIT;
+		}
+
 	}
 
 	m_state = SelectChapter;

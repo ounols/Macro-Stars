@@ -9,5 +9,8 @@ public:
 	bool CheckFirst() override;
 	bool CheckScene() override;
 	void ActionDecision() override;
+
+private:
+	bool isQuestTalk = false;
 };
 

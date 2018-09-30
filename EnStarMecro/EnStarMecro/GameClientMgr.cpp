@@ -332,6 +332,11 @@ void GameClientMgr::SetIsGunstars(bool is_gunstars) {
 }
 
 
+void GameClientMgr::SetHttp(bool enable) {
+	isHttp = enable;
+}
+
+
 bool GameClientMgr::GetIsAutoReboot() const {
 	return isAutoReboot;
 }
@@ -540,8 +545,13 @@ void GameClientMgr::EditADBScreen() {
 		m_ADBHeight = height;
 	}
 
-	if(width != 1920 && height != 1080)
+	if (width != 1920 && height != 1080) {
+		if(isHttp) {
+			int param[3] = { CV_IMWRITE_JPEG_QUALITY , 10, 0};
+			cvSaveImage("C:\\http\\report\\current.jpg", screenImage, param);
+		}
 		RESIZE_IMAGE(screenImage, cvSize(1920, 1080));
+	}
 
 
 	free(buf);

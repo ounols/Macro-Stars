@@ -26,6 +26,7 @@ MainScene::MainScene() {
 	RESMGR->RegisterImage("img/MainScene/pop_menu_concert.jpg", "main_pop_menu_concert");
 	RESMGR->RegisterImage("img/MainScene/pop_menu_storage.jpg", "main_pop_menu_storage");
 	RESMGR->RegisterImage("img/MainScene/pop_reward.jpg", "main_pop_reward");
+	RESMGR->RegisterImage("img/MainScene/pop_login_gift.jpg", "main_pop_login_gift");
 	RESMGR->RegisterImage("img/MainScene/reward_check.jpg", "main_pop_reward_check");
 	RESMGR->RegisterImage("img/MainScene/quest_script.jpg", "main_quest_script");
 }
@@ -222,6 +223,58 @@ bool MainScene::ReadData() {
 
 	//메뉴 갱신 요망
 
+
+
+	AddTodo();
+
+
+	//콘서트를 해야한다면
+	if (PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
+		m_pos = cvPoint(1807, 967);
+		return true;
+
+	}
+
+	Todo* todo = PRODUCER->GetTodo();
+
+	if(todo != nullptr) {
+		Scene* target = todo->targetScene;
+
+		if (target == nullptr) return true;
+		// 프로듀스를 해야한다면
+		if (target->GetName().find("Produce") != std::string::npos) {
+			m_pos = cvPoint(PRODUCE_POS.x, PRODUCE_POS.y);
+			SCENE->LockScene();
+			return true;
+		}
+	}
+
+	//한정 이벤트 아이템 사용 - lp
+	if (PRODUCER->GetStatus() != ProducerAI::NOMAL && lp.current <= lp.max / 2) {
+		if (PRODUCER->GetTodo<CoverTodo>() == nullptr) {
+			CoverTodo* todo_cover = new CoverTodo();
+			todo_cover->targetScene = SCENE->GetScene<MainScene>();
+			PRODUCER->AddTodo(todo_cover);
+			m_pos = cvPoint(1700, 41);
+			SCENE->LockScene();
+			return true;
+		}
+	}
+
+	//한정 이벤트 아이템 사용 - ap
+	if (ap.current < 30) {
+		if (PRODUCER->GetTodo<CoverTodo>() == nullptr) {
+			CoverTodo* todo_cover = new CoverTodo();
+			todo_cover->targetScene = SCENE->GetScene<MainScene>();
+			PRODUCER->AddTodo(todo_cover);
+			m_pos = cvPoint(1500, 41);
+			SCENE->LockScene();
+			return true;
+		}
+	}
+
+
+
 	return true;
 }
 
@@ -240,7 +293,7 @@ void MainScene::ActionDecision() {
 
 	if (PRODUCER->GetIsChacked() != 198294) return;
 
-	AddTodo();
+	//AddTodo();
 
 	Todo* todo = PRODUCER->GetTodo();
 
@@ -262,27 +315,27 @@ void MainScene::ActionDecision() {
 			remain_second = 0;
 		}
 
-
+		GAME->SetMouseClick(595, 210);
 		Sleep(remain_second);
 
 		return;
 	}
 
-	//콘서트를 해야한다면
-	if (PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
-		GAME->SetMouseClick(1807, 967);
-		return;
+	////콘서트를 해야한다면
+	//if (PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
+	//	GAME->SetMouseClick(1807, 967);
+	//	return;
 
-	}
+	//}
 
-	Scene* target = todo->targetScene;
+	//Scene* target = todo->targetScene;
 
-	if (target == nullptr) return;
-	// 프로듀스를 해야한다면
-	if(target->GetName().find("Produce") != std::string::npos) {
-		GAME->SetMouseClick(PRODUCE_POS.x, PRODUCE_POS.y);
-		SCENE->LockScene();
-	}
+	//if (target == nullptr) return;
+	//// 프로듀스를 해야한다면
+	//if(target->GetName().find("Produce") != std::string::npos) {
+	//	GAME->SetMouseClick(PRODUCE_POS.x, PRODUCE_POS.y);
+	//	SCENE->LockScene();
+	//}
 
 	
 
@@ -437,12 +490,19 @@ void MainScene::ReadPopUp() {
 
 		std::cout << "[유메노사키 학원 출석표]\n";
 
+		if(PRODUCER->b_isGetGift) {
+			GAME->SetMouseClick(cancel_pos.x, cancel_pos.y);
+		}
+
 		points = RESMGR->FindImages(nullptr, "main_pop_reward_check", 0.99, 18, true, cvRect(330, 288, 1130, 627));
 		if(points.empty()) {
-			m_pos = cvPoint(420, 376);
+			//m_pos = cvPoint(420, 376);
 			GAME->SetMouseClick(420, 376);
 			Sleep(1000);
 			GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
+			Sleep(1000);
+
+			PRODUCER->b_isGetGift = true;
 
 			return;
 
@@ -469,12 +529,25 @@ void MainScene::ReadPopUp() {
 		Sleep(1000);
 		GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
 
-		m_pos = cvPoint(420, 376);
+		PRODUCER->b_isGetGift = true;
+
+
+		//m_pos = cvPoint(420, 376);
 
 		//CvPoint point = cvPoint(point_first.x + x * 210, point_first.y + y * 210);
 		//cvRectangle(GAME->GetScreenImage(), point, cvPoint(point.x + 20, point.y + 20), CV_RGB(255, 0, 0), 4);
 		//cvShowImage("sample", GAME->GetScreenImage());
 		//cvWaitKey();
+		return;
+	}
+
+	points = RESMGR->FindImages(nullptr, "main_pop_login_gift", 0.98, 1, true, cvRect(763, 219, 411, 165));
+	//login gift
+	if (!points.empty()) {
+
+		std::cout << "[로그인 보상]\n";
+
+		m_pos = cvPoint(959, 740);
 		return;
 	}
 

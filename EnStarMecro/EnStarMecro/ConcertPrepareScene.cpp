@@ -132,6 +132,10 @@ void ConcertPrepareScene::ReadIntro() {
 
 void ConcertPrepareScene::ReadPrepare() {
 
+	//юс╫ц======================================================
+	//PRODUCER->SetStatus(ProducerAI::EVENT_IMPORTANT);
+	//==========================================================
+
 	isNeedInfomation = false;
 	isQuitConcert = false;
 	isNeedDiamond = false;

@@ -13,9 +13,12 @@ public:
 
 	void SetGunStars(bool enable);
 	void SetMarket(bool enable);
+	void SetReport(bool enable);
 
 private:
 	void MakeBugReport();
+	void MakeCurrentStateReport();
+	void GetRemotedInfo();
 
 	void GetCurrentActivity();
 
@@ -36,5 +39,7 @@ private:
 
 	bool isMarket = false;
 	bool isGunStars = false;
+	bool isReport = false;
+	int remoteDate = 0;
 };
 
