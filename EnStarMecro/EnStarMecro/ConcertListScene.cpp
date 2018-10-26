@@ -131,6 +131,7 @@ bool ConcertListScene::ReadData() {
 		auto points = RESMGR->FindImages(nullptr, "concert_bt_get", 0.98, 1, true, cvRect(1098, 260, 252, 769));
 		if (points.empty()) {
 			isQuit = true;
+			#ifdef WIN32
 			{
 				SYSTEMTIME oTime;
 				GetLocalTime(&oTime);
@@ -139,6 +140,7 @@ bool ConcertListScene::ReadData() {
 				cvSaveImage(str.str().c_str(), GAME->GetScreenImage());
 				std::cout << str.str() << " is " << "Saved." << std::endl;
 			}
+			#endif
 			return true;
 		}
 
@@ -164,7 +166,7 @@ bool ConcertListScene::ReadData() {
 
 	ConcertTodo* todo = PRODUCER->GetFirstTodo<ConcertTodo>();
 
-	//»õ·ÎÀÌ ¼³Á¤
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if(PRODUCER->GetTodo<ConcertTodo>() == nullptr) {
 		AddConcertTodo();
 		todo = PRODUCER->GetFirstTodo<ConcertTodo>();

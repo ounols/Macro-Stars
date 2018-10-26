@@ -2,7 +2,11 @@
 #include "ResMgr.h"
 #include "SceneMgr.h"
 #include "ReconnectScene.h"
+#ifdef WIN32
 #include <windows.h>
+#elif __linux__
+#include "windows_for_linux.h"
+#endif
 #include "GameClientMgr.h"
 
 

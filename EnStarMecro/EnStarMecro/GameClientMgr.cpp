@@ -7,9 +7,12 @@
 
 using namespace cv;
 
+#ifdef WIN32
 #define popen _popen
 #define pclose _pclose
+#elif __linux__
 
+#endif
 IMPLEMENT_SINGLETON(GameClientMgr);
 
 
@@ -38,23 +41,24 @@ void GameClientMgr::GetGameHWND() {
 
 	m_isSupportExecOut = true;
 
-	system("adb\\adb kill-server");
-	system("adb\\adb start-server");
-	system("adb\\adb connect 127.0.0.1:62001");	//³ì½º ¿¬°á
+	SendAdbCommand("adb kill-server");
+	SendAdbCommand("adb start-server");
+	SendAdbCommand("adb connect 127.0.0.1:62001");	//ï¿½ì½º ï¿½ï¿½ï¿½ï¿½
 
-	//ADB ¼³Á¤
+	//ADB ï¿½ï¿½ï¿½ï¿½
 	SetADB();
+#ifdef WIN32
 
-	//ÇÚµé ¼³Á¤
+	//ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
 	SetHWND();
-
+#endif
 }
 
 
 void GameClientMgr::UpdateScreenImage() {
 
-
-	//ÀÌ¹ÌÁö ¹Þ¾Æ¿À±â
+#ifdef WIN32
+	//ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½
 	if (gameHwnd == nullptr && m_client == NONE) {
 
 		if (m_screenImage != nullptr) {
@@ -106,10 +110,14 @@ void GameClientMgr::UpdateScreenImage() {
 	}
 
 	screenMat.release();
-
+#elif __linux__
+	EditADBScreen();
+	// cvShowImage("sample", m_screenImage);
+	// cvWaitKey();
+#endif
 }
 
-
+#ifdef WIN32
 Mat GameClientMgr::hwnd2Mat(HWND hwnd) {
 
 	HDC hwindowDC, hwindowCompatibleDC;
@@ -164,11 +172,11 @@ Mat GameClientMgr::hwnd2Mat(HWND hwnd) {
 	src.release();
 
 	return src_noAlpha;
-
 }
-
+#endif
 
 void GameClientMgr::GetHWNDSize() {
+#ifdef WIN32
 
 	if (gameHwnd == nullptr) return;
 
@@ -178,7 +186,7 @@ void GameClientMgr::GetHWNDSize() {
 
 	m_hwndHeight = windowsize.bottom;  //change this to whatever size you want to resize to
 	m_hwndWidth = windowsize.right;
-
+#endif
 }
 
 
@@ -200,6 +208,7 @@ void GameClientMgr::SetMouseMove(int x, int y) {
 		system(std::string(event_index + "0 0 0").c_str());
 		return;
 	}
+#ifdef WIN32
 
 	if (gameHwnd == nullptr) return;
 
@@ -207,6 +216,7 @@ void GameClientMgr::SetMouseMove(int x, int y) {
 	int final_y = ((float)m_hwndHeight / IMG_HEIGHT)*y;
 
 	PostMessageA(gameHwnd, WM_MOUSEMOVE, MK_LBUTTON, MAKELPARAM(final_x, final_y));
+#endif
 }
 
 
@@ -225,6 +235,7 @@ void GameClientMgr::SetMouseUp(int x, int y) {
 		//system(std::string(event_index + "0 0 0").c_str());
 		return;
 	}
+#ifdef WIN32
 
 	if (gameHwnd == nullptr) return;
 
@@ -233,7 +244,7 @@ void GameClientMgr::SetMouseUp(int x, int y) {
 
 
 	PostMessageA(gameHwnd, WM_LBUTTONUP, 0, MAKELPARAM(final_x + m_startX, final_y + m_startY));
-
+#endif
 }
 
 
@@ -265,13 +276,20 @@ void GameClientMgr::SetMouseDown(int x, int y, int delay) {
 		int final_x = ((float)m_ADBWidth / IMG_WIDTH)  *(float)x;
 		int final_y = ((float)m_ADBHeight / IMG_HEIGHT)*(float)y;
 
-		std::string command = "adb\\adb shell input swipe " + std::to_string(final_x) + " " + std::to_string(final_y) + " " +
+		std::string command =
+#ifdef WIN32
+		 "adb\\adb shell input swipe " + 
+#elif __linux__
+		 "adb shell input swipe " + 
+#endif
+		 	std::to_string(final_x) + " " + std::to_string(final_y) + " " +
 			std::to_string(final_x) + " " + std::to_string(final_y) + " " +
 			std::to_string(delay);
 
 		system(command.c_str());
 		return;
 	}
+#ifdef WIN32
 
 	if (gameHwnd == nullptr) return;
 
@@ -281,6 +299,7 @@ void GameClientMgr::SetMouseDown(int x, int y, int delay) {
 	PostMessageA(gameHwnd, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(final_x + m_startX, final_y + m_startY));
 
 	Sleep(delay);
+#endif
 }
 
 
@@ -291,13 +310,19 @@ void GameClientMgr::SetMouseClick(int x, int y) {
 		int final_x = ((float)m_ADBWidth / IMG_WIDTH)  *(float)x;
 		int final_y = ((float)m_ADBHeight / IMG_HEIGHT)*(float)y;
 
-		std::string command = "adb\\adb shell input tap " + std::to_string(final_x) + " " + std::to_string(final_y);
+		std::string command =
+#ifdef WIN32		
+		"adb\\adb shell input tap "
+#elif __linux__
+		"adb shell input tap "
+#endif
+		 + std::to_string(final_x) + " " + std::to_string(final_y);
 
 		system(command.c_str());
 
 		return;
 	}
-
+#ifdef WIN32
 	if (gameHwnd == nullptr) return;
 
 	int final_x = ((float)m_hwndWidth / IMG_WIDTH)  *(float)x;
@@ -307,12 +332,14 @@ void GameClientMgr::SetMouseClick(int x, int y) {
 	PostMessageA(gameHwnd, WM_LBUTTONUP, 0, MAKELPARAM(final_x + m_startX, final_y + m_startY));
 
 
-
+#endif
 }
 
 
 void GameClientMgr::SendAdbCommand(std::string command) {
+#ifdef WIN32
 	command = "adb\\" + command;
+#endif
 	system(command.c_str());
 }
 
@@ -368,7 +395,7 @@ void GameClientMgr::SetGunStarsPath(const std::string& gun_stars_path) {
 
 
 void GameClientMgr::EditNoneScreen(cv::Mat img) {
-
+#ifdef WIN32
 	IplImage* noneImg = &IplImage(img);
 	IplImage* img_temp = (IplImage*)cvClone(noneImg);
 
@@ -378,12 +405,12 @@ void GameClientMgr::EditNoneScreen(cv::Mat img) {
 	}
 
 	m_screenImage = img_temp;
-
+#endif
 }
 
 
 void GameClientMgr::EditNoxScreen(cv::Mat img) {
-
+#ifdef WIN32
 	m_startX = 2;
 	m_startY = 30;
 
@@ -406,7 +433,7 @@ void GameClientMgr::EditNoxScreen(cv::Mat img) {
 	RESIZE_IMAGE(_img, cvSize(1920, 1080));
 
 	m_screenImage = _img;
-
+#endif
 }
 
 
@@ -416,13 +443,21 @@ void GameClientMgr::EditADBScreen() {
 	FILE* fp = nullptr;
 
 	if(m_isSupportExecOut)
+#ifdef WIN32
 		fp = popen("adb\\adb exec-out screencap", "rb");
+#elif __linux
+		fp = popen("adb exec-out screencap", "r");
+#endif
 	else
+#ifdef WIN32
 		fp = popen("adb\\adb shell screencap", "rb");
+#elif __linux
+		fp = popen("adb shell screencap", "r");
+#endif
 
 
 	if (fp == nullptr) {
-		std::cout << "Failed to load adb.\n";
+		std::cout << "Failed to load adb.(screencap)\n";
 		return;
 	}
 
@@ -436,7 +471,7 @@ void GameClientMgr::EditADBScreen() {
 
 	pclose(fp);
 
-	//°¡·Î¼¼·Î ¼³Á¤
+	//ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	const int width = buf[0] + buf[1] * 0x100 + buf[2] * 0x10000 + buf[3] * 0x1000000;
 	const int height = buf[4] + buf[5] * 0x100 + buf[6] * 0x10000 + buf[7] * 0x1000000;
 
@@ -456,7 +491,7 @@ void GameClientMgr::EditADBScreen() {
 		int bak_index = -1;
 		int bak_i = -1;
 
-		//º¸Á¤ ÀÛ¾÷
+		//ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½
 		for (int i = 12; i < width * height * 4; i++) {
 
 			int alpha_index = i + 4 - ((index + 1) % 4);
@@ -495,7 +530,7 @@ void GameClientMgr::EditADBScreen() {
 	
 
 
-	//°¡·Î¼¼·Î¿¡ µû¶ó »õ·Î ÇÒ´ç
+	//ï¿½ï¿½ï¿½Î¼ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½
 
 	IplImage* screenImage;
 
@@ -507,7 +542,7 @@ void GameClientMgr::EditADBScreen() {
 		m_isVertical = false;
 	}
 
-	//ÇÈ¼¿°ª ÇÒ´ç ÀÛ¾÷
+	//ï¿½È¼ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ ï¿½Û¾ï¿½
 	for (int y = 0; y < height; y++) {
 
 		for (int x = 0; x < width; x++) {
@@ -515,7 +550,7 @@ void GameClientMgr::EditADBScreen() {
 			int src_index = y * width * 3 + x * 3;
 			int index = y * width * 4 + x * 4;
 
-			//°¡·Îº»´É¿¡ ¸ÂÃß¾î ÀÎµ¦½º °ªÀ» ¼öÁ¤
+			//ï¿½ï¿½ï¿½Îºï¿½ï¿½É¿ï¿½ ï¿½ï¿½ï¿½ß¾ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (width < height) {
 				src_index = (x)* height * 3 + y * 3;
 				index = y * width * 4 + (width - x) * 4;
@@ -572,10 +607,15 @@ void GameClientMgr::EditADBScreen() {
 
 void GameClientMgr::SetADB() {
 
-	//ADB ¼³Á¤
+	//ADB ï¿½ï¿½ï¿½ï¿½
+#ifdef WIN32
 	FILE* fpipe = popen("adb\\adb devices", "r");
+#elif __linux
+	FILE* fpipe = popen("adb devices", "r");
+#endif
+	
 	if (fpipe == NULL)
-		std::cout << "\nadb is not available.\n";
+		std::cout << "\nadb is not available.(Set ADB)\n";
 
 	char adb_result_str[1024] = {};
 	std::string adb_result;
@@ -588,7 +628,7 @@ void GameClientMgr::SetADB() {
 	if (adb_result.size() > 27) {
 		m_isADB = true;
 		std::cout << adb_result;
-		std::cout << "[ADB°¡ »ç¿ë °¡´ÉÇÑ µð¹ÙÀÌ½ºÀÔ´Ï´Ù.]\n";
+		std::cout << "[ADBï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ô´Ï´ï¿½.]\n";
 		m_client = UNKOWN;
 	}
 
@@ -596,25 +636,25 @@ void GameClientMgr::SetADB() {
 
 
 void GameClientMgr::SetHWND() {
-
-	//nox ÇÃ·¹ÀÌ¾î È®ÀÎ ½ÃÀÛ
-	gameHwnd = FindWindowA("Qt5QWindowIcon", "³ì½º ÇÃ·¹ÀÌ¾î");
+#ifdef WIN32
+	//nox ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	gameHwnd = FindWindowA("Qt5QWindowIcon", "ï¿½ì½º ï¿½Ã·ï¿½ï¿½Ì¾ï¿½");
 	if (gameHwnd != nullptr) {
 		m_client = NOX;
 		m_isSupportExecOut = false;
 		m_currentTouchEvent = 8;
-		std::cout << "[NOX ÇÃ·¹ÀÌ¾î¸¦ ÀÎ½ÄÇÏ¿´½À´Ï´Ù.]\n\n";
+		std::cout << "[NOX ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½Î½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.]\n\n";
 		return;
 	}
 
-	//ºí·ç½ºÅÃ È®ÀÎ ½ÃÀÛ
+	//ï¿½ï¿½ç½ºï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	gameHwnd = FindWindowA("BS2CHINAUI", nullptr);
 	if (gameHwnd != nullptr) {
 		m_client = BLUESTACK;
 		m_isSupportExecOut = false;
 		m_currentTouchEvent = -1;
-		std::cout << "[ºí·ç½ºÅÃÀ» ÀÎ½ÄÇÏ¿´½À´Ï´Ù.]\n\n";
+		std::cout << "[ï¿½ï¿½ç½ºï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.]\n\n";
 		return;
 	}
-
+#endif
 }

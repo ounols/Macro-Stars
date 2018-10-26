@@ -80,31 +80,31 @@ bool ConcertUnitScene::ReadData() {
 
 	unit.type = current_page;
 
-	//¹®Á¦°¡ ÀÖ´ÂÁö È®ÀÎ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if(unit.team[0] < unit.team[1] || unit.team[1] < unit.team[2] || unit.team[0] < unit.team[2]) {
-		std::cout << "\n\n****ÀÎ½Ä ¿¡·¯!****\nÈ­¸é Å©±â¸¦ ´õ Å°¿ì¼¼¿ä.\n\n";
+		std::cout << "\n\n****ï¿½Î½ï¿½ ï¿½ï¿½ï¿½ï¿½!****\nÈ­ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ Å°ï¿½ì¼¼ï¿½ï¿½.\n\n";
 		return false;
 	}
 
 	switch (current_page) {
 	case DANCE:
 		PRODUCER->SetConcertDance(unit);
-		attribute_str = "´í½º";
+		attribute_str = "ï¿½ï¿½";
 		break;
 	case PERFORMANCE:
 		PRODUCER->SetConcertPerformance(unit);
-		attribute_str = "ÆÛÆ÷¸Õ½º";
+		attribute_str = "ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½";
 		break;
 	case VOCAL:
 		PRODUCER->SetConcertVocal(unit);
-		attribute_str = "º¸ÄÃ";
+		attribute_str = "ï¿½ï¿½ï¿½ï¿½";
 		break;
 	default:
 		return false;
 	}
 	
 
-	std::cout << "\n[" << attribute_str << " ÆÀ Á¤º¸]" << "\n¸ÞÀÎ ÆÀ : " << teamStr[0] << "\n¼­ºê ÆÀ1 : " << teamStr[1] << "\n¼­ºê ÆÀ2 : " << teamStr[2] << "\n\n";
+	std::cout << "\n[" << attribute_str << " ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]" << "\nï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ : " << teamStr[0] << "\nï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½1 : " << teamStr[1] << "\nï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½2 : " << teamStr[2] << "\n\n";
 	
 	
 	return true;
@@ -143,7 +143,7 @@ void ConcertUnitScene::ActionDecision() {
 
 void ConcertUnitScene::SetCurrentAttribute(int x, int y) {
 
-	//¼Ó¼º ¼³Á¤
+	//ï¿½Ó¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 	//vocal
 	if (RESMGR->CheckRGB(nullptr, x, y, 75, 190, 221, 4)) {
 		current_page = VOCAL;
@@ -200,7 +200,9 @@ std::string ConcertUnitScene::GetNumber(int x, int y, int width, int height) {
 		//cvShowImage("sample", img);
 		//cvWaitKey();
 
-		dst = (IplImage*)cvClone(&IplImage(leveled));
+		IplImage dump_img = leveled;
+		cvCopy(&dump_img, dst);
+		// dst = (IplImage*)cvClone(&IplImage(leveled));
 		REALLOC(img, dst);
 
 		dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
@@ -210,7 +212,9 @@ std::string ConcertUnitScene::GetNumber(int x, int y, int width, int height) {
 		leveled = cv::cvarrToMat(img);
 		//leveled = RESMGR->gammaCorrection(leveled, 2);
 		leveled = RESMGR->basicLinearTransform(leveled, 1.8, 0);
-		dst = (IplImage*)cvClone(&IplImage(leveled));
+		// dst = (IplImage*)cvClone(&IplImage(leveled));
+		dump_img = leveled;
+		cvCopy(&dump_img, dst);
 		REALLOC(img, dst);
 
 

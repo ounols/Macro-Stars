@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+
 
 class ConcertListScene : public Scene {
 private:

@@ -5,10 +5,10 @@
 #include "ProduceTodo.h"
 #include "ConcertTodo.h"
 
-
+#ifdef WIN32
 #define popen _popen
 #define pclose _pclose
-
+#endif
 
 MainScene::MainScene() {
 
@@ -106,8 +106,8 @@ bool MainScene::ReadData() {
 
 	std::string ap_cooltime_str = GetNumber(1425, 20, 88, 30, false, false, 190, 255, 3);
 
-	//46·©Å© ÀÌÈÄ·Î apÃÖ´ëÄ¡°¡ 3ÀÚ¸®¼ö
-	//·©Å©°¡ 46 ¹Ì¸¸ÀÌ¶ó¸é
+	//46ï¿½ï¿½Å© ï¿½ï¿½ï¿½Ä·ï¿½ apï¿½Ö´ï¿½Ä¡ï¿½ï¿½ 3ï¿½Ú¸ï¿½ï¿½ï¿½
+	//ï¿½ï¿½Å©ï¿½ï¿½ 46 ï¿½Ì¸ï¿½ï¿½Ì¶ï¿½ï¿½
 	if(rank < 46) {
 		ap_slash = ap_str.size() - 3;
 	}else {
@@ -185,33 +185,33 @@ bool MainScene::ReadData() {
 	long lp_remain = lp.achieveTime - currentTime;
 
 	std::cout << "===============\n[Rank] " << PRODUCER->GetRank()
-		<< "\n[AP] " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "ºÐ " << ProducerAI::Millisecond2Second(ap_remain) << "ÃÊ ÈÄ °»½Å"
-		<< "\n[LP] " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "ºÐ " << ProducerAI::Millisecond2Second(lp_remain) << "ÃÊ ÈÄ °»½Å"
+		<< "\n[AP] " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "ï¿½ï¿½ " << ProducerAI::Millisecond2Second(ap_remain) << "ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"
+		<< "\n[LP] " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "ï¿½ï¿½ " << ProducerAI::Millisecond2Second(lp_remain) << "ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"
 		<< "\n===============\n";
 
 
 	//======================================================
-	//¾ÆÀÌÅÛ ¹× ÀÏºÎ °»½Å»çÇ× °»½Å
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ïºï¿½ ï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	//°æÇèÄ¡ °»½Å ¿ä¸Á
+	//ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	if (PRODUCER->GetTotalEXP() <= 0 || PRODUCER->GetIsChacked() != 198294) {
 		m_pos = cvPoint(1050, 90);
 		return true;
 	}
 
-	//ÄÜ¼­Æ® º¸»ó °»½Å
+	//ï¿½Ü¼ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (RESMGR->CheckRGB(nullptr, 1806, 276, 221, 34, 53, 7)) {
 		m_pos = cvPoint(1482, 385);
 		return true;
 	}
 
-	//¼±¹°ÇÔ °»½Å ¿ä¸Á
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
 		m_pos = cvPoint(83, 393);
 		return true;
 	}
 
-	//¹Ì¼Ç °»½Å ¿ä¸Á
+	//ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	if (RESMGR->CheckRGB(nullptr, 1570, 608, 223, 33, 53, 7)) {
 
 		auto points = RESMGR->FindImages(nullptr, "main_quest_script", 0.97, 1, true, cvRect(450, 744, 270, 124));
@@ -221,14 +221,14 @@ bool MainScene::ReadData() {
 		}
 	}
 
-	//¸Þ´º °»½Å ¿ä¸Á
+	//ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
 
 
 	AddTodo();
 
 
-	//ÄÜ¼­Æ®¸¦ ÇØ¾ßÇÑ´Ù¸é
+	//ï¿½Ü¼ï¿½Æ®ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ñ´Ù¸ï¿½
 	if (PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
 		m_pos = cvPoint(1807, 967);
 		return true;
@@ -241,7 +241,7 @@ bool MainScene::ReadData() {
 		Scene* target = todo->targetScene;
 
 		if (target == nullptr) return true;
-		// ÇÁ·Îµà½º¸¦ ÇØ¾ßÇÑ´Ù¸é
+		// ï¿½ï¿½ï¿½Îµà½ºï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ñ´Ù¸ï¿½
 		if (target->GetName().find("Produce") != std::string::npos) {
 			m_pos = cvPoint(PRODUCE_POS.x, PRODUCE_POS.y);
 			SCENE->LockScene();
@@ -249,7 +249,7 @@ bool MainScene::ReadData() {
 		}
 	}
 
-	//ÇÑÁ¤ ÀÌº¥Æ® ¾ÆÀÌÅÛ »ç¿ë - lp
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ - lp
 	if (PRODUCER->GetStatus() != ProducerAI::NOMAL && lp.current <= lp.max / 2) {
 		if (PRODUCER->GetTodo<CoverTodo>() == nullptr) {
 			CoverTodo* todo_cover = new CoverTodo();
@@ -261,7 +261,7 @@ bool MainScene::ReadData() {
 		}
 	}
 
-	//ÇÑÁ¤ ÀÌº¥Æ® ¾ÆÀÌÅÛ »ç¿ë - ap
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ - ap
 	if (ap.current < 30) {
 		if (PRODUCER->GetTodo<CoverTodo>() == nullptr) {
 			CoverTodo* todo_cover = new CoverTodo();
@@ -298,7 +298,7 @@ void MainScene::ActionDecision() {
 	Todo* todo = PRODUCER->GetTodo();
 
 	if (todo == nullptr) {
-		//ÄðÅ¸ÀÓ¿¡ µû¶ó ¸ÅÅ©·Î »ç¿ëÀ» ÀÏ½Ã Áß´ÜÇÔ
+		//ï¿½ï¿½Å¸ï¿½Ó¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï½ï¿½ ï¿½ß´ï¿½ï¿½ï¿½
 		auto ap = PRODUCER->GetAP();
 		auto lp = PRODUCER->GetLP();
 
@@ -321,7 +321,7 @@ void MainScene::ActionDecision() {
 		return;
 	}
 
-	////ÄÜ¼­Æ®¸¦ ÇØ¾ßÇÑ´Ù¸é
+	////ï¿½Ü¼ï¿½Æ®ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ñ´Ù¸ï¿½
 	//if (PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
 	//	GAME->SetMouseClick(1807, 967);
 	//	return;
@@ -331,7 +331,7 @@ void MainScene::ActionDecision() {
 	//Scene* target = todo->targetScene;
 
 	//if (target == nullptr) return;
-	//// ÇÁ·Îµà½º¸¦ ÇØ¾ßÇÑ´Ù¸é
+	//// ï¿½ï¿½ï¿½Îµà½ºï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ñ´Ù¸ï¿½
 	//if(target->GetName().find("Produce") != std::string::npos) {
 	//	GAME->SetMouseClick(PRODUCE_POS.x, PRODUCE_POS.y);
 	//	SCENE->LockScene();
@@ -355,7 +355,7 @@ void MainScene::ReadPopUp() {
 	auto points = RESMGR->FindImages(nullptr, "main_pop_close", 0.98, 1, true, cvRect(1465, 45, 334, 206));
 	//cancel button
 	if (!points.empty()) {
-		std::cout << "´Ý±â ¹öÆ°ÀÌ Á¸ÀçÇÔ.\n";
+		std::cout << "ï¿½Ý±ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.\n";
 		cancel_pos = cvPoint(1465 + points[0].x + 40, 45 + points[0].y + 40);
 
 	}
@@ -365,7 +365,7 @@ void MainScene::ReadPopUp() {
 	//menu
 	if (!points.empty()) {
 
-		std::cout << "[¸Þ´º]\n";
+		std::cout << "[ï¿½Þ´ï¿½]\n";
 
 		if(todo == nullptr) {
 			m_pos = cancel_pos;
@@ -373,22 +373,22 @@ void MainScene::ReadPopUp() {
 		}
 
 		if (isScene<ConcertResultScene>(todo->targetScene)) {
-			//ÄÜ¼­Æ® È®ÀÎ
+			//ï¿½Ü¼ï¿½Æ® È®ï¿½ï¿½
 
 			auto concert_icon = RESMGR->FindImages(nullptr, "main_pop_menu_concert", 0.95, 1, true, cvRect(455, 276, 706, 652));
 			//concert icon
 			if (concert_icon.empty()) {
-				std::cout << "ÄÜ¼­Æ® ¹öÆ°ÀÌ º¸ÀÌÁö ¾ÊÀ½ ½ºÅ©·Ñ ¼öÁ¤.\n";
+				std::cout << "ï¿½Ü¼ï¿½Æ® ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.\n";
 				m_pos = cvPoint(1525, 610);
 				return;
 			}
-			std::cout << "ÄÜ¼­Æ® ¹öÆ° Ã£À½.\n";
+			std::cout << "ï¿½Ü¼ï¿½Æ® ï¿½ï¿½Æ° Ã£ï¿½ï¿½.\n";
 			m_pos = cvPoint(455 + concert_icon[0].x + 50, 276 + concert_icon[0].y + 50);
 			SCENE->LockScene();
 			return;
 		}
 
-		//½ºÅä¸®Áö °ü·Ãµµ Ãß°¡ ¿¹Á¤
+		//ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 		m_pos = cancel_pos;
 		return;
@@ -398,12 +398,12 @@ void MainScene::ReadPopUp() {
 	//infomation
 	if (!points.empty()) {
 
-		std::cout << "[ÀüÇÐ»ý ¼­·ù]\n";
+		std::cout << "[ï¿½ï¿½ï¿½Ð»ï¿½ ï¿½ï¿½ï¿½ï¿½]\n";
 
-		//ÇöÀç ¾×Æ¼ºñÆ¼ È®ÀÎ
+		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½Æ¼ È®ï¿½ï¿½
 		//EasyVPN : com.easyovpn.easyovpn
 		//OpenVPN : net.openvpn.openvpn
-		//¸¶ÄÏ : com.android.vending
+		//ï¿½ï¿½ï¿½ï¿½ : com.android.vending
 		FILE* fpipe = popen("adb\\adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
 		if (fpipe == NULL)
 			std::cout << "\nadb is not available.\n";
@@ -416,27 +416,27 @@ void MainScene::ReadPopUp() {
 
 		pclose(fpipe);
 
-		//¾Ó½ºÅ¸ ¾ÛÀÎÁö È®ÀÎ
+		//ï¿½Ó½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 		if(adb_result.find("com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity") == std::string::npos) {
-			std::cout << "\n[¾Ó½ºÅ¸°¡ °¨Áö°¡ µÇÁö ¾ÊÀ½]\n\n";
+			std::cout << "\n[ï¿½Ó½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]\n\n";
 			system("adb\\adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
 			return;
 		}
 
-		//À¯Àú È®ÀÎ
+		//ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 		std::string uid_str = GetNumber(436, 760, 250, 45, false, false, 0, 180, 4);
 		std::string userNumber_str = GetNumber(1039, 760, 250, 45, false, false, 0, 180, 4);
 
 
 		if(uid_str != "1000065003" || userNumber_str != "748421995247") {
-			std::cout << "\n\n[º»ÀÎ È®ÀÎ ½ÇÆÐ]\n\nº»ÀÎÀÇ °èÁ¤ÀÎÁö È®ÀÎÇÏ¿© ÁÖ½Ê½Ã¿À.\n\n";
+			std::cout << "\n\n[ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]\n\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ö½Ê½Ã¿ï¿½.\n\n";
 			return;
 		}
 
-		std::cout << "\n[º»ÀÎ È®ÀÎ ¿Ï·á]\n\n";
+		std::cout << "\n[ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½Ï·ï¿½]\n\n";
 		PRODUCER->SetIsChacked(198294);
 
-		//ÀÎÆ÷ È®ÀÎ
+		//ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 		std::string exp_str = GetNumber(968, 520, 142, 40, false, false, 0, 90, 4);
 		int exp_slash = -1;
 		if ((exp_slash = exp_str.find("/")) != std::string::npos) {
@@ -458,7 +458,7 @@ void MainScene::ReadPopUp() {
 
 		std::cout << "[contact]\n";
 
-		//Â÷ÈÄ Ãß°¡
+		//ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 
 		m_pos = cancel_pos;
 		return;
@@ -468,7 +468,7 @@ void MainScene::ReadPopUp() {
 	//giftbox
 	if (!points.empty()) {
 
-		std::cout << "[¼±¹°ÇÔ]\n";
+		std::cout << "[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]\n";
 
 		m_pos = cvPoint(1194, 920);
 		return;
@@ -478,7 +478,7 @@ void MainScene::ReadPopUp() {
 	//check_item
 	if (!points.empty()) {
 
-		std::cout << "[¾ÆÀÌÅÛ È®ÀÎ]\n";
+		std::cout << "[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½]\n";
 
 		m_pos = cvPoint(957, 904);
 		return;
@@ -488,7 +488,7 @@ void MainScene::ReadPopUp() {
 	//reward
 	if (!points.empty()) {
 
-		std::cout << "[À¯¸Þ³ë»çÅ° ÇÐ¿ø Ãâ¼®Ç¥]\n";
+		std::cout << "[ï¿½ï¿½ï¿½Þ³ï¿½ï¿½Å° ï¿½Ð¿ï¿½ ï¿½â¼®Ç¥]\n";
 
 		if(PRODUCER->b_isGetGift) {
 			GAME->SetMouseClick(cancel_pos.x, cancel_pos.y);
@@ -513,7 +513,7 @@ void MainScene::ReadPopUp() {
 			//return;
 		}
 
-		//Ã¹¹øÂ° Ã¼Å©Ç¥½Ã
+		//Ã¹ï¿½ï¿½Â° Ã¼Å©Ç¥ï¿½ï¿½
 		CvPoint point_first = cvPoint(0, 0);
 		int min_x = 999;
 		int min_y = 999;
@@ -545,7 +545,7 @@ void MainScene::ReadPopUp() {
 	//login gift
 	if (!points.empty()) {
 
-		std::cout << "[·Î±×ÀÎ º¸»ó]\n";
+		std::cout << "[ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]\n";
 
 		m_pos = cvPoint(959, 740);
 		return;
@@ -606,7 +606,7 @@ std::string MainScene::GetNumber(int x, int y, int width, int height, bool isDil
 		REALLOC(img, dst);
 	}
 
-	//cvShowImage("ÀÌÁø", img);
+	//cvShowImage("ï¿½ï¿½ï¿½ï¿½", img);
 	//cvWaitKey();
 
 	std::string str = RESMGR->Image2String(img, 20 * scale);
@@ -626,7 +626,7 @@ std::string MainScene::GetNumber(int x, int y, int width, int height) {
 	RESIZE_IMAGE(img, cvSize(img->width * 2, img->height * 2));
 	IplImage* img_over = (IplImage*)cvClone(img);
 
-	//cvShowImage("ÀÌÁø", img);
+	//cvShowImage("ï¿½ï¿½ï¿½ï¿½", img);
 	//cvWaitKey();
 
 	{
@@ -646,7 +646,7 @@ std::string MainScene::GetNumber(int x, int y, int width, int height) {
 		ResMgr::__MaskImage(img_over, cvScalar(250, 230, 96), 35, img);
 	}
 
-	//cvShowImage("ÀÌÁø", img);
+	//cvShowImage("ï¿½ï¿½ï¿½ï¿½", img);
 	//cvWaitKey();
 
 	std::string str = RESMGR->Image2String(img);

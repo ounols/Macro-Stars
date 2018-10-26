@@ -1,6 +1,10 @@
 #pragma once
 #include "MacroDef.h"
-#include <Windows.h>
+#ifdef WIN32
+#include <windows.h>
+#elif __linux__
+#include "windows_for_linux.h"
+#endif
 #include <opencv2/core/core.hpp>
 #include <thread>
 #include <mutex>
@@ -24,8 +28,9 @@ public:
 		return m_screenImage;
 	}
 
-
+#ifdef WIN32
 	cv::Mat hwnd2Mat(HWND hwnd);
+#endif
 	void GetHWNDSize();
 
 	bool IsEmpty() const {
@@ -76,7 +81,9 @@ private:
 	CLIENT m_client = NONE;
 	bool m_isADB = false;
 	bool m_isSupportExecOut = false;
+#ifdef WIN32
 	HWND gameHwnd = nullptr;
+#endif
 	int m_hwndWidth;
 	int m_hwndHeight;
 	int m_ADBWidth = -1;
@@ -93,7 +100,7 @@ private:
 
 	long m_updatedTime = 0;
 
-	//юс╫ц
+	//О©╫с╫О©╫
 	bool isGunstars = false;
 	std::string GunStarsPath = "";
 	bool isVPN = false;

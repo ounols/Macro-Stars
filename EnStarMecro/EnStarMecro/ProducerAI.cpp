@@ -1,5 +1,9 @@
 #include "ProducerAI.h"
+#ifdef WIN32
 #include <Windows.h>
+#elif __linux__
+#include "windows_for_linux.h"
+#endif
 #include <iostream>
 #include "ConcertTodo.h"
 #include <fstream>
@@ -44,7 +48,7 @@ void ProducerAI::Update() {
 
 	long ap_coolTime = m_ap.achieveTime - currentTime;
 	long lp_coolTime = m_lp.achieveTime - currentTime;
-
+#ifdef WIN32
 	if(GAME->GetIsAutoReboot()){
 		SYSTEMTIME oTime;
 		GetLocalTime(&oTime);
@@ -55,7 +59,7 @@ void ProducerAI::Update() {
 
 			if (!reboot_in.is_open()) {
 				std::ofstream reboot("reboot.dat");
-				reboot << "±º´ë ½È¾î ½ÃÆÞ";
+				reboot << "ï¿½ï¿½ï¿½ï¿½ ï¿½È¾ï¿½ ï¿½ï¿½ï¿½ï¿½";
 				reboot.close();
 			}
 
@@ -93,7 +97,7 @@ void ProducerAI::Update() {
 			reboot_in.close();
 		}
 	}
-
+#endif
 	if(ap_coolTime <= 0) {
 		if(m_ap.current + 1 >= m_ap.max) {
 			m_ap.achieveTime = currentTime + ap_coolTime;
@@ -114,8 +118,8 @@ void ProducerAI::Update() {
 		}
 	}
 
-	std::cout << "\n\n[ÄðÅ¸ÀÓ]\nAP´Â " << Millisecond2Min(ap_coolTime) << "ºÐ " << Millisecond2Second(ap_coolTime) << "ÃÊ ÈÄ ÄðÅ¸ÀÓ (" << m_ap.current << "/" << m_ap.max << ")\n"
-				<< "LP´Â " << Millisecond2Min(lp_coolTime) << "ºÐ " << Millisecond2Second(lp_coolTime) << "ÃÊ ÈÄ ÄðÅ¸ÀÓ (" << m_lp.current << "/" << m_lp.max << ")\n\n";
+	std::cout << "\n\n[ï¿½ï¿½Å¸ï¿½ï¿½]\nAPï¿½ï¿½ " << Millisecond2Min(ap_coolTime) << "ï¿½ï¿½ " << Millisecond2Second(ap_coolTime) << "ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ (" << m_ap.current << "/" << m_ap.max << ")\n"
+				<< "LPï¿½ï¿½ " << Millisecond2Min(lp_coolTime) << "ï¿½ï¿½ " << Millisecond2Second(lp_coolTime) << "ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ (" << m_lp.current << "/" << m_lp.max << ")\n\n";
 
 	std::vector<Todo*> swaped(m_todoList);
 	for(const auto& todo : swaped) {
@@ -123,7 +127,7 @@ void ProducerAI::Update() {
 		todo->Update();
 	}
 
-	//ÄÜ¼­Æ®°¡ Áßº¹À¸·Î ÀÖÀ» ½Ã ¸ðµÎ Á¦°ÅÇÏ°í ´Ù½Ã È®ÀÎ
+	//ï¿½Ü¼ï¿½Æ®ï¿½ï¿½ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ù½ï¿½ È®ï¿½ï¿½
 	auto concert_todos = GetAllTodo<ConcertTodo>();
 	if (concert_todos.size() > 1) {
 		for (auto todo : concert_todos) {

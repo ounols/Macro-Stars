@@ -15,9 +15,10 @@
 #include "HolaScene.h"
 
 
+#ifdef WIN32
 #define popen _popen
 #define pclose _pclose
-
+#endif
 
 MainProc::MainProc() {
 	GAME->GetGameHWND();
@@ -29,9 +30,9 @@ MainProc::MainProc() {
 
 	//PRODUCER->AddTodo(static_cast<Todo>(todo));
 
-	//ÀÓ½Ã
+	//ï¿½Ó½ï¿½
 	//namedWindow("sample", cv::WINDOW_GUI_NORMAL);
-	//namedWindow("ÀÌÁø", cv::WINDOW_AUTOSIZE);
+	//namedWindow("ï¿½ï¿½ï¿½ï¿½", cv::WINDOW_AUTOSIZE);
 	PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
 
 	//ProduceTodo* todo = new ProduceTodo();
@@ -70,6 +71,18 @@ MainProc::MainProc() {
 
 	//PRODUCER->SetAP(ap);
 	Sleep(5000);
+
+#ifdef __linux__
+	const char *dev = "/dev/input/by-path/platform-i8042-serio-0-event-kbd";
+    
+    ssize_t n;
+
+    fd = open(dev, O_RDONLY);
+    if (fd == -1) {
+        fprintf(stderr, "Cannot open %s: %s.\n", dev, strerror(errno));
+        return;
+    }
+#endif
 }
 
 
@@ -82,9 +95,36 @@ MainProc::~MainProc() {
 	cvDestroyAllWindows();
 }
 
+#ifdef __linux__
+bool MainProc::LinuxKeyEvent(){
+	ssize_t n = read(fd, &ev, sizeof ev);
+        if (n == (ssize_t)-1) {
+            if (errno == EINTR)
+                return true;
+            else
+                return true;
+        } else
+        if (n != sizeof ev) {
+            errno = EIO;
+            return true;
+        }
+
+        //
+        if (ev.type == EV_KEY){
+            if(ev.code == 1 && ev.value == 1){
+                b_isQuit = true;
+				return false;
+            }
+			if(ev.code == 107 && ev.value == 1 && PRODUCER->GetIsChacked() == 198294) {
+				b_isPause = !b_isPause;
+				return false;
+			}
+        }
+}
+#endif
 
 void MainProc::Update() {
-
+#ifdef WIN32
 	if(GetAsyncKeyState(VK_ESCAPE)) {
 		b_isQuit = true;
 		return;
@@ -94,10 +134,6 @@ void MainProc::Update() {
 		b_isPause = !b_isPause;
 	}
 
-	if(GAME->isQuit) {
-		b_isQuit = true;
-		return;
-	}
 
 	if (GetAsyncKeyState(VK_F11)) {
 		SYSTEMTIME oTime;
@@ -108,8 +144,16 @@ void MainProc::Update() {
 		cvSaveImage(str.str().c_str(), GAME->GetScreenImage());
 		std::cout << str.str() << " is " << "Saved." << std::endl;
 	}
+#elif __linux__
+	// LinuxKeyEvent();
+#endif
 
-	//ÇöÀç ¾×Æ¼ºñÆ¼ ÃßÃâ
+	if(GAME->isQuit) {
+		b_isQuit = true;
+		return;
+	}
+
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½
 	GetCurrentActivity();
 
 	//Sleep(100);
@@ -119,13 +163,13 @@ void MainProc::Update() {
 		return;
 	}
 
-	//http º¸°í
+	//http ï¿½ï¿½ï¿½ï¿½
 	if (isReport)
 		MakeCurrentStateReport();
 
 	GetRemotedInfo();
 
-	//°ÔÀÓÀÌ ½ÇÇàÇÏ´Â°ÇÁö È®ÀÎ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â°ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if(m_currentActivity != ENSTARS) {
 
 		Scene* scene = nullptr;
@@ -184,9 +228,9 @@ void MainProc::Update() {
 	//cvShowImage("sample", GAME->GetScreenImage());
 	//cvWaitKey(1);
 
-	//±º½ºÅ¸ Ãß°¡»çÇ×
-	//·ÎµùÀÌ µÇÁö¾Ê°í Å¸ÀÓ¾Æ¿ôÀÌ Á¦ÇÑµÈ È½¼ö¸¦ ³Ñ¾ú´Ù¸é
-	//vpnÀ» ¼Õ¾´´Ù
+	//ï¿½ï¿½ï¿½ï¿½Å¸ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½
+	//ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê°ï¿½ Å¸ï¿½Ó¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñµï¿½ È½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½Ù¸ï¿½
+	//vpnï¿½ï¿½ ï¿½Õ¾ï¿½ï¿½ï¿½
 	if(!isLoaded) {
 		if(loadingCount > 5) {
 			loadingCount = 0;
@@ -201,7 +245,7 @@ void MainProc::Update() {
 		}
 	}
 
-	//¾À È®ÀÎ
+	//ï¿½ï¿½ È®ï¿½ï¿½
 	for(auto scene : SCENE->GetScenes()) {
 		if (!scene->CheckFirst()) continue;
 		if(scene->CheckScene()) {
@@ -210,7 +254,7 @@ void MainProc::Update() {
 		}
 	}
 
-	//¾Ë ¼ö ¾ø´Â »óÈ²¿¡¼­ ¹ö±× ¸®Æ÷Æ® ÀÛ¼º
+	//ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È²ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Û¼ï¿½
 	if (m_unkownCount > UNKOWN_COUNT_MAX) {
 		if(m_unkownAccrue <= 0) {
 			
@@ -253,9 +297,9 @@ void MainProc::Update() {
 	}
 
 
-	//ÇöÀç ¾À Ãâ·Â
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
 	std::cout << "\n\n=============================================================="
-			<< "\n[ÇöÀç Àå¸é] " << currentScene->GetName() << "\n\n";
+			<< "\n[ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½] " << currentScene->GetName() << "\n\n";
 
 	if(!isLoaded && Scene::isScene<ReconnectScene>(currentScene)) {
 		loadingCount++;
@@ -263,14 +307,14 @@ void MainProc::Update() {
 		isLoaded = true;
 	}
 
-	//¾À ºÐ¼®
+	//ï¿½ï¿½ ï¿½Ð¼ï¿½
 	//if (!currentScene->CheckFirst()) return;
 	currentScene->ReadData();
 
 	//cvShowImage("sample", GAME->GetScreenImage());
 	//cvWaitKey(1);
 
-	//Çàµ¿ °áÁ¤
+	//ï¿½àµ¿ ï¿½ï¿½ï¿½ï¿½
 	currentScene->ActionDecision();
 
 	if(!currentScene->GetIsIgnorePrevScene())
@@ -304,6 +348,7 @@ void MainProc::SetReport(bool enable) {
 
 
 void MainProc::MakeBugReport() {
+#ifdef WIN32
 	SYSTEMTIME oTime;
 	GetLocalTime(&oTime);
 	std::stringstream name;
@@ -319,10 +364,10 @@ void MainProc::MakeBugReport() {
 
 	std::ofstream file(savePath_log, std::ios::out);
 
-	file << "[¹ö±× ¸®Æ÷Æ®]\n\n";
-	file << "³¯Â¥ : " << name.str() << std::endl;
-	file << "ÀÌÀü È­¸é : " << prevSceneName << std::endl;
-	file << "¾Ë¼ö¾øÀ½ ´©Àû È½¼ö : " << m_unkownAccrue << std::endl;
+	file << "[ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®]\n\n";
+	file << "ï¿½ï¿½Â¥ : " << name.str() << std::endl;
+	file << "ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ : " << prevSceneName << std::endl;
+	file << "ï¿½Ë¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½ : " << m_unkownAccrue << std::endl;
 
 	auto ap = PRODUCER->GetAP();
 	auto lp = PRODUCER->GetLP();
@@ -331,30 +376,32 @@ void MainProc::MakeBugReport() {
 	long ap_remain = ap.achieveTime - currentTime;
 	long lp_remain = lp.achieveTime - currentTime;
 
-	file << "\n·¹º§ : " << PRODUCER->GetRank()
-		<< "\nAP : " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "ºÐ " << ProducerAI::Millisecond2Second(ap_remain) << "ÃÊ ÈÄ °»½Å"
-		<< "\nLP : " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "ºÐ " << ProducerAI::Millisecond2Second(lp_remain) << "ÃÊ ÈÄ °»½Å"
+	file << "\nï¿½ï¿½ï¿½ï¿½ : " << PRODUCER->GetRank()
+		<< "\nAP : " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "ï¿½ï¿½ " << ProducerAI::Millisecond2Second(ap_remain) << "ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"
+		<< "\nLP : " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "ï¿½ï¿½ " << ProducerAI::Millisecond2Second(lp_remain) << "ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½"
 		<< "\n\n";
 
-	file << "ÇÒÀÏ ¼ö : " << PRODUCER->GetTodoSize() << std::endl;
+	file << "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ : " << PRODUCER->GetTodoSize() << std::endl;
 
 	int index = 0;
 	for(auto todo : PRODUCER->GetTodoList()) {
 		Scene* scene = todo->targetScene;
-		file << "ÇÒÀÏ[" << index << "]\n\t¸ñÇ¥ È­¸é : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
-		file << "\tÇöÀç À¯È¿ ¿©ºÎ : " << (todo->isAvailable() ? "true" : "false") << std::endl;
-		file << "\t¹®ÀÚ¿­ °ª : " << todo->todo_str << std::endl;
-		file << "\tÁß¿äµµ : " << todo->important << std::endl;
+		file << "ï¿½ï¿½ï¿½ï¿½[" << index << "]\n\tï¿½ï¿½Ç¥ È­ï¿½ï¿½ : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
+		file << "\tï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ ï¿½ï¿½ï¿½ï¿½ : " << (todo->isAvailable() ? "true" : "false") << std::endl;
+		file << "\tï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ : " << todo->todo_str << std::endl;
+		file << "\tï¿½ß¿äµµ : " << todo->important << std::endl;
 		file << std::endl;
 
 		index++;
 	}
 
 	file.close();
+#endif
 }
 
 
 void MainProc::MakeCurrentStateReport() {
+#ifdef WIN32
 
 	SYSTEMTIME oTime;
 	GetLocalTime(&oTime);
@@ -389,21 +436,22 @@ void MainProc::MakeCurrentStateReport() {
 	int index = 0;
 	for (auto todo : PRODUCER->GetTodoList()) {
 		Scene* scene = todo->targetScene;
-		file << "ÇÒÀÏ[" << index << "]\n\t¸ñÇ¥ È­¸é : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
-		file << "\tÇöÀç À¯È¿ ¿©ºÎ : " << (todo->isAvailable() ? "true" : "false") << std::endl;
-		file << "\t¹®ÀÚ¿­ °ª : " << todo->todo_str << std::endl;
-		file << "\tÁß¿äµµ : " << todo->important << std::endl;
+		file << "ï¿½ï¿½ï¿½ï¿½[" << index << "]\n\tï¿½ï¿½Ç¥ È­ï¿½ï¿½ : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
+		file << "\tï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ ï¿½ï¿½ï¿½ï¿½ : " << (todo->isAvailable() ? "true" : "false") << std::endl;
+		file << "\tï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½ï¿½ : " << todo->todo_str << std::endl;
+		file << "\tï¿½ß¿äµµ : " << todo->important << std::endl;
 		file << std::endl;
 
 		index++;
 	}
 
 	file.close();
-
+#endif
 }
 
 
 void MainProc::GetRemotedInfo() {
+#ifdef WIN32
 	SYSTEMTIME oTime;
 	GetLocalTime(&oTime);
 
@@ -475,16 +523,21 @@ void MainProc::GetRemotedInfo() {
 		}
 
 	}
+#endif
 }
 
 
 void MainProc::GetCurrentActivity() {
 
 	m_currentActivity = UNKOWN;
-
+#ifdef WIN32
 	FILE* fpipe = popen("adb\\adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
+#elif __linux__
+	FILE* fpipe = popen("adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
+#endif
+	
 	if (fpipe == NULL)
-		std::cout << "\nadb is not available.\n";
+		std::cout << "\nadb is not available.(GetActivity)\n";
 
 	char adb_result_str[1024] = {};
 	std::string adb_result;
@@ -495,43 +548,43 @@ void MainProc::GetCurrentActivity() {
 	pclose(fpipe);
 
 
-	//¾Ó½ºÅ¸ ¾ÛÀÎÁö È®ÀÎ
+	//ï¿½Ó½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if (adb_result.find("com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity") != std::string::npos) {
 		m_currentActivity = ENSTARS;
 		return;
 	}
 
-	//¸¶ÄÏ ¾ÛÀÎÁö È®ÀÎ
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if (adb_result.find("com.android.vending") != std::string::npos) {
 		m_currentActivity = MARKET;
 		return;
 	}
 
-	////easy vpn ¾ÛÀÎÁö È®ÀÎ
+	////easy vpn ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	//if (adb_result.find("com.easyovpn.easyovpn") != std::string::npos) {
 	//	m_currentActivity = EASYVPN;
 	//	return;
 	//}
 
-	////open vpn ¾ÛÀÎÁö È®ÀÎ
+	////open vpn ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	//if (adb_result.find("net.openvpn.openvpn") != std::string::npos) {
 	//	m_currentActivity = OPENVPN;
 	//	return;
 	//}
 
-	//ultrasurf ÆË¾÷ÀÎÁö È®ÀÎ
+	//ultrasurf ï¿½Ë¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if (adb_result.find("us.ultrasurf.mobile.ultrasurf") != std::string::npos) {
 		m_currentActivity = ULTRA;
 		return;
 	}
 
-	//hola ÆË¾÷ÀÎÁö È®ÀÎ
+	//hola ï¿½Ë¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if (adb_result.find("org.hola") != std::string::npos) {
 		m_currentActivity = HOLA;
 		return;
 	}
 
-	//vpn ÆË¾÷ÀÎÁö È®ÀÎ
+	//vpn ï¿½Ë¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	if (adb_result.find("com.android.vpndialogs") != std::string::npos) {
 		m_currentActivity = ULTRA;
 		return;

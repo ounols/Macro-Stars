@@ -2,6 +2,17 @@
 #include <vector>
 #include "Scene.h"
 
+
+#ifdef __linux__
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <linux/input.h>
+#include <string.h>
+#include <stdio.h>
+#endif
+
 class MainProc {
 private:
 	enum ACTIVITY { UNKOWN, ENSTARS, MARKET, EASYVPN, OPENVPN, ULTRA, HOLA };
@@ -21,7 +32,10 @@ private:
 	void GetRemotedInfo();
 
 	void GetCurrentActivity();
+#ifdef __linux__
+	bool LinuxKeyEvent();
 
+#endif
 public:
 	bool b_isQuit = false;
 	bool b_isPause = false;
@@ -41,5 +55,10 @@ private:
 	bool isGunStars = false;
 	bool isReport = false;
 	int remoteDate = 0;
+
+#ifdef __linux__
+	struct input_event ev;
+	int fd = -1;
+#endif
 };
 

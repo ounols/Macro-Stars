@@ -20,7 +20,9 @@
 #include <iostream>
 #include <opencv2/core/version.hpp>
 
+#ifdef WIN32
 #include <vld.h>
+#endif
 #include "GameClientMgr.h"
 #include <fstream>
 
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
 			GAME->SetIsVpn(true);
 			std::cout << "\nSetting VPN\n";
 		}
-
+#ifdef WIN32
 		if (std::string(argv[i]) == "auto_reboot") {
 			GAME->SetIsAutoReboot(true);
 			std::cout << "\nSetting auto reboot\n";
@@ -57,10 +59,10 @@ int main(int argc, char* argv[]) {
 			GetLocalTime(&oTime);
 			oTime.wHour = (oTime.wHour + 9) % 24;
 
-			std::cout << "time : " << oTime.wHour << "½Ã " << oTime.wMinute << "ºÐ\n";
+			std::cout << "time : " << oTime.wHour << "ï¿½ï¿½ " << oTime.wMinute << "ï¿½ï¿½\n";
 
 		}
-
+#endif
 		//if (std::string(argv[i]) == "http") {
 		//	main_proc->SetReport(true);
 		//	std::cout << "\nhttp on\n";
