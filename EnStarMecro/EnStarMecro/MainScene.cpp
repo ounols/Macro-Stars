@@ -419,7 +419,7 @@ void MainScene::ReadPopUp() {
 		//�ӽ�Ÿ ������ Ȯ��
 		if(adb_result.find("com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity") == std::string::npos) {
 			std::cout << "\n[�ӽ�Ÿ�� ������ ���� ����]\n\n";
-			system("adb\\adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
+			GAME->SendAdbCommand("adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
 			return;
 		}
 
