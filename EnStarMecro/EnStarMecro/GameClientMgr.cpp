@@ -287,6 +287,9 @@ void GameClientMgr::SetMouseDown(int x, int y, int delay) {
 			std::to_string(delay);
 
 		system(command.c_str());
+#ifdef __linux__
+		Sleep(500);
+#endif
 		return;
 	}
 #ifdef WIN32
@@ -319,7 +322,9 @@ void GameClientMgr::SetMouseClick(int x, int y) {
 		 + std::to_string(final_x) + " " + std::to_string(final_y);
 
 		system(command.c_str());
-
+#ifdef __linux__
+		Sleep(500);
+#endif
 		return;
 	}
 #ifdef WIN32
@@ -610,7 +615,7 @@ void GameClientMgr::SetADB() {
 	//ADB ����
 #ifdef WIN32
 	FILE* fpipe = popen("adb\\adb devices", "r");
-#elif __linux
+#elif __linux__
 	FILE* fpipe = popen("adb devices", "r");
 #endif
 	
