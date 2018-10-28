@@ -404,7 +404,11 @@ void MainScene::ReadPopUp() {
 		//EasyVPN : com.easyovpn.easyovpn
 		//OpenVPN : net.openvpn.openvpn
 		//���� : com.android.vending
+#ifdef WIN32
 		FILE* fpipe = popen("adb\\adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
+#elif __linux__
+		FILE* fpipe = popen("adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
+#endif
 		if (fpipe == NULL)
 			std::cout << "\nadb is not available.\n";
 
