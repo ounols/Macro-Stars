@@ -11,6 +11,7 @@ link_directories(/usr/lib)
 link_directories(/usr/lib32)
 link_directories(/usr/local/lib)
 
+
 file(GLOB SOURCES_SRC
                         "EnStarMecro/*.cpp"
                         "EnStarMecro/*.h")
@@ -19,5 +20,5 @@ file(GLOB SOURCES_SRC
 add_executable( MacroStars.app ${SOURCES_SRC} )
 
 
-
 target_link_libraries( MacroStars.app ${OpenCV_LIBS} )
+add_custom_command(TARGET MacroStars.app POST_BUILD COMMAND bash "-c" "./b.sh")

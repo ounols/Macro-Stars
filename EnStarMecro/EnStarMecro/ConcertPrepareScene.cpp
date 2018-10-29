@@ -132,7 +132,7 @@ void ConcertPrepareScene::ReadIntro() {
 
 void ConcertPrepareScene::ReadPrepare() {
 
-	//ÀÓ½Ã======================================================
+	//ì„ì‹œ======================================================
 	//PRODUCER->SetStatus(ProducerAI::EVENT_IMPORTANT);
 	//==========================================================
 
@@ -175,7 +175,7 @@ void ConcertPrepareScene::ReadPrepare() {
 		isNeedInfomation = true;
 	}
 
-	//¼Ó¼º ¼³Á¤
+	//ì†ì„± ì„¤ì •
 	//vocal
 	if (RESMGR->CheckRGB(nullptr, 990, 170, 75, 190, 221, 4)) {
 		todo->attribute = VOCAL;
@@ -200,12 +200,12 @@ void ConcertPrepareScene::ReadPrepare() {
 		return;
 	}
 
-	//ÇÊ¿äÇÑ LP µî °è»ê
+	//í•„ìš”í•œ LP ë“± ê³„ì‚°
 	if (todo->attribute != UNKOWN && todo->totalAudience > -1 && todo->type != ConcertTodo::NODATA) {
 		SetConcertTodo(todo);
 	}
 
-	//Å¸ÀÔÀÌ ¼³Á¤µÇÁö ¾ÊÀº°Å¶ó¸é µÚ´Ê°Ô ¾Ë¾ÆÃ¦ ÄÜ¼­Æ®ÀÌ¹Ç·Î »õ·Î Ãß°¡
+	//íƒ€ì…ì´ ì„¤ì •ë˜ì§€ ì•Šì€ê±°ë¼ë©´ ë’¤ëŠ¦ê²Œ ì•Œì•„ì±ˆ ì½˜ì„œíŠ¸ì´ë¯€ë¡œ ìƒˆë¡œ ì¶”ê°€
 	if(todo->type == ConcertTodo::NODATA) {
 
 		long currentTime = GAME->GetUpdatedTime();
@@ -269,28 +269,28 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 
 	todo->needLPCount = needLP;
 
-	//ÄÜ¼­Æ® ÁøÇà °áÁ¤
+	//ì½˜ì„œíŠ¸ ì§„í–‰ ê²°ì •
 	DECISION dec = DecisionConcert(todo, needLP);
 
 	switch (dec) {
 		case WAIT:
 		case OK: 
 		{
-			//¹Ù·Î ÁøÇà °¡´É
-			//½É¾ß ÄÜ¼­Æ®·Î ¼³Á¤µÇÁö ¾Ê¾Ò°í ½É¾ß ÄÜ¼­Æ®°¡ °¡´ÉÇÑ °æ¿ì
+			//ë°”ë¡œ ì§„í–‰ ê°€ëŠ¥
+			//ì‹¬ì•¼ ì½˜ì„œíŠ¸ë¡œ ì„¤ì •ë˜ì§€ ì•Šì•˜ê³  ì‹¬ì•¼ ì½˜ì„œíŠ¸ê°€ ê°€ëŠ¥í•œ ê²½ìš°
 			if(!todo->isMidnight && isMidnightAvailable) {
 				int needLP_mid = needLP * 3;
 				if (isNeedInfomation) { return; }
 
 				DECISION dec_mid = DecisionConcert(todo, needLP_mid, false);
 
-				//¸¸¾à ½É¾ß ÄÜ¼­Æ®¸¦ Æ÷±âÇÑ´Ù¸é
+				//ë§Œì•½ ì‹¬ì•¼ ì½˜ì„œíŠ¸ë¥¼ í¬ê¸°í•œë‹¤ë©´
 				if(dec_mid == NO) {
 					m_decision = dec;
 					break;
 				}
 
-				//½É¾ß¸¦ ÁøÇàÇÏ°Ú´Ù¸é
+				//ì‹¬ì•¼ë¥¼ ì§„í–‰í•˜ê² ë‹¤ë©´
 				m_decision = CHANGE_MID;
 				todo->isMidnight = true;
 				todo->totalAudience = -1;
@@ -301,10 +301,10 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 
 			}
 
-			////ÀÓ½Ã Ãß°¡
+			////ì„ì‹œ ì¶”ê°€
 			//if (!todo->isMidnight && isMidnightAvailable) {
 			//	if(todo->type == ConcertTodo::GUERRILLA) {
-			//		//½É¾ß¸¦ ÁøÇàÇÏ°Ú´Ù¸é
+			//		//ì‹¬ì•¼ë¥¼ ì§„í–‰í•˜ê² ë‹¤ë©´
 			//		m_decision = CHANGE_MID;
 			//		todo->isMidnight = true;
 			//		todo->totalAudience = -1;
@@ -321,10 +321,10 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 		break;
 
 		case NEED_DIA: {
-			////ÀÓ½Ã Ãß°¡
+			////ì„ì‹œ ì¶”ê°€
 			//if (!todo->isMidnight && isMidnightAvailable) {
 			//	if (todo->type == ConcertTodo::GUERRILLA) {
-			//		//½É¾ß¸¦ ÁøÇàÇÏ°Ú´Ù¸é
+			//		//ì‹¬ì•¼ë¥¼ ì§„í–‰í•˜ê² ë‹¤ë©´
 			//		m_decision = CHANGE_MID;
 			//		todo->isMidnight = true;
 			//		todo->totalAudience = -1;
@@ -344,7 +344,7 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 			{
 				auto todo = PRODUCER->GetTodo<ProduceTodo>();
 
-				//ÇÁ·Îµà½Ì ÇÒÀÏ »èÁ¦
+				//í”„ë¡œë“€ì‹± í• ì¼ ì‚­ì œ
 				if (todo != nullptr) {
 					PRODUCER->RemoveTodo(todo);
 				}
@@ -393,7 +393,7 @@ int ConcertPrepareScene::CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, boo
 
 	int* units;
 
-	//¼Ó¼º¿¡ µû¸¥ ÄÜ¼­Æ® À¯´Ö ½ºÆå È£Ãâ
+	//ì†ì„±ì— ë”°ë¥¸ ì½˜ì„œíŠ¸ ìœ ë‹› ìŠ¤í™ í˜¸ì¶œ
 	switch (unit) {
 		case DANCE:
 			units = PRODUCER->GetConcertDance().team;
@@ -414,7 +414,7 @@ int ConcertPrepareScene::CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, boo
 		return 0;
 	}
 
-	//ÇÊ¿äÇÑ LP °è»ê
+	//í•„ìš”í•œ LP ê³„ì‚°
 	for (int audience = 0; audience < totalAudience; ) {
 
 		int pureSum = 0;
@@ -429,24 +429,24 @@ int ConcertPrepareScene::CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, boo
 				return 0;
 			}
 
-			//½Ã³ÊÁö È¿°ú¸¦ Ãß°¡
+			//ì‹œë„ˆì§€ íš¨ê³¼ë¥¼ ì¶”ê°€
 
-			//½É¾ß ÄÜ¼­Æ®ÀÏ °æ¿ì
+			//ì‹¬ì•¼ ì½˜ì„œíŠ¸ì¼ ê²½ìš°
 			if (isMidnight) {
 				tempSum = pureSum * scale * 3;
-				//ÇÊ¿äÇÑ LPÃß°¡
+				//í•„ìš”í•œ LPì¶”ê°€
 				needLPCount += 3;
 
 			}
-			//Æò¹üÇÑ ÄÜ¼­Æ® °æ¿ì
+			//í‰ë²”í•œ ì½˜ì„œíŠ¸ ê²½ìš°
 			else {
 				tempSum = pureSum * scale;
-				//ÇÊ¿äÇÑ LPÃß°¡
+				//í•„ìš”í•œ LPì¶”ê°€
 				needLPCount++;
 			}
 
 
-			//ÇöÀç±îÁö °è»êµÈ °ü°´ ¼ö¿Í ÇÊ¿äÇÑ °ü°´ ¼ö¸¦ È®ÀÎ
+			//í˜„ì¬ê¹Œì§€ ê³„ì‚°ëœ ê´€ê° ìˆ˜ì™€ í•„ìš”í•œ ê´€ê° ìˆ˜ë¥¼ í™•ì¸
 			if (audience + tempSum >= totalAudience) {
 				audience += tempSum;
 				break;
@@ -457,7 +457,7 @@ int ConcertPrepareScene::CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, boo
 		audience += tempSum;
 	}
 
-	std::cout << "\nÇÊ¿äÇÑ LP : " << needLPCount << std::endl;
+	std::cout << "\ní•„ìš”í•œ LP : " << needLPCount << std::endl;
 	return needLPCount;
 
 }
@@ -467,42 +467,45 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	//int needLPCount = todo->needLPCount;
 	int currentLP = PRODUCER->GetLP().current;
-	int scarceLP = 0;	//ºÎÁ·ÇÑ LP
-	int scarceWaitLP = 0;	//½Ã°£À» Áö³»¼­ ¾ò´Â ÃÖ¼±ÀÇ ºÎÁ·ÇÑ LP
+	int scarceLP = 0;	//ë¶€ì¡±í•œ LP
+	int scarceWaitLP = 0;	//ì‹œê°„ì„ ì§€ë‚´ì„œ ì–»ëŠ” ìµœì„ ì˜ ë¶€ì¡±í•œ LP
 	int waitCount = 0;
-
+	bool isUsingDiaUntilFullLv = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT);
+	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 30 : 0; //limiting time when concert process is slow
+	limitedMinutes -= 10;
+	
 	long concertTime = todo->achieveTime - timeGetTime();
-	std::cout << "ÄÜ¼­Æ® ³²Àº ½Ã°£ : " << ProducerAI::Millisecond2Min(concertTime) << "ºĞ " << ProducerAI::Millisecond2Second(concertTime) << "ÃÊ\n";
+	std::cout << "ì½˜ì„œíŠ¸ ë‚¨ì€ ì‹œê°„ : " << ProducerAI::Millisecond2Min(concertTime) << "ë¶„ " << ProducerAI::Millisecond2Second(concertTime) << "ì´ˆ\n";
 
 	if (needLPCount - currentLP > 0) {
 		scarceLP = needLPCount - currentLP;
 	}
 
 
-	//ÇöÀç LP·Î ÇÊ¿äÇÑ LP¸¦ ¸Å²Ü ¼ö ÀÖ´Ù¸é
+	//í˜„ì¬ LPë¡œ í•„ìš”í•œ LPë¥¼ ë§¤ê¿€ ìˆ˜ ìˆë‹¤ë©´
 	else {
-		std::cout << "ÇöÀç LP°¡ " << currentLP << "°³ ÀÖÀ¸¹Ç·Î ¹Ù·Î ÁøÇà" << std::endl;
+		std::cout << "í˜„ì¬ LPê°€ " << currentLP << "ê°œ ìˆìœ¼ë¯€ë¡œ ë°”ë¡œ ì§„í–‰" << std::endl;
 		return OK;
 	}
 
-	std::cout << "ÇöÀç LP°¡ " << currentLP << "°³¸¦ »ç¿ëÇÏ¸é ´õ ÇÊ¿äÇÑ LP´Â " << scarceLP << "°³." << std::endl;
+	std::cout << "í˜„ì¬ LPê°€ " << currentLP << "ê°œë¥¼ ì‚¬ìš©í•˜ë©´ ë” í•„ìš”í•œ LPëŠ” " << scarceLP << "ê°œ." << std::endl;
 
 
 	long LPTime = PRODUCER->GetLP().achieveTime;
 	bool isLPOver = false;
 
-	//ÀÌ¹Ì lp°¡ ²Ë Ã¡À» ¶§
+	//ì´ë¯¸ lpê°€ ê½‰ ì°¼ì„ ë•Œ
 	if (PRODUCER->GetLP().current >= PRODUCER->GetLP().max) {
 		LPTime = timeGetTime() + ProducerAI::GetMillisecond(30, 00);
 		isLPOver = true;
 	}
 
-	//1Â÷ÀûÀ¸·Ğ °¡Àå ¸ÕÀú ¿Ã LP ÄğÅ¸ÀÓ ½Ã°£ÀÌ ÄÜ¼­Æ® ¸¶°¨ ½Ã°£º¸´Ù ´ÊÀ» °æ¿ì
+	//1ì°¨ì ìœ¼ë¡  ê°€ì¥ ë¨¼ì € ì˜¬ LP ì¿¨íƒ€ì„ ì‹œê°„ì´ ì½˜ì„œíŠ¸ ë§ˆê° ì‹œê°„ë³´ë‹¤ ëŠ¦ì„ ê²½ìš°
 	if (todo->achieveTime <= LPTime) {
 		long deltaTime = LPTime - timeGetTime();
 
-		std::cout << "½Ã°£ ³»·Î ºÒ°¡´É. ¸Å¿ì ÃË¹ÚÇÔ" << std::endl;
-		std::cout << "ÄÜ¼­Æ® ³²Àº ½Ã°£ : " << ProducerAI::Millisecond2Min(deltaTime) << std::endl;
+		std::cout << "ì‹œê°„ ë‚´ë¡œ ë¶ˆê°€ëŠ¥. ë§¤ìš° ì´‰ë°•í•¨" << std::endl;
+		std::cout << "ì½˜ì„œíŠ¸ ë‚¨ì€ ì‹œê°„ : " << ProducerAI::Millisecond2Min(deltaTime) << std::endl;
 		scarceWaitLP = scarceLP;
 
 	} else {
@@ -513,10 +516,10 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 			scarceWaitLP = scarceLP - i;
 			waitCount = i;
 
-			//ÄÜ¼­Æ®°¡ LP i°³¸¦ ¸¶Àú ¸øÃ¤¿ì°í ³¡³¯ °æ¿ì
+			//ì½˜ì„œíŠ¸ê°€ LP iê°œë¥¼ ë§ˆì € ëª»ì±„ìš°ê³  ëë‚  ê²½ìš°
 			if (deltaAchieveTime <= i * ProducerAI::GetMillisecond(30, 00)) {
 				long deltaTime = (i - 1) * ProducerAI::GetMillisecond(30, 00) + (LPTime - timeGetTime());
-				std::cout << "LP " << i << "°³¸¦ ±â°£ ³»·Î È¹µæ °¡´É. ÃÖ´ëÇÑ ¸ğÀ¸´Â ½Ã°£Àº " << ProducerAI::Millisecond2Min(deltaTime) << "ºĞ " << ProducerAI::Millisecond2Second(deltaTime) << "ÃÊ." << std::endl;
+				std::cout << "LP " << i << "ê°œë¥¼ ê¸°ê°„ ë‚´ë¡œ íšë“ ê°€ëŠ¥. ìµœëŒ€í•œ ëª¨ìœ¼ëŠ” ì‹œê°„ì€ " << ProducerAI::Millisecond2Min(deltaTime) << "ë¶„ " << ProducerAI::Millisecond2Second(deltaTime) << "ì´ˆ." << std::endl;
 				break;
 			}
 		}
@@ -524,21 +527,34 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	}
 
-	//¸¸¾à ½Ã°£ ³»·Î ÄÜ¼­Æ®¸¦ ³¡³¾ ¼ö ÀÖ´Ù¸é
+	//If using dia until concert level will reach fully
+	if(isUsingDiaUntilFullLv && todo->totalAudience < 500000){
+		return NEED_DIA;
+	}
+
+	//ë§Œì•½ ì‹œê°„ ë‚´ë¡œ ì½˜ì„œíŠ¸ë¥¼ ëë‚¼ ìˆ˜ ìˆë‹¤ë©´
 	if (scarceWaitLP <= 0) {
 
 		//if(PRODUCER->GetLP().current >= 1) {
 		//	scarceWaitLP = scarceLP;
 		//}else {
-			//±â´Ù·É
+			//ê¸°ë‹¤ë ¹
 			//todo->SetWait();
 			//isQuitConcert = true;
-			std::cout << "½Ã°£ ³»·Î °¡´É. Àá½Ã ±â´Ù¸²." << std::endl;
+			std::cout << "ì‹œê°„ ë‚´ë¡œ ê°€ëŠ¥. ì ì‹œ ê¸°ë‹¤ë¦¼." << std::endl;
 			if (isLPOver) {
-				std::cout << "±×·¯³ª ÀÌ¹Ì LP°¡ ÃÖ´ëÄ¡¸¦ ³Ñ¾ú±â¿¡ ¹Ù·Î ÁøÇà" << std::endl;
+				std::cout << "ê·¸ëŸ¬ë‚˜ ì´ë¯¸ LPê°€ ìµœëŒ€ì¹˜ë¥¼ ë„˜ì—ˆê¸°ì— ë°”ë¡œ ì§„í–‰" << std::endl;
 				return OK;
 			}
-			return WAIT;
+
+			if(limitedMinutes <= 0)	return WAIT;
+
+			// limiting about timeout
+			if(limitedMinutes >= ProducerAI::Millisecond2Min(concertTime)){
+				std::cout << "LIMITING TIME!\n";
+				scarceWaitLP = scarceLP;
+			}else
+				return WAIT;
 		//}
 
 
@@ -547,48 +563,48 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	}
 
-	std::cout << "½Ã°£ÀÌ ÃÖ´ëÇÑ Áö³ª°í ³­ µÚ ÇÊ¿äÇÑ LP´Â " << scarceWaitLP << "°³°¡ µÈ´Ù." << std::endl;
+	std::cout << "ì‹œê°„ì´ ìµœëŒ€í•œ ì§€ë‚˜ê³  ë‚œ ë’¤ í•„ìš”í•œ LPëŠ” " << scarceWaitLP << "ê°œê°€ ëœë‹¤." << std::endl;
 
 
-	//¾î...½Ã°£³»·Î ¸ø³¡³»³ª..?
-	//¤¡...±×·³ ·¹º§ ¾÷À¸·Î LP ²ÇÀ¸·Î Ã¤¿ï ¼ö ÀÖÁö ¾ÊÀ»±î...? (Â÷ÈÄ Ãß°¡)
+	//ì–´...ì‹œê°„ë‚´ë¡œ ëª»ëë‚´ë‚˜..?
+	//ã„±...ê·¸ëŸ¼ ë ˆë²¨ ì—…ìœ¼ë¡œ LP ê½ìœ¼ë¡œ ì±„ìš¸ ìˆ˜ ìˆì§€ ì•Šì„ê¹Œ...? (ì°¨í›„ ì¶”ê°€)
 	int currentEXP = PRODUCER->GetCurrentEXP();
 	int totalEXP = PRODUCER->GetTotalEXP();
 
-	std::cout << "ÇöÀç °æÇèÄ¡ : " << currentEXP << " / " << totalEXP << std::endl;
+	std::cout << "í˜„ì¬ ê²½í—˜ì¹˜ : " << currentEXP << " / " << totalEXP << std::endl;
 
-	//ÇöÁ¸ÇÏ´Â ÇÁ·Îµà½º Áß ÇÑ¹ø ´ç °¡Àå ¸¹ÀÌ °æÇèÄ¡¸¦ ÁÖ´Â ÇÁ·Îµà½º¸¦ ±âÁØÀ¸·Î
+	//í˜„ì¡´í•˜ëŠ” í”„ë¡œë“€ìŠ¤ ì¤‘ í•œë²ˆ ë‹¹ ê°€ì¥ ë§ì´ ê²½í—˜ì¹˜ë¥¼ ì£¼ëŠ” í”„ë¡œë“€ìŠ¤ë¥¼ ê¸°ì¤€ìœ¼ë¡œ
 	float produceAPCount = 60;
 
 	int needProduceCount = ceil((totalEXP - currentEXP) / (produceAPCount * 10.f));
 	int currentProduceCount = PRODUCER->GetAP().current / produceAPCount;
 
-	std::cout << "ÇÊ¿äÇÑ ÇÁ·Îµà½º È½¼ö : " << needProduceCount << ", ÇöÀç AP·Î È¹µæ °¡´ÉÇÑ ÇÁ·Îµà½º ¼ö : " << currentProduceCount << "\n";
+	std::cout << "í•„ìš”í•œ í”„ë¡œë“€ìŠ¤ íšŸìˆ˜ : " << needProduceCount << ", í˜„ì¬ APë¡œ íšë“ ê°€ëŠ¥í•œ í”„ë¡œë“€ìŠ¤ ìˆ˜ : " << currentProduceCount << "\n";
 
-	//ÇöÀç AP·Î ·¹º§¾÷ÀÌ °¡´ÉÇÏ´Ù¸é
+	//í˜„ì¬ APë¡œ ë ˆë²¨ì—…ì´ ê°€ëŠ¥í•˜ë‹¤ë©´
 	if(currentProduceCount - needProduceCount >= 0) {
 		long concertTime = todo->achieveTime - timeGetTime();
 
-		std::cout << "AP ÃæÀüÇÏ´Âµ¥ °É¸®´Â ½Ã°£ : " << needProduceCount * 5 << "ºĞ, ÄÜ¼­Æ® ³²Àº ±â°£ : " << ProducerAI::Millisecond2Min(concertTime) << "ºĞ\n";
+		std::cout << "AP ì¶©ì „í•˜ëŠ”ë° ê±¸ë¦¬ëŠ” ì‹œê°„ : " << needProduceCount * 5 << "ë¶„, ì½˜ì„œíŠ¸ ë‚¨ì€ ê¸°ê°„ : " << ProducerAI::Millisecond2Min(concertTime) << "ë¶„\n";
 
-		//ÇÑ ÇÁ·Îµà½º¸¦ ÁøÇàÇÏ´Âµ¥ °É¸®´Â ½Ã°£ÀÌ ¼º´É¿¡µµ Å« ¿µÇâÀ» ¹ŞÀ¸¹Ç·Î
-		//Æò±Õ 5ºĞÀ¸·Î ÁöÁ¤
-		//ÇÁ·Îµà½º¸¦ ÁøÇàÇÏ´Â ½Ã°£º¸´Ù ÄÜ¼­Æ® ±â°£ÀÌ ´õ ±ä °æ¿ì
+		//í•œ í”„ë¡œë“€ìŠ¤ë¥¼ ì§„í–‰í•˜ëŠ”ë° ê±¸ë¦¬ëŠ” ì‹œê°„ì´ ì„±ëŠ¥ì—ë„ í° ì˜í–¥ì„ ë°›ìœ¼ë¯€ë¡œ
+		//í‰ê·  5ë¶„ìœ¼ë¡œ ì§€ì •
+		//í”„ë¡œë“€ìŠ¤ë¥¼ ì§„í–‰í•˜ëŠ” ì‹œê°„ë³´ë‹¤ ì½˜ì„œíŠ¸ ê¸°ê°„ì´ ë” ê¸´ ê²½ìš°
 		if(needProduceCount * 5 <= ProducerAI::Millisecond2Min(concertTime)) {
-			//·¹º§¾÷À¸·Î LP ÃæÀü °¡´É
-			std::cout << "·¹º§¾÷À¸·Î Ä¿¹ö °¡´É\n";
+			//ë ˆë²¨ì—…ìœ¼ë¡œ LP ì¶©ì „ ê°€ëŠ¥
+			std::cout << "ë ˆë²¨ì—…ìœ¼ë¡œ ì»¤ë²„ ê°€ëŠ¥\n";
 			return LEVEL_UP;
 		}
 
 	}
 
-	//¤·..¾Æ´Ï¸é ³ªÀÇ ÀÇÁöµµ¿Í ÄÜ¼­Æ® ±Ô¸ğ¿¡ µû¶ó µ·À¸·Î ÃÄ¹ßÃÄ¹ßÇÒÁö »ı°¢À» ÇÏÀÚ
+	//ã…‡..ì•„ë‹ˆë©´ ë‚˜ì˜ ì˜ì§€ë„ì™€ ì½˜ì„œíŠ¸ ê·œëª¨ì— ë”°ë¼ ëˆìœ¼ë¡œ ì³ë°œì³ë°œí• ì§€ ìƒê°ì„ í•˜ì
 
 	bool isNeedDia = false;
 
 	switch (PRODUCER->GetStatus()) {
 	case ProducerAI::EVENT_NOMAL: {
-		//°Ô¸±¶ó Á» º¸°í µ· ¾²ÀÚ.....
+		//ê²Œë¦´ë¼ ì¢€ ë³´ê³  ëˆ ì“°ì.....
 		if (todo->type == ConcertTodo::GUERRILLA) {
 			if (scarceWaitLP <= 3) {
 				isNeedDia = true;
@@ -598,13 +614,13 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	}
 		break;
 	case ProducerAI::EVENT_IMPORTANT: {
-		//°Ô¸±¶ó´Â ¹«Á¶°Ç µ·À» ºÎ¾î¾ß ÇØ... ÇìÇò......
+		//ê²Œë¦´ë¼ëŠ” ë¬´ì¡°ê±´ ëˆì„ ë¶€ì–´ì•¼ í•´... í—¤í—·......
 		if (todo->type == ConcertTodo::GUERRILLA) {
 			isNeedDia = true;
 			break;
 		}
 
-		//´ë±Ô¸ğ ÄÜ¼­Æ®¿¡¼­ ºÎÁ·ÇÑ LP¸¦ È®ÀÎ ÈÄ °áÁ¤
+		//ëŒ€ê·œëª¨ ì½˜ì„œíŠ¸ì—ì„œ ë¶€ì¡±í•œ LPë¥¼ í™•ì¸ í›„ ê²°ì •
 		if (todo->type == ConcertTodo::BIG) {
 			if (scarceWaitLP <= 3) {
 				isNeedDia = true;
@@ -621,9 +637,9 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 		todo->needLPCount = needLPCount;
 	}
 
-	//´ÙÀÌ¾Æµµ ¾È¾²¸é Æ÷±â
+	//ë‹¤ì´ì•„ë„ ì•ˆì“°ë©´ í¬ê¸°
 	if (!isNeedDia) {
-		std::cout << "µ· ¾²±â¸¦ Æ÷±âÇÔ" << std::endl;
+		std::cout << "ëˆ ì“°ê¸°ë¥¼ í¬ê¸°í•¨" << std::endl;
 		//todo->isGiveUp = true;
 		//isQuitConcert = true;
 		return NO;
@@ -635,19 +651,19 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 		int needDiaForAP = 0;
 		int needDiaForLP = scarceWaitLP * 10;
 
-		//ÇÑ ÇÁ·Îµà½º¸¦ ÁøÇàÇÏ´Âµ¥ °É¸®´Â ½Ã°£ÀÌ ¼º´É¿¡µµ Å« ¿µÇâÀ» ¹ŞÀ¸¹Ç·Î
-		//Æò±Õ 5ºĞÀ¸·Î ÁöÁ¤
-		//ÇÁ·Îµà½º¸¦ ÁøÇàÇÏ´Â ½Ã°£º¸´Ù ÄÜ¼­Æ® ±â°£ÀÌ ´õ ±ä °æ¿ì
+		//í•œ í”„ë¡œë“€ìŠ¤ë¥¼ ì§„í–‰í•˜ëŠ”ë° ê±¸ë¦¬ëŠ” ì‹œê°„ì´ ì„±ëŠ¥ì—ë„ í° ì˜í–¥ì„ ë°›ìœ¼ë¯€ë¡œ
+		//í‰ê·  5ë¶„ìœ¼ë¡œ ì§€ì •
+		//í”„ë¡œë“€ìŠ¤ë¥¼ ì§„í–‰í•˜ëŠ” ì‹œê°„ë³´ë‹¤ ì½˜ì„œíŠ¸ ê¸°ê°„ì´ ë” ê¸´ ê²½ìš°
 		if (needProduceCount * 5 <= ProducerAI::Millisecond2Min(concertTime)) {
-			//·¹º§¾÷À¸·Î LP ÃæÀü °¡´É
-			std::cout << "·¹º§¾÷À¸·Î Ä¿¹ö °¡´ÉÇÑ AP¸¦ ¼ÒÁöÇÔ.\n";
+			//ë ˆë²¨ì—…ìœ¼ë¡œ LP ì¶©ì „ ê°€ëŠ¥
+			std::cout << "ë ˆë²¨ì—…ìœ¼ë¡œ ì»¤ë²„ ê°€ëŠ¥í•œ APë¥¼ ì†Œì§€í•¨.\n";
 
 			needDiaForAP = (needProduceCount - currentProduceCount) * (produceAPCount / 2.f);
-			std::cout << needDiaForAP << "°³ÀÇ ´ÙÀÌ¾Æ¸¦ »ç¿ëÇÏ¸é ·¹º§¾÷ °¡´É\n";
+			std::cout << needDiaForAP << "ê°œì˜ ë‹¤ì´ì•„ë¥¼ ì‚¬ìš©í•˜ë©´ ë ˆë²¨ì—… ê°€ëŠ¥\n";
 
-			//AP·Î ·¹º§¾÷ ÇÏ´Â°Ô ´õ È¿À²ÀûÀÌ¶ó¸é
+			//APë¡œ ë ˆë²¨ì—… í•˜ëŠ”ê²Œ ë” íš¨ìœ¨ì ì´ë¼ë©´
 			if (needDiaForLP > needDiaForAP) {
-				std::cout << "·¹º§¾÷ÀÌ ´ÙÀÌ¾Æ " << needDiaForLP - needDiaForAP << "°³ Â÷ÀÌ·Î Àú·ÅÇÔ\n";
+				std::cout << "ë ˆë²¨ì—…ì´ ë‹¤ì´ì•„ " << needDiaForLP - needDiaForAP << "ê°œ ì°¨ì´ë¡œ ì €ë ´í•¨\n";
 				return LEVEL_UP;
 			}
 			
@@ -655,18 +671,18 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	}
 
 
-	// ´ÙÀÌ¾Æ¸¦ ¾²±â·Î °áÁ¤ÇÏ°í ½Ã°£ ÄğÅ¸ÀÓ º¸Á¤ÀÌ ¾ÆÁ÷ ¸ÔÈ÷´Â °æ¿ì
+	// ë‹¤ì´ì•„ë¥¼ ì“°ê¸°ë¡œ ê²°ì •í•˜ê³  ì‹œê°„ ì¿¨íƒ€ì„ ë³´ì •ì´ ì•„ì§ ë¨¹íˆëŠ” ê²½ìš°
 	if (scarceLP - scarceWaitLP > 0) {
 
 		//if (PRODUCER->GetLP().current >= 1) {
 		//	scarceWaitLP = scarceLP;
 		//} else {
-			//±â´Ù·É
+			//ê¸°ë‹¤ë ¹
 			//todo->SetWait();
 			//isQuitConcert = true;
-			std::cout << "ÃÖ´ëÇÑ LP¸¦ ¾Æ³¢¸é " << scarceWaitLP << "°³°¡ ³²°í ³ª¸ÓÁö´Â ´ÙÀÌ¾Æ·Î ¸Å²Ş. µû¶ó¼­ Àá½Ã ±â´Ù¸²." << std::endl;
+			std::cout << "ìµœëŒ€í•œ LPë¥¼ ì•„ë¼ë©´ " << scarceWaitLP << "ê°œê°€ ë‚¨ê³  ë‚˜ë¨¸ì§€ëŠ” ë‹¤ì´ì•„ë¡œ ë§¤ê¿ˆ. ë”°ë¼ì„œ ì ì‹œ ê¸°ë‹¤ë¦¼." << std::endl;
 			if (isLPOver) {
-				std::cout << "±×·¯³ª ÀÌ¹Ì LP°¡ ÃÖ´ëÄ¡¸¦ ³Ñ¾ú±â¿¡ ¹Ù·Î ÁøÇà" << std::endl;
+				std::cout << "ê·¸ëŸ¬ë‚˜ ì´ë¯¸ LPê°€ ìµœëŒ€ì¹˜ë¥¼ ë„˜ì—ˆê¸°ì— ë°”ë¡œ ì§„í–‰" << std::endl;
 				return OK;
 			}
 			return WAIT;
@@ -675,10 +691,10 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 	}
 
-	std::cout << "³²Àº LP " << scarceWaitLP << "°³¸¦ ´ÙÀÌ¾Æ·Î ¸Å²Ş" << std::endl;
+	std::cout << "ë‚¨ì€ LP " << scarceWaitLP << "ê°œë¥¼ ë‹¤ì´ì•„ë¡œ ë§¤ê¿ˆ" << std::endl;
 
 
-	//´ÙÀÌ¾Æ¸¦ ¾µ ½Ã°£ÀÌ´Ù.
+	//ë‹¤ì´ì•„ë¥¼ ì“¸ ì‹œê°„ì´ë‹¤.
 	//isNeedDiamond = true;
 	return NEED_DIA;
 
@@ -698,7 +714,7 @@ void ConcertPrepareScene::ActionIntro() {
 			deltaTime = ProducerAI::GetMillisecond(60, 00);
 		case ConcertTodo::GUERRILLA: 
 		{
-			//¾À Ã¹ ºÎºĞÀÌ¶ó¸é ÇÒÀÏ ¸®½ºÆ®¿¡ Ãß°¡
+			//ì”¬ ì²« ë¶€ë¶„ì´ë¼ë©´ í• ì¼ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
 			if(!isScene<ConcertPrepareScene>(SCENE->GetPrevScene())) {
 				ConcertTodo* _todo = new ConcertTodo();
 				PRODUCER->AddTodo(_todo);
@@ -833,7 +849,7 @@ std::string ConcertPrepareScene::GetNumber(int x, int y, int width, int height) 
 	RESIZE_IMAGE(img, cvSize(img->width * 2, img->height * 2));
 	IplImage* img_over = (IplImage*)cvClone(img);
 
-	//cvShowImage("ÀÌÁø", img);
+	//cvShowImage("ì´ì§„", img);
 	//cvWaitKey();
 
 	{
@@ -853,7 +869,7 @@ std::string ConcertPrepareScene::GetNumber(int x, int y, int width, int height) 
 		ResMgr::__MaskImage(img_over, cvScalar(250, 230, 96), 35, img);
 	}
 
-	//cvShowImage("ÀÌÁø", img);
+	//cvShowImage("ì´ì§„", img);
 	//cvWaitKey();
 
 	std::string str = RESMGR->Image2String(img);

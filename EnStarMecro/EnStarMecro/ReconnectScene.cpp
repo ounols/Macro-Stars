@@ -2,7 +2,8 @@
 #include "ResMgr.h"
 #include "GameClientMgr.h"
 #include "ProducerAI.h"
-
+#include "SceneMgr.h"
+#include "IntroScene.h"
 
 ReconnectScene::ReconnectScene() {
 	
@@ -103,6 +104,12 @@ bool ReconnectScene::CheckScene() {
 
 
 void ReconnectScene::ActionDecision() {
+
+	if(isScene<IntroScene>(SCENE->GetPrevScene())){
+#ifdef __linux__
+		system("shutdown --reboot");
+#endif
+	}
 
 	switch (m_state) {
 		case RECONNECT: 
