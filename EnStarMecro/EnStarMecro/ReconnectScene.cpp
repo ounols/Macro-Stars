@@ -60,7 +60,7 @@ bool ReconnectScene::CheckScene() {
 		return true;
 	}
 
-	//¼­¹ö ¼³Á¤
+	//ì„œë²„ ì„¤ì •
 	points.clear();
 
 	points = RESMGR->FindImages(nullptr, "reconnect_server_setting", 0.99, 1, true, cvRect(752, 430, 218, 131));

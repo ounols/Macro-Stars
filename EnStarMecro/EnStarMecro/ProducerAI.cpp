@@ -118,8 +118,8 @@ void ProducerAI::Update() {
 		}
 	}
 
-	std::cout << "\n\n[��Ÿ��]\nAP�� " << Millisecond2Min(ap_coolTime) << "�� " << Millisecond2Second(ap_coolTime) << "�� �� ��Ÿ�� (" << m_ap.current << "/" << m_ap.max << ")\n"
-				<< "LP�� " << Millisecond2Min(lp_coolTime) << "�� " << Millisecond2Second(lp_coolTime) << "�� �� ��Ÿ�� (" << m_lp.current << "/" << m_lp.max << ")\n\n";
+	std::cout << "\n\n[쿨타임]\nAP는 " << Millisecond2Min(ap_coolTime) << "분 " << Millisecond2Second(ap_coolTime) << "초 후 쿨타임 (" << m_ap.current << "/" << m_ap.max << ")\n"
+				<< "LP는 " << Millisecond2Min(lp_coolTime) << "분 " << Millisecond2Second(lp_coolTime) << "초 후 쿨타임 (" << m_lp.current << "/" << m_lp.max << ")\n\n";
 
 	std::vector<Todo*> swaped(m_todoList);
 	for(const auto& todo : swaped) {

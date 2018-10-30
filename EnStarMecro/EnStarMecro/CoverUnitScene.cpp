@@ -61,51 +61,51 @@ bool CoverUnitScene::CheckScene() {
 
 	CvRect rect = cvRect(734, 165, 450, 180);
 
-	//ÀÌº¥Æ® ±â°£ - Àü¿ë ÇÑÁ¤ ¾ÆÀÌÅÛ
+	//ì´ë²¤íŠ¸ ê¸°ê°„ - ì „ìš© í•œì • ì•„ì´í…œ
 	if(m_state == LIMITED_ITEM) {
 		auto points = RESMGR->FindImages(nullptr, "cover_pop_limited_item", 0.98, 1, true, rect);
 		if (points.empty()) return false;
-		std::cout << "ÀÌº¥Æ® ±â°£ - Àü¿ë ÇÑÁ¤ ¾ÆÀÌÅÛ\n";
+		std::cout << "ì´ë²¤íŠ¸ ê¸°ê°„ - ì „ìš© í•œì • ì•„ì´í…œ\n";
 		return true;
 	}
 
-	//apÈ¸º¹
+	//apíšŒë³µ
 	auto points = RESMGR->FindImages(nullptr, "cover_pop_ap", 0.98, 1, true, rect);
 	if (!points.empty()) {
 		m_state = COVER_AP;
-		std::cout << "apÈ¸º¹\n";
+		std::cout << "apíšŒë³µ\n";
 		return true;
 	}
 
-	//lpÈ¸º¹
+	//lpíšŒë³µ
 	points = RESMGR->FindImages(nullptr, "cover_pop_lp", 0.98, 1, true, rect);
 	if (!points.empty()) {
 		m_state = COVER_LP;
-		std::cout << "lpÈ¸º¹\n";
+		std::cout << "lpíšŒë³µ\n";
 		return true;
 	}
 
-	//¾ÆÀÌÅÛ »ç¿ë
+	//ì•„ì´í…œ ì‚¬ìš©
 	points = RESMGR->FindImages(nullptr, "cover_pop_use_item", 0.98, 1, true, rect);
 	if (!points.empty()) {
 		m_state = USE_ITEM;
-		std::cout << "¾ÆÀÌÅÛ »ç¿ë\n";
+		std::cout << "ì•„ì´í…œ ì‚¬ìš©\n";
 		return true;
 	}
 
-	//LP ÃæÀü
+	//LP ì¶©ì „
 	points = RESMGR->FindImages(nullptr, "cover_pop_charge_lp", 0.98, 1, true, rect);
 	if (!points.empty()) {
 		m_state = USE_ITEM;
-		std::cout << "LP ÃæÀü (¾ÆÀÌÅÛ »ç¿ë)\n";
+		std::cout << "LP ì¶©ì „ (ì•„ì´í…œ ì‚¬ìš©)\n";
 		return true;
 	}
 
-	//¾ÆÀÌÅÛ ±¸¸Å
+	//ì•„ì´í…œ êµ¬ë§¤
 	points = RESMGR->FindImages(nullptr, "cover_pop_buy_item", 0.98, 1, true, rect);
 	if (!points.empty()) {
 		m_state = BUY_ITEM;
-		std::cout << "¾ÆÀÌÅÛ ±¸¸Å\n";
+		std::cout << "ì•„ì´í…œ êµ¬ë§¤\n";
 		return true;
 	}
 
@@ -168,22 +168,22 @@ void CoverUnitScene::ReadCoverAP() {
 
 	CvRect rect = cvRect(430, 290, 234, 194);
 
-	//»ç¿ë¹öÆ°ÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+	//ì‚¬ìš©ë²„íŠ¼ì´ ì¡´ìž¬í•˜ëŠ”ì§€ í™•ì¸
 	{
 		auto points = RESMGR->FindImages(nullptr, "cover_bt_use_yellow", 0.98, 1, true, cvRect(1300, 319, 194, 151));
 		if (!points.empty()) {
-			std::cout << "»ç¿ë ¹öÆ°ÀÌ ÀÖÀ½\n";
+			std::cout << "ì‚¬ìš© ë²„íŠ¼ì´ ìžˆìŒ\n";
 			m_pos = cvPoint(1400, 390);
 		}
 	}
 
-	//¸ÞÀÎÈ­¸é¿¡¼­ Áö¿ø¹Þ´Â°Å¶ó¸é 
+	//ë©”ì¸í™”ë©´ì—ì„œ ì§€ì›ë°›ëŠ”ê±°ë¼ë©´ 
 	if (isScene<MainScene>(todo->targetScene)) {
 
-		//±â°£ÀÌ ³²Àº ¾ÆÀÌÅÛÀÎ°¡?
+		//ê¸°ê°„ì´ ë‚¨ì€ ì•„ì´í…œì¸ê°€?
 		auto points = RESMGR->FindImages(nullptr, "cover_item_limit", 0.99, 1, true, cvRect(663, 443, 146, 50));
 		if (points.empty()) {
-			std::cout << "Áß¿ä ÀÌº¥Æ®¿¡¸¸ »ç¿ëÇÔ. °í·Î ³Ñ±è\n";
+			std::cout << "ì¤‘ìš” ì´ë²¤íŠ¸ì—ë§Œ ì‚¬ìš©í•¨. ê³ ë¡œ ë„˜ê¹€\n";
 			todo->Destroy();
 			m_pos = cvPoint(958, 850);
 			return;
@@ -194,14 +194,14 @@ void CoverUnitScene::ReadCoverAP() {
 
 	auto points = RESMGR->FindImages(nullptr, "cover_item_dia", 0.98, 1, true, rect);
 	if (!points.empty()) {
-		std::cout << "´ÙÀÌ¾Æ »ç¿ë + 1 ap\n";
+		std::cout << "ë‹¤ì´ì•„ ì‚¬ìš© + 1 ap\n";
 		todo->coveredAP = 1;
 		return;
 	}
 
 	points = RESMGR->FindImages(nullptr, "item_bread", 0.98, 1, true, rect);
 	if (!points.empty()) {
-		std::cout << "»§ »ç¿ë + max ap\n";
+		std::cout << "ë¹µ ì‚¬ìš© + max ap\n";
 		todo->coveredAP = PRODUCER->GetAP().max;
 		return;
 	}
@@ -220,24 +220,24 @@ void CoverUnitScene::ReadCoverLP() {
 
 	CvRect rect = cvRect(430, 290, 234, 194);
 
-	//»ç¿ë¹öÆ°ÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+	//ì‚¬ìš©ë²„íŠ¼ì´ ì¡´ìž¬í•˜ëŠ”ì§€ í™•ì¸
 	{
 		auto points = RESMGR->FindImages(nullptr, "cover_bt_use_yellow", 0.98, 1, true, cvRect(1300, 319, 194, 151));
 		if (!points.empty()) {
-			std::cout << "»ç¿ë ¹öÆ°ÀÌ ÀÖÀ½\n";
+			std::cout << "ì‚¬ìš© ë²„íŠ¼ì´ ìžˆìŒ\n";
 			m_pos = cvPoint(1400, 390);
 		}
 	}
 
 
-	//Áß¿ä ÀÌº¥Æ®°¡ ¾Æ´Ï¶ó¸é ±×¸®°í ¸ÞÀÎÈ­¸é¿¡¼­ Áö¿ø¹Þ´Â°Å¶ó¸é 
+	//ì¤‘ìš” ì´ë²¤íŠ¸ê°€ ì•„ë‹ˆë¼ë©´ ê·¸ë¦¬ê³  ë©”ì¸í™”ë©´ì—ì„œ ì§€ì›ë°›ëŠ”ê±°ë¼ë©´ 
 	if((PRODUCER->GetStatus() != ProducerAI::EVENT_IMPORTANT && PRODUCER->GetStatus() != ProducerAI::EVENT_NOMAL) ||
 		isScene<MainScene>(todo->targetScene)) {
 		
-		//±â°£ÀÌ ³²Àº ¾ÆÀÌÅÛÀÎ°¡?
+		//ê¸°ê°„ì´ ë‚¨ì€ ì•„ì´í…œì¸ê°€?
 		auto points = RESMGR->FindImages(nullptr, "cover_item_limit", 0.99, 1, true, cvRect(663, 443, 146, 50));
 		if (points.empty()) {
-			std::cout << "Áß¿ä ÀÌº¥Æ®¿¡¸¸ »ç¿ëÇÔ. °í·Î ³Ñ±è\n";
+			std::cout << "ì¤‘ìš” ì´ë²¤íŠ¸ì—ë§Œ ì‚¬ìš©í•¨. ê³ ë¡œ ë„˜ê¹€\n";
 			auto concert_todo = PRODUCER->GetTodo<ConcertTodo>();
 
 			if(concert_todo != nullptr)
@@ -255,29 +255,29 @@ void CoverUnitScene::ReadCoverLP() {
 	auto points = RESMGR->FindImages(nullptr, "cover_item_dia", 0.98, 1, true, rect);
 	if (!points.empty()) {
 
-		//±â°£ ÇÑÁ¤ ¼¼ÀÏÀÌ ÁøÇà ÁßÀÎÁö È®ÀÎ
+		//ê¸°ê°„ í•œì • ì„¸ì¼ì´ ì§„í–‰ ì¤‘ì¸ì§€ í™•ì¸
 		auto point_limited = RESMGR->FindImages(nullptr, "cover_pop_lp_sale", 0.98, 1, true, cvRect(390, 150, 310, 130));
 		if(!point_limited.empty() && PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) {
-			std::cout << "ÇÑÁ¤ ÀÌº¥Æ® ¹°Ç° ¼¼ÀÏ ÁßÀÌ±â¿¡ »ç·¯ °¨.\n";
+			std::cout << "í•œì • ì´ë²¤íŠ¸ ë¬¼í’ˆ ì„¸ì¼ ì¤‘ì´ê¸°ì— ì‚¬ëŸ¬ ê°.\n";
 			m_pos = cvPoint(456, 198);
 			return;
 		}
 
-		std::cout << "´ÙÀÌ¾Æ »ç¿ë + 1 lp\n";
+		std::cout << "ë‹¤ì´ì•„ ì‚¬ìš© + 1 lp\n";
 		todo->coveredLP = 1;
 		return;
 	}
 
 	points = RESMGR->FindImages(nullptr, "cover_item_sportdrink", 0.98, 1, true, rect);
 	if (!points.empty()) {
-		std::cout << "½ºÆ÷Ã÷ À½·á »ç¿ë + 5 lp\n";
+		std::cout << "ìŠ¤í¬ì¸  ìŒë£Œ ì‚¬ìš© + 5 lp\n";
 		todo->coveredLP = 5;
 		return;
 	}
 
 	points = RESMGR->FindImages(nullptr, "cover_item_yogurt", 0.98, 1, true, rect);
 	if (!points.empty()) {
-		std::cout << "¿ä±¸¸£Æ® »ç¿ë + 1 lp\n";
+		std::cout << "ìš”êµ¬ë¥´íŠ¸ ì‚¬ìš© + 1 lp\n";
 		todo->coveredLP = 1;
 		return;
 	}
@@ -297,7 +297,7 @@ void CoverUnitScene::ReadUseItem() {
 	std::string count_str = GetNumber(794, 512, 320, 55);
 	int count = std::stoi(count_str);
 
-	std::cout << count << "°³ »ç¿ëÇÔ\n";
+	std::cout << count << "ê°œ ì‚¬ìš©í•¨\n";
 
 	todo->UpdateCovered(count);
 	todo->Destroy();
