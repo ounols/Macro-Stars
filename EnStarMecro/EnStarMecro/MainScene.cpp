@@ -217,6 +217,7 @@ bool MainScene::ReadData() {
 		auto points = RESMGR->FindImages(nullptr, "main_quest_script", 0.97, 1, true, cvRect(450, 744, 270, 124));
 		if (!points.empty()) {
 			m_pos = cvPoint(800, 775);
+			SCENE->LockScene();
 			return true;
 		}
 	}

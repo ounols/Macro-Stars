@@ -33,7 +33,7 @@ MainProc::MainProc() {
 	//�ӽ�
 	//namedWindow("sample", cv::WINDOW_GUI_NORMAL);
 	//namedWindow("����", cv::WINDOW_AUTOSIZE);
-	PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
+	PRODUCER->SetStatus(ProducerAI::EVENT_IMPORTANT);
 
 	//ProduceTodo* todo = new ProduceTodo();
 	//todo->type = ProduceTodo::LIMIT;
@@ -72,7 +72,8 @@ MainProc::MainProc() {
 	//PRODUCER->SetAP(ap);
 	Sleep(5000);
 
-#ifdef __linux__
+// #ifdef __linux__
+#ifdef false
 	const char *dev = "/dev/input/by-path/platform-i8042-serio-0-event-kbd";
     
     ssize_t n;
