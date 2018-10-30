@@ -298,9 +298,9 @@ void MainProc::Update() {
 	}
 
 
-	//���� �� ���
+	//현재 씬 출력
 	std::cout << "\n\n=============================================================="
-			<< "\n[���� ���] " << currentScene->GetName() << "\n\n";
+			<< "\n[현재 장면] " << currentScene->GetName() << "\n\n";
 
 	if(!isLoaded && Scene::isScene<ReconnectScene>(currentScene)) {
 		loadingCount++;
@@ -308,14 +308,14 @@ void MainProc::Update() {
 		isLoaded = true;
 	}
 
-	//�� �м�
+	//씬 분석
 	//if (!currentScene->CheckFirst()) return;
 	currentScene->ReadData();
 
 	//cvShowImage("sample", GAME->GetScreenImage());
 	//cvWaitKey(1);
 
-	//�ൿ ����
+	//행동 결정
 	currentScene->ActionDecision();
 
 	if(!currentScene->GetIsIgnorePrevScene())

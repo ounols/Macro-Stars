@@ -106,8 +106,8 @@ bool MainScene::ReadData() {
 
 	std::string ap_cooltime_str = GetNumber(1425, 20, 88, 30, false, false, 190, 255, 3);
 
-	//46��ũ ���ķ� ap�ִ�ġ�� 3�ڸ���
-	//��ũ�� 46 �̸��̶��
+	//46랭크 이후로 ap최대치가 3자리수
+	//랭크가 46 미만이라면
 	if(rank < 46) {
 		ap_slash = ap_str.size() - 3;
 	}else {
@@ -185,33 +185,33 @@ bool MainScene::ReadData() {
 	long lp_remain = lp.achieveTime - currentTime;
 
 	std::cout << "===============\n[Rank] " << PRODUCER->GetRank()
-		<< "\n[AP] " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "�� " << ProducerAI::Millisecond2Second(ap_remain) << "�� �� ����"
-		<< "\n[LP] " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "�� " << ProducerAI::Millisecond2Second(lp_remain) << "�� �� ����"
+		<< "\n[AP] " << ap.current << " / " << ap.max << "\t" << ProducerAI::Millisecond2Min(ap_remain) << "분 " << ProducerAI::Millisecond2Second(ap_remain) << "초 후 갱신"
+		<< "\n[LP] " << lp.current << " / " << lp.max << "\t" << ProducerAI::Millisecond2Min(lp_remain) << "분 " << ProducerAI::Millisecond2Second(lp_remain) << "초 후 갱신"
 		<< "\n===============\n";
 
 
 	//======================================================
-	//������ �� �Ϻ� ���Ż��� ����
+	//아이템 및 일부 갱신사항 갱신
 
-	//����ġ ���� ���
+	//경험치 갱신 요망
 	if (PRODUCER->GetTotalEXP() <= 0 || PRODUCER->GetIsChacked() != 198294) {
 		m_pos = cvPoint(1050, 90);
 		return true;
 	}
 
-	//�ܼ�Ʈ ���� ����
+	//콘서트 보상 갱신
 	if (RESMGR->CheckRGB(nullptr, 1806, 276, 221, 34, 53, 7)) {
 		m_pos = cvPoint(1482, 385);
 		return true;
 	}
 
-	//������ ���� ���
+	//선물함 갱신 요망
 	if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
 		m_pos = cvPoint(83, 393);
 		return true;
 	}
 
-	//�̼� ���� ���
+	//미션 갱신 요망
 	if (RESMGR->CheckRGB(nullptr, 1570, 608, 223, 33, 53, 7)) {
 
 		auto points = RESMGR->FindImages(nullptr, "main_quest_script", 0.97, 1, true, cvRect(450, 744, 270, 124));
@@ -356,7 +356,7 @@ void MainScene::ReadPopUp() {
 	auto points = RESMGR->FindImages(nullptr, "main_pop_close", 0.98, 1, true, cvRect(1465, 45, 334, 206));
 	//cancel button
 	if (!points.empty()) {
-		std::cout << "�ݱ� ��ư�� ������.\n";
+		std::cout << "닫기 버튼이 존재함.\n";
 		cancel_pos = cvPoint(1465 + points[0].x + 40, 45 + points[0].y + 40);
 
 	}
@@ -366,7 +366,7 @@ void MainScene::ReadPopUp() {
 	//menu
 	if (!points.empty()) {
 
-		std::cout << "[�޴�]\n";
+		std::cout << "[메뉴]\n";
 
 		if(todo == nullptr) {
 			m_pos = cancel_pos;
@@ -374,22 +374,22 @@ void MainScene::ReadPopUp() {
 		}
 
 		if (isScene<ConcertResultScene>(todo->targetScene)) {
-			//�ܼ�Ʈ Ȯ��
+			//콘서트 확인
 
 			auto concert_icon = RESMGR->FindImages(nullptr, "main_pop_menu_concert", 0.95, 1, true, cvRect(455, 276, 706, 652));
 			//concert icon
 			if (concert_icon.empty()) {
-				std::cout << "�ܼ�Ʈ ��ư�� ������ ���� ��ũ�� ����.\n";
+				std::cout << "콘서트 버튼이 보이지 않음 스크롤 수정.\n";
 				m_pos = cvPoint(1525, 610);
 				return;
 			}
-			std::cout << "�ܼ�Ʈ ��ư ã��.\n";
+			std::cout << "콘서트 버튼 찾음.\n";
 			m_pos = cvPoint(455 + concert_icon[0].x + 50, 276 + concert_icon[0].y + 50);
 			SCENE->LockScene();
 			return;
 		}
 
-		//���丮�� ���õ� �߰� ����
+		//스토리지 관련도 추가 예정
 
 		m_pos = cancel_pos;
 		return;
@@ -399,12 +399,12 @@ void MainScene::ReadPopUp() {
 	//infomation
 	if (!points.empty()) {
 
-		std::cout << "[���л� ����]\n";
+		std::cout << "[전학생 서류]\n";
 
-		//���� ��Ƽ��Ƽ Ȯ��
+		//현재 액티비티 확인
 		//EasyVPN : com.easyovpn.easyovpn
 		//OpenVPN : net.openvpn.openvpn
-		//���� : com.android.vending
+		//마켓 : com.android.vending
 #ifdef WIN32
 		FILE* fpipe = popen("adb\\adb shell \"dumpsys window windows | grep -E \'mCurrentFocus|mFocusedApp\'\"", "r");
 #elif __linux__
@@ -421,27 +421,27 @@ void MainScene::ReadPopUp() {
 
 		pclose(fpipe);
 
-		//�ӽ�Ÿ ������ Ȯ��
+		//앙스타 앱인지 확인
 		if(adb_result.find("com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity") == std::string::npos) {
-			std::cout << "\n[�ӽ�Ÿ�� ������ ���� ����]\n\n";
-			GAME->SendAdbCommand("adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
+			std::cout << "\n[앙스타가 감지가 되지 않음]\n\n";
+			system("adb\\adb shell am start -n com.kakaogames.estarskr/com.happyelements.kirara.KakaoActivity");
 			return;
 		}
 
-		//���� Ȯ��
+		//유저 확인
 		std::string uid_str = GetNumber(436, 760, 250, 45, false, false, 0, 180, 4);
 		std::string userNumber_str = GetNumber(1039, 760, 250, 45, false, false, 0, 180, 4);
 
 
 		if(uid_str != "1000065003" || userNumber_str != "748421995247") {
-			std::cout << "\n\n[���� Ȯ�� ����]\n\n������ �������� Ȯ���Ͽ� �ֽʽÿ�.\n\n";
+			std::cout << "\n\n[본인 확인 실패]\n\n본인의 계정인지 확인하여 주십시오.\n\n";
 			return;
 		}
 
-		std::cout << "\n[���� Ȯ�� �Ϸ�]\n\n";
+		std::cout << "\n[본인 확인 완료]\n\n";
 		PRODUCER->SetIsChacked(198294);
 
-		//���� Ȯ��
+		//인포 확인
 		std::string exp_str = GetNumber(968, 520, 142, 40, false, false, 0, 90, 4);
 		int exp_slash = -1;
 		if ((exp_slash = exp_str.find("/")) != std::string::npos) {
@@ -463,7 +463,7 @@ void MainScene::ReadPopUp() {
 
 		std::cout << "[contact]\n";
 
-		//���� �߰�
+		//차후 추가
 
 		m_pos = cancel_pos;
 		return;
@@ -473,7 +473,7 @@ void MainScene::ReadPopUp() {
 	//giftbox
 	if (!points.empty()) {
 
-		std::cout << "[������]\n";
+		std::cout << "[선물함]\n";
 
 		m_pos = cvPoint(1194, 920);
 		return;
@@ -483,7 +483,7 @@ void MainScene::ReadPopUp() {
 	//check_item
 	if (!points.empty()) {
 
-		std::cout << "[������ Ȯ��]\n";
+		std::cout << "[아이템 확인]\n";
 
 		m_pos = cvPoint(957, 904);
 		return;
@@ -493,7 +493,7 @@ void MainScene::ReadPopUp() {
 	//reward
 	if (!points.empty()) {
 
-		std::cout << "[���޳��Ű �п� �⼮ǥ]\n";
+		std::cout << "[유메노사키 학원 출석표]\n";
 
 		if(PRODUCER->b_isGetGift) {
 			GAME->SetMouseClick(cancel_pos.x, cancel_pos.y);
@@ -518,7 +518,7 @@ void MainScene::ReadPopUp() {
 			//return;
 		}
 
-		//ù��° üũǥ��
+		//첫번째 체크표시
 		CvPoint point_first = cvPoint(0, 0);
 		int min_x = 999;
 		int min_y = 999;
@@ -550,7 +550,7 @@ void MainScene::ReadPopUp() {
 	//login gift
 	if (!points.empty()) {
 
-		std::cout << "[�α��� ����]\n";
+		std::cout << "[로그인 보상]\n";
 
 		m_pos = cvPoint(959, 740);
 		return;
