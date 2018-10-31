@@ -43,8 +43,9 @@ void GameClientMgr::GetGameHWND() {
 
 	SendAdbCommand("adb kill-server");
 	SendAdbCommand("adb start-server");
+#ifdef WIN32
 	SendAdbCommand("adb connect 127.0.0.1:62001");	//�콺 ����
-
+#endif
 	//ADB ����
 	SetADB();
 #ifdef WIN32
@@ -288,7 +289,7 @@ void GameClientMgr::SetMouseDown(int x, int y, int delay) {
 
 		system(command.c_str());
 #ifdef __linux__
-		Sleep(500);
+		// Sleep(500);
 #endif
 		return;
 	}
@@ -323,7 +324,7 @@ void GameClientMgr::SetMouseClick(int x, int y) {
 
 		system(command.c_str());
 #ifdef __linux__
-		Sleep(500);
+		// Sleep(500);
 #endif
 		return;
 	}
@@ -482,6 +483,7 @@ void GameClientMgr::EditADBScreen() {
 
 	if (width == 0 || height == 0) {
 		free(buf);
+		SetADB();
 		return;
 	}
 
@@ -635,6 +637,12 @@ void GameClientMgr::SetADB() {
 		std::cout << adb_result;
 		std::cout << "[ADB�� ��� ������ ����̽��Դϴ�.]\n";
 		m_client = UNKOWN;
+	} else {
+#ifdef __linux__
+		std::cout << "Emulator is not working...\n";
+		system("shutdown -r now");
+		return;
+#endif
 	}
 
 }
