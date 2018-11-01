@@ -136,7 +136,8 @@ bool NomalProduceScene::ReadData() {
 		
 		//콘서트 정보가 없거나 당장 할일이 콘서트일 때
 		if(PRODUCER->GetTodo<ConcertTodo>() == nullptr || PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
-			if(PRODUCER->GetTodo<ConcertTodo>() == nullptr){
+			if(PRODUCER->GetFirstTodo<ConcertTodo>() == nullptr){
+				PRODUCER->RemoveAllTodo<ConcertTodo>();
 				auto todo_p = new ConcertTodo();
 				PRODUCER->AddTodo(todo_p);
 			}

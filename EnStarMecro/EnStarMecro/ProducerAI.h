@@ -4,6 +4,7 @@
 #include <list>
 #include "Todo.h"
 #include <vector>
+#include <iostream>
 
 #define PRODUCER ProducerAI::getInstance()
 
@@ -79,6 +80,8 @@ public:
 	T* GetFirstTodo() const;
 	template<class T>
 	std::vector<T*> GetAllTodo() const;
+	template<class T>
+	void RemoveAllTodo();
 	bool isTodoEmpty() const;
 	int GetTodoSize() const;
 	std::vector<Todo*> GetTodoList() const;
@@ -156,4 +159,20 @@ std::vector<T*> ProducerAI::GetAllTodo() const {
 	}
 
 	return todos;
+}
+
+template <class T>
+void ProducerAI::RemoveAllTodo() {
+
+	for (auto todo : m_todoList) {
+		if (dynamic_cast<T*>(todo)) {
+				// auto iObj = std::find(m_todoList.begin(), m_todoList.end(), static_cast<T*>(todo));
+
+				// if (iObj != m_todoList.end()) {
+				// 	m_todoList.erase(iObj);
+				// 	SAFE_DELETE(static_cast<T*>(todo));
+				// }
+		}
+	}
+
 }
