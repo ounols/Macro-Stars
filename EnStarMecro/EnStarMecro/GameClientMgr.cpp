@@ -318,7 +318,7 @@ void GameClientMgr::SetMouseClick(int x, int y) {
 #ifdef WIN32		
 		"adb\\adb shell input tap "
 #elif __linux__
-		"adb shell input tap "
+		"sudo adb shell input tap "
 #endif
 		 + std::to_string(final_x) + " " + std::to_string(final_y);
 
