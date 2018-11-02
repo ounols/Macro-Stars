@@ -95,6 +95,11 @@ bool ReconnectScene::CheckScene() {
 	if (!points.empty()) {
 		m_state = UNKOWN_EXIT;
 		m_unkownPos = points[0];
+#ifdef __linux__
+			if(isScene<IntroScene>(SCENE->GetPrevScene())){
+		system("shutdown --reboot");
+#endif
+	}
 		return true;
 	}
 
@@ -104,12 +109,6 @@ bool ReconnectScene::CheckScene() {
 
 
 void ReconnectScene::ActionDecision() {
-
-	if(isScene<IntroScene>(SCENE->GetPrevScene())){
-#ifdef __linux__
-		system("shutdown --reboot");
-#endif
-	}
 
 	switch (m_state) {
 		case RECONNECT: 
@@ -170,6 +169,7 @@ void ReconnectScene::ActionUnkown() const {
 
 	std::cout << "touch blue button\n";
 	GAME->SetMouseClick(550 + m_unkownPos.x + 150, 634 + m_unkownPos.y + 70);
+	SCENE->LockScene();
 
 }
 

@@ -570,7 +570,7 @@ void MainScene::ReadPopUp() {
 void MainScene::ActionPopUp() {
 
 	GAME->SetMouseClick(m_pos.x, m_pos.y);
-
+	Sleep(500);
 }
 
 
