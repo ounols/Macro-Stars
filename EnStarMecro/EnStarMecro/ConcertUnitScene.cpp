@@ -200,6 +200,7 @@ std::string ConcertUnitScene::GetNumber(int x, int y, int width, int height) {
 		//cvShowImage("sample", img);
 		//cvWaitKey();
 
+		dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
 		IplImage dump_img = leveled;
 		cvCopy(&dump_img, dst);
 		// dst = (IplImage*)cvClone(&IplImage(leveled));
@@ -213,6 +214,7 @@ std::string ConcertUnitScene::GetNumber(int x, int y, int width, int height) {
 		//leveled = RESMGR->gammaCorrection(leveled, 2);
 		leveled = RESMGR->basicLinearTransform(leveled, 1.8, 0);
 		// dst = (IplImage*)cvClone(&IplImage(leveled));
+		dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
 		dump_img = leveled;
 		cvCopy(&dump_img, dst);
 		REALLOC(img, dst);
