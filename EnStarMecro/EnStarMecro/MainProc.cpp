@@ -261,8 +261,11 @@ void MainProc::Update() {
 			
 		}else if(m_unkownAccrue == 1){
 			GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
+		}else if(m_unkownAccrue == 2){
+			GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
 		} else {
 			GAME->SendAdbCommand("adb shell am force-stop com.kakaogames.estarskr");
+			m_unkownAccrue = 0;
 		}
 		m_unkownCount = 0;
 		m_unkownAccrue++;
