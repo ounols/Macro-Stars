@@ -236,8 +236,9 @@ void ConcertPrepareScene::ReadPrepare() {
 
 		long currentTime = GAME->GetUpdatedTime();
 
-		auto points = RESMGR->FindImages(nullptr, "concert_scale_big_s", 0.99, 1, true, cvRect(137, 672, 193, 150));
+		auto points = RESMGR->FindImages(nullptr, "concert_scale_big_s", 0.97, 1, true, cvRect(137, 672, 193, 150));
 		if (!points.empty()) {
+			std::cout << "reconized BIG Concert\n";
 			todo->type = ConcertTodo::BIG;
 			if(todo->achieveTime <= (long)0)
 				todo->achieveTime = GAME->GetUpdatedTime(); + ProducerAI::GetMillisecond(60, 00);
@@ -254,6 +255,7 @@ void ConcertPrepareScene::ReadPrepare() {
 			return;
 		}
 
+		std::cout << "GiveUp\n";
 		todo->isGiveUp = true;
 	}
 
