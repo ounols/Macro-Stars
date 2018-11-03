@@ -411,6 +411,7 @@ int ConcertPrepareScene::CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, boo
 
 	if (units[0] <= 0) {
 		isNeedInfomation = true;
+		std::cout << "It needs infomation\n";
 		return 0;
 	}
 
@@ -426,6 +427,8 @@ int ConcertPrepareScene::CheckNeedLP(int totalAudience, ATTRIBUTE_UNIT unit, boo
 			pureSum += units[team];
 			if (pureSum <= 0) {
 				isNeedInfomation = true;
+			std::cout << "It needs infomation(while cur LP)\n";
+
 				return 0;
 			}
 
