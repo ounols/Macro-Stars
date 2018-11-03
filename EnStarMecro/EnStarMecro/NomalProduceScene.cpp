@@ -140,6 +140,10 @@ bool NomalProduceScene::ReadData() {
 			return true;
 		}
 
+		if(PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
+			isQuit = true;
+		}
+
 	}
 
 
@@ -208,7 +212,14 @@ void NomalProduceScene::ActionDecision() {
 	}
 
 	{
+		if(isQuit) {
+			GAME->SetMouseClick(1828, 78);
+			isQuit = false;
+			return;
+		}
+
 		Todo* todo = PRODUCER->GetTodo();
+		
 
 		if(todo == nullptr || isScene<MainScene>(todo->targetScene)) {
 			if(PRODUCER->GetTodo<ProduceTodo>() == nullptr) {

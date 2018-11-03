@@ -204,7 +204,7 @@ void ConcertListScene::ActionDecision() {
 
 	if(isQuit) {
 		GAME->SetMouseClick(80, 70);
-		Sleep(1000);
+		SCENE->LockScene();
 		return;
 	}
 

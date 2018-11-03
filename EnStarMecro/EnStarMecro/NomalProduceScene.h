@@ -23,6 +23,7 @@ private:
 	int m_choose;
 	bool isEnterConcert = false;
 	bool isWait = false;
+	bool isQuit = false;
 
 	IplImage* m_prevImage = nullptr;
 	CvPoint m_popPos;
