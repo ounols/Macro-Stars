@@ -183,6 +183,7 @@ bool ConcertListScene::ReadData() {
 
 		std::string totalAudience_str = GetNumber(1245, 305, 116, 33);
 		todo->totalAudience = std::stoi(totalAudience_str);
+		std::cout << "totalAudience : " << todo->totalAudience << std::endl;
 
 		std::string concert_achieveTime_str = GetNumber(1306, 346, 87, 36);
 		int achieve_second = std::stoi(concert_achieveTime_str.substr(concert_achieveTime_str.size() - 2));
