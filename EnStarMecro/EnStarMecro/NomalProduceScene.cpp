@@ -251,7 +251,7 @@ void NomalProduceScene::ActionDecision() {
 
 	std::cout << "Try sending...\n";
 	GAME->SetMouseClick(pos.x, pos.y);
-
+	Sleep(500);
 }
 
 
