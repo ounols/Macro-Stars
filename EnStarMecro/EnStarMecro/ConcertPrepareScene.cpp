@@ -172,12 +172,10 @@ void ConcertPrepareScene::ReadPrepare() {
 		// PRODUCER->RemoveAllTodo<ConcertTodo>();
 		ConcertTodo* todo_p = new ConcertTodo();
 		PRODUCER->AddTodo(todo_p);
-		todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
+		todo_p->type = type;
 		todo_p->todo_str = "concert";
+		todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
 
-		// Todo* main_todo = new Todo();
-		// main_todo->targetScene = SCENE->GetScene<MainScene>();
-		// PRODUCER->AddTodo(main_todo);
 		
 		int index = 0;
 		for(auto todo : PRODUCER->GetTodoList()) {
@@ -226,6 +224,10 @@ void ConcertPrepareScene::ReadPrepare() {
 		return;
 	}
 
+	std::cout << "attri : " << todo->attribute << "\n";
+	std::cout << "totalAudience : " << todo->totalAudience << "\n";
+	std::cout << "type : " << todo->type << "\n";
+
 	//필요한 LP 등 계산
 	if (todo->attribute != UNKOWN && todo->totalAudience > -1 && todo->type != ConcertTodo::NODATA) {
 		SetConcertTodo(todo);
@@ -236,7 +238,7 @@ void ConcertPrepareScene::ReadPrepare() {
 
 		long currentTime = GAME->GetUpdatedTime();
 
-		auto points = RESMGR->FindImages(nullptr, "concert_scale_big_s", 0.97, 1, true, cvRect(137, 672, 193, 150));
+		auto points = RESMGR->FindImages(nullptr, "concert_scale_big_s", 0.99, 1, true, cvRect(137, 672, 193, 150));
 		if (!points.empty()) {
 			std::cout << "reconized BIG Concert\n";
 			todo->type = ConcertTodo::BIG;
@@ -782,6 +784,7 @@ void ConcertPrepareScene::ActionPrepare() {
 	if (todo != nullptr && todo->isGiveUp) {
 		GAME->SetMouseClick(1100, 988);
 		PRODUCER->RemoveTodo(todo);
+		std::cout << "GiveUp (ActionPre)\n";
 		Sleep(1000);
 		return;
 	}
