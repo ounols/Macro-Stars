@@ -168,13 +168,17 @@ void ConcertPrepareScene::ReadPrepare() {
 
 
 	if(todo == nullptr) {
-		std::cout << "Nullptr Todo\n";
-		// PRODUCER->RemoveAllTodo<ConcertTodo>();
-		ConcertTodo* todo_p = new ConcertTodo();
-		PRODUCER->AddTodo(todo_p);
-		todo_p->type = type;
-		todo_p->todo_str = "concert";
-		todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
+		if(PRODUCER->GetTodo<ConcertTodo>() == nullptr) {
+			std::cout << "Nullptr Todo\n";
+			// PRODUCER->RemoveAllTodo<ConcertTodo>();
+			ConcertTodo* todo_p = new ConcertTodo();
+			PRODUCER->AddTodo(todo_p);
+			todo_p->type = ConcertTodo::NODATA;
+			todo_p->todo_str = "concert";
+			todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
+			todo_p->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(60, 00);
+		}
+
 
 		
 		int index = 0;
@@ -565,6 +569,12 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 		return NEED_DIA;
 	}
 
+		// limiting about timeout
+	if(limitedMinutes >= ProducerAI::Millisecond2Min(concertTime)){
+		std::cout << "LIMITING TIME!\n";
+		return NEED_DIA;
+	}
+
 	//만약 시간 내로 콘서트를 끝낼 수 있다면
 	if (scarceWaitLP <= 0) {
 
@@ -579,15 +589,8 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 				std::cout << "그러나 이미 LP가 최대치를 넘었기에 바로 진행" << std::endl;
 				return OK;
 			}
-
-			if(limitedMinutes <= 0)	return WAIT;
-
-			// limiting about timeout
-			if(limitedMinutes >= ProducerAI::Millisecond2Min(concertTime)){
-				std::cout << "LIMITING TIME!\n";
-				return NEED_DIA;
-			}else
-				return WAIT;
+			
+			return WAIT;
 		//}
 
 
@@ -595,6 +598,8 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 
 
 	}
+
+
 
 	std::cout << "시간이 최대한 지나고 난 뒤 필요한 LP는 " << scarceWaitLP << "개가 된다." << std::endl;
 

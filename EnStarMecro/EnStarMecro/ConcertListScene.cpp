@@ -179,6 +179,10 @@ bool ConcertListScene::ReadData() {
 		return true;
 	}
 
+	if(!todo->isAvailable()){
+		isQuit = true;
+		return true;
+	}
 	if(todo->totalAudience == -1) {
 
 		std::string totalAudience_str = GetNumber(1245, 305, 116, 33);
