@@ -214,7 +214,6 @@ void NomalProduceScene::ActionDecision() {
 	{
 		if(isQuit) {
 			GAME->SetMouseClick(1828, 78);
-			isQuit = false;
 			return;
 		}
 
@@ -282,8 +281,9 @@ void NomalProduceScene::ReadPopUp() {
 	if (!points.empty()) {
 		Todo* todo = PRODUCER->GetTodo();
 
-		if (todo == nullptr || isScene<MainScene>(todo->targetScene)) {
+		if (todo == nullptr || isScene<MainScene>(todo->targetScene) || isQuit) {
 			m_popPos = cvPoint(733 + points[0].x + 250, 634 + points[0].y + 60);
+			isQuit = false;
 			return;
 		}
 
