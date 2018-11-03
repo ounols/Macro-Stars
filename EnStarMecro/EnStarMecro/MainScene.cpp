@@ -79,6 +79,20 @@ bool MainScene::ReadData() {
 
 	m_pos = cvPoint(0, 0);
 
+//======================================================================================
+	int index = 0;
+		for(auto todo : PRODUCER->GetTodoList()) {
+			Scene* scene = todo->targetScene;
+			std::cout << "todo[" << index << "]\n\ttarget scene : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
+			std::cout << "\tisActive : " << (todo->isAvailable() ? "true" : "false") << std::endl;
+			std::cout << "\ttodo_str : " << todo->todo_str << std::endl;
+			std::cout << "\timportant : " << todo->important << std::endl;
+			std::cout << std::endl;
+
+			index++;
+		}
+//======================================================================================
+
 	if (isPopUp) {
 		ReadPopUp();
 		return true;

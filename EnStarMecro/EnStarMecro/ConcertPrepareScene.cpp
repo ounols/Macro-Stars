@@ -220,7 +220,7 @@ void ConcertPrepareScene::ReadPrepare() {
 	if(!todo->isMidnight && isMidnightScene) {
 		m_decision = CHANGE_MID;
 		todo->totalAudience = -1;
-		std::cout << "Need Total Audience(Midnight)\n";
+		std::cout << "Need Total Audience(No Midnight)\n";
 		return;
 	}
 
@@ -585,7 +585,7 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 			// limiting about timeout
 			if(limitedMinutes >= ProducerAI::Millisecond2Min(concertTime)){
 				std::cout << "LIMITING TIME!\n";
-				scarceWaitLP = scarceLP;
+				return NEED_DIA;
 			}else
 				return WAIT;
 		//}
@@ -783,7 +783,8 @@ void ConcertPrepareScene::ActionPrepare() {
 
 	if (todo != nullptr && todo->isGiveUp) {
 		GAME->SetMouseClick(1100, 988);
-		PRODUCER->RemoveTodo(todo);
+		if(todo->isGiveUp)
+			PRODUCER->RemoveTodo(todo);
 		std::cout << "GiveUp (ActionPre)\n";
 		Sleep(1000);
 		return;
