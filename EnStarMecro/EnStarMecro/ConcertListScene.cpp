@@ -169,11 +169,13 @@ bool ConcertListScene::ReadData() {
 	//������ ����
 	if(PRODUCER->GetTodo<ConcertTodo>() == nullptr) {
 		AddConcertTodo();
+		std::cout << "add todo\n";
 		todo = PRODUCER->GetFirstTodo<ConcertTodo>();
 	}
 
 	if(todo == nullptr) {
 		isQuit = true;
+		std::cout << "NULLPTR todo\n";
 		return true;
 	}
 
@@ -189,8 +191,6 @@ bool ConcertListScene::ReadData() {
 
 		if (achieve_second <= 59 && achieve_minute <= 59)
 			todo->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(achieve_minute, achieve_second);
-		else
-			isWait = true;
 
 	}
 
