@@ -167,6 +167,7 @@ void ConcertPrepareScene::ReadPrepare() {
 
 
 	if(todo == nullptr) {
+		std::cout << "Nullptr Todo\n";
 		return;
 	}
 
@@ -191,12 +192,14 @@ void ConcertPrepareScene::ReadPrepare() {
 
 	if(todo->totalAudience == -1) {
 		isQuitConcert = true;
+		std::cout << "Need Total Audience\n";
 		return;
 	}
 
 	if(!todo->isMidnight && isMidnightScene) {
 		m_decision = CHANGE_MID;
 		todo->totalAudience = -1;
+		std::cout << "Need Total Audience(Midnight)\n";
 		return;
 	}
 
