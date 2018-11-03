@@ -168,6 +168,14 @@ void ConcertPrepareScene::ReadPrepare() {
 
 	if(todo == nullptr) {
 		std::cout << "Nullptr Todo\n";
+		PRODUCER->RemoveAllTodo<ConcertTodo>();
+		auto todo_p = new ConcertTodo();
+		PRODUCER->AddTodo(todo_p);
+
+		Todo* main_todo = new Todo();
+		main_todo->targetScene = SCENE->GetScene<MainScene>();
+		PRODUCER->AddTodo(main_todo);
+		
 		return;
 	}
 

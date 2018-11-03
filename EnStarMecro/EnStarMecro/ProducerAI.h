@@ -166,12 +166,7 @@ void ProducerAI::RemoveAllTodo() {
 
 	for (auto todo : m_todoList) {
 		if (dynamic_cast<T*>(todo)) {
-				// auto iObj = std::find(m_todoList.begin(), m_todoList.end(), static_cast<T*>(todo));
-
-				// if (iObj != m_todoList.end()) {
-				// 	m_todoList.erase(iObj);
-				// 	SAFE_DELETE(static_cast<T*>(todo));
-				// }
+			RemoveTodo(todo);
 		}
 	}
 

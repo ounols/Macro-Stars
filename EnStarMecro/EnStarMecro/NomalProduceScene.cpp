@@ -135,12 +135,7 @@ bool NomalProduceScene::ReadData() {
 	if (!concert.empty() || RESMGR->CheckRGB(nullptr, 172, 286, 215, 7, 41, 15)) {
 		
 		//콘서트 정보가 없거나 당장 할일이 콘서트일 때
-		if(PRODUCER->GetTodo<ConcertTodo>() == nullptr || PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr) {
-			if(PRODUCER->GetFirstTodo<ConcertTodo>() == nullptr){
-				PRODUCER->RemoveAllTodo<ConcertTodo>();
-				auto todo_p = new ConcertTodo();
-				PRODUCER->AddTodo(todo_p);
-			}
+		if(PRODUCER->GetTodo<ConcertTodo>() == nullptr /*|| PRODUCER->GetFirstTodo<ConcertTodo>() != nullptr*/) {
 			isEnterConcert = true;
 			return true;
 		}
@@ -234,10 +229,8 @@ void NomalProduceScene::ActionDecision() {
 	}
 
 	if(isEnterConcert) {
-		//GAME->SetMouseClick(126, 306);
-		Todo* main_todo = new Todo();
-		main_todo->targetScene = SCENE->GetScene<MainScene>();
-		PRODUCER->AddTodo(main_todo);
+		GAME->SetMouseClick(126, 306);
+		return;
 	}
 
 	if(isSkiped) {
