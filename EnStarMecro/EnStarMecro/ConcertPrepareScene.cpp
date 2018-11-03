@@ -7,6 +7,7 @@
 #include "MainScene.h"
 #include "ProduceTodo.h"
 #include "CoverTodo.h"
+#include <vector>
 
 
 ConcertPrepareScene::ConcertPrepareScene() {
@@ -175,6 +176,18 @@ void ConcertPrepareScene::ReadPrepare() {
 		Todo* main_todo = new Todo();
 		main_todo->targetScene = SCENE->GetScene<MainScene>();
 		PRODUCER->AddTodo(main_todo);
+		
+		int index = 0;
+		for(auto todo : PRODUCER->GetTodoList()) {
+			Scene* scene = todo->targetScene;
+			std::cout << "todo[" << index << "]\n\ttarget scene : " << (scene != nullptr ? scene->GetName() : "Null") << std::endl;
+			std::cout << "\tisActive : " << (todo->isAvailable() ? "true" : "false") << std::endl;
+			std::cout << "\ttodo_str : " << todo->todo_str << std::endl;
+			std::cout << "\timportant : " << todo->important << std::endl;
+			std::cout << std::endl;
+
+			index++;
+		}
 		
 		return;
 	}
