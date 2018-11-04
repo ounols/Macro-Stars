@@ -317,6 +317,7 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 				if (isNeedInfomation) { return; }
 
 				DECISION dec_mid = DecisionConcert(todo, needLP_mid, false);
+				todo->isGiveUp = false;
 
 				//만약 심야 콘서트를 포기한다면
 				if(dec_mid == NO) {
@@ -414,6 +415,7 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 			}
 			todo->isGiveUp = true;
 			m_decision = NO;
+			std::cout << "GIVE UP Decicion\n";
 		}
 		break;
 
@@ -510,9 +512,10 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	int scarceWaitLP = 0;	//시간을 지내서 얻는 최선의 부족한 LP
 	int waitCount = 0;
 	bool isUsingDiaUntilFullLv = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT);
-	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 50 : 0; //limiting time when concert process is slow
+	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 58 : 0; //limiting time when concert process is slow
 
 	todo->limitedTime = limitedMinutes;
+	std::cout << "limitedTime = " << limitedMinutes << '\n';
 	
 	long concertTime = todo->achieveTime - timeGetTime();
 	std::cout << "콘서트 남은 시간 : " << ProducerAI::Millisecond2Min(concertTime) << "분 " << ProducerAI::Millisecond2Second(concertTime) << "초\n";

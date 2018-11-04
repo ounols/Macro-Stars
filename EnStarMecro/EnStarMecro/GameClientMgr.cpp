@@ -324,7 +324,7 @@ void GameClientMgr::SetMouseClick(int x, int y) {
 
 		system(command.c_str());
 #ifdef __linux__
-		Sleep(100);
+		Sleep(200);
 #endif
 		return;
 	}
