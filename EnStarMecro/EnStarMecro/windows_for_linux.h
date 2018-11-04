@@ -20,7 +20,8 @@ static long timeGetTime() {
     s  = spec.tv_sec * 1000;
     ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
 
-    return ms + s;
+    long result = ms + s;
+    return abs(result);
 }
 
 static void Sleep(int milliseconds){
