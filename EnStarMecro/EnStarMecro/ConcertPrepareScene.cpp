@@ -790,11 +790,13 @@ void ConcertPrepareScene::ActionIntro() {
 void ConcertPrepareScene::ActionPrepare() {
 
 	ConcertTodo* todo = PRODUCER->GetFirstTodo<ConcertTodo>();
-	if(m_decision != NO){
-		todo->isGiveUp = false;
-	}
 
 	if (todo != nullptr && todo->isGiveUp) {
+		if(m_decision != NO){
+			todo->isGiveUp = false;
+			std::cout << "decision = " << m_decision << '\n';
+			return;
+		}
 		GAME->SetMouseClick(1100, 988);
 		if(todo->isGiveUp)
 			PRODUCER->RemoveTodo(todo);
