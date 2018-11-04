@@ -176,7 +176,7 @@ void ConcertPrepareScene::ReadPrepare() {
 			todo_p->type = ConcertTodo::NODATA;
 			todo_p->todo_str = "concert";
 			todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
-			todo_p->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(60, 00);
+			todo_p->achieveTime = timeGetTime() + ProducerAI::GetMillisecond(60, 00);
 		}
 
 
