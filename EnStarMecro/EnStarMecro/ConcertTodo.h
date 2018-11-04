@@ -67,7 +67,7 @@ public:
 		if (targetScene == nullptr) targetScene = SCENE->GetScene<ConcertResultScene>();
 
 		long concertTime = achieveTime - timeGetTime();
-		if(concertTime <= 0 || needLPCount == 0) {
+		if(achieveTime - timeGetTime() <= 0 || needLPCount == 0) {
 			PRODUCER->RemoveTodo(this);
 			return;
 		}
