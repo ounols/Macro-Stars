@@ -195,7 +195,7 @@ bool ConcertListScene::ReadData() {
 
 
 		if (achieve_second <= 59 && achieve_minute <= 59)
-			todo->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(achieve_minute, achieve_second);
+			todo->achieveTime = timeGetTime() + ProducerAI::GetMillisecond(achieve_minute, achieve_second);
 
 	}
 
@@ -345,7 +345,7 @@ void ConcertListScene::AddConcertTodo() {
 		int achieve_minute = std::stoi(concert_achieveTime_str.substr(0, 2));
 
 		if (achieve_second <= 59 && achieve_minute <= 59)
-			_todo->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(achieve_minute, achieve_second);
+			_todo->achieveTime = timeGetTime() + ProducerAI::GetMillisecond(achieve_minute, achieve_second);
 		else
 			isWait = true;
 	}
