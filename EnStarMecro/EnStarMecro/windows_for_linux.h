@@ -17,8 +17,8 @@ static long timeGetTime() {
 
     clock_gettime(CLOCK_REALTIME, &spec);
 
-    s  = spec.tv_sec * 1000;
-    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+    s  = abs(spec.tv_sec * 1000);
+    ms = abs(round(spec.tv_nsec / 1.0e6)); // Convert nanoseconds to milliseconds
 
     long result = ms + s;
     return abs(result);

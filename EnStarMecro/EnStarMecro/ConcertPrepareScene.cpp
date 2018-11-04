@@ -807,7 +807,7 @@ void ConcertPrepareScene::ActionPrepare() {
 
 	if (todo == nullptr || m_decision == WAIT || isQuitConcert) {
 
-		if(m_decision == WAIT) {
+		if(todo != nullptr && m_decision == WAIT) {
 			todo->SetWait();
 		}
 		GAME->SetMouseClick(102, 77);
