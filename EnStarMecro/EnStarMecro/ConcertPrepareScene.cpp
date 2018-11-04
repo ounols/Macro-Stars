@@ -177,7 +177,6 @@ void ConcertPrepareScene::ReadPrepare() {
 			todo_p->todo_str = "concert";
 			todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
 			todo_p->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(60, 00);
-			todo_p->totalAudience = -1;
 		}
 
 
