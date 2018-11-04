@@ -382,6 +382,7 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 				//프로듀싱 할일 삭제
 				if (todo != nullptr) {
 					PRODUCER->RemoveTodo(todo);
+					std::cout << "removetodo levelup\n";
 				}
 
 			}
@@ -866,6 +867,7 @@ void ConcertPrepareScene::ActionPrepare() {
 		todo->usedLP = (todo->isMidnight ? 6 : 2);
 	}else if(needLP <= 0) {
 		PRODUCER->RemoveTodo(todo);
+		std::cout << "removetodo needlp\n";
 		GAME->SetMouseClick(102, 77);
 		return;
 	}else {
