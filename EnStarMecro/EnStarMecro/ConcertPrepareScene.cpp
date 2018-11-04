@@ -790,7 +790,9 @@ void ConcertPrepareScene::ActionIntro() {
 void ConcertPrepareScene::ActionPrepare() {
 
 	ConcertTodo* todo = PRODUCER->GetFirstTodo<ConcertTodo>();
-
+	if(m_decision != NO){
+		todo->isGiveUp = false;
+	}
 
 	if (todo != nullptr && todo->isGiveUp) {
 		GAME->SetMouseClick(1100, 988);
