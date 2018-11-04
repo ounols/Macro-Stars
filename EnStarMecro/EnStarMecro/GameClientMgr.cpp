@@ -483,7 +483,12 @@ void GameClientMgr::EditADBScreen() {
 
 	if (width == 0 || height == 0) {
 		free(buf);
+#ifdef __linux__
 		SetADB();
+		std::cout << "Emulator is not working...\n";
+		system("shutdown -r now");
+		return;
+#endif
 		return;
 	}
 
