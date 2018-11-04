@@ -69,7 +69,7 @@ public:
 		long concertTime = achieveTime - timeGetTime();
 		if(achieveTime - timeGetTime() <= 0 || needLPCount == 0) {
 			std::cout << "concert todo removeing...\n";
-			std::cout << "achieveTime = " << concertTime << '\n';
+			std::cout << "achieveTime = " << achieveTime << ", timeGetTime() = " << timeGetTime() << '\n';
 			PRODUCER->RemoveTodo(this);
 			return;
 		}
