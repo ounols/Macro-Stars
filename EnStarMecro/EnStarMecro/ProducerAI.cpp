@@ -48,6 +48,8 @@ void ProducerAI::Update() {
 
 	long ap_coolTime = m_ap.achieveTime - currentTime;
 	long lp_coolTime = m_lp.achieveTime - currentTime;
+
+	std::cout << "achieveTime = " << m_ap.achieveTime << ", currentTime = " << currentTime << '\n';
 #ifdef WIN32
 	if(GAME->GetIsAutoReboot()){
 		SYSTEMTIME oTime;
