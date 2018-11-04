@@ -401,7 +401,6 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 		}
 		break;
 
-		case NONE:
 		case NO: 
 		{
 			if(todo->isMidnight && isMidnightScene) {
@@ -508,8 +507,9 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	int scarceWaitLP = 0;	//시간을 지내서 얻는 최선의 부족한 LP
 	int waitCount = 0;
 	bool isUsingDiaUntilFullLv = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT);
-	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 30 : 0; //limiting time when concert process is slow
-	limitedMinutes -= 10;
+	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 50 : 0; //limiting time when concert process is slow
+
+	todo->limitedTime = limitedMinutes;
 	
 	long concertTime = todo->achieveTime - timeGetTime();
 	std::cout << "콘서트 남은 시간 : " << ProducerAI::Millisecond2Min(concertTime) << "분 " << ProducerAI::Millisecond2Second(concertTime) << "초\n";

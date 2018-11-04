@@ -37,6 +37,8 @@ public:
 	//���������� ������ �ð�
 	long achieveTime = 0;
 
+	int limitedTime = -1;
+
 	//��ٸ� �ʿ䰡 �ִ����� ����
 	bool isWait = false;
 
@@ -64,12 +66,17 @@ public:
 
 		if (targetScene == nullptr) targetScene = SCENE->GetScene<ConcertResultScene>();
 
-		if(achieveTime - timeGetTime() <= 0 || needLPCount == 0) {
+		long concertTime = achieveTime - timeGetTime();
+		if(concertTime <= 0 || needLPCount == 0) {
 			PRODUCER->RemoveTodo(this);
 			return;
 		}
 
 		if(isWait && PRODUCER->GetLP().current != waitLP) {
+			isWait = false;
+		}
+
+		if(limitedTime > 0 && limitedTime >= ProducerAI::Millisecond2Min(concertTime)){
 			isWait = false;
 		}
 
