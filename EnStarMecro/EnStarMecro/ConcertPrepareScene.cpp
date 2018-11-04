@@ -177,6 +177,7 @@ void ConcertPrepareScene::ReadPrepare() {
 			todo_p->todo_str = "concert";
 			todo_p->targetScene = SCENE->GetScene<ConcertResultScene>();
 			todo_p->achieveTime = GAME->GetUpdatedTime() + ProducerAI::GetMillisecond(60, 00);
+			todo_p->totalAudience = -1;
 		}
 
 
@@ -331,6 +332,7 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 				todo->isWait = false;
 				isNeedDiamond = false;
 				todo->needLPCount = needLP_mid;
+				std::cout << "심야를 진행 totalAudience -1 \n";
 				break;
 
 			}
@@ -407,6 +409,7 @@ void ConcertPrepareScene::SetConcertTodo(ConcertTodo* todo) {
 				todo->isMidnight = false;
 				todo->totalAudience = -1;
 				m_decision = CHANGE_MID;
+				std::cout << "midnight NO totalAudience -1\n";
 				break;
 			}
 			todo->isGiveUp = true;
