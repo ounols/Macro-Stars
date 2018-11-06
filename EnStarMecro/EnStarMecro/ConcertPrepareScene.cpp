@@ -242,7 +242,7 @@ void ConcertPrepareScene::ReadPrepare() {
 
 		long currentTime = GAME->GetUpdatedTime();
 
-		auto points = RESMGR->FindImages(nullptr, "concert_scale_big_s", 0.98, 1, true, cvRect(137, 672, 193, 150));
+		auto points = RESMGR->FindImages(nullptr, "concert_scale_big_s", 0.95, 1, true, cvRect(137, 672, 193, 150));
 		if (!points.empty()) {
 			std::cout << "reconized BIG Concert\n";
 			todo->type = ConcertTodo::BIG;
