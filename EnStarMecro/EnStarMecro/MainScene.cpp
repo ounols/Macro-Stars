@@ -684,8 +684,9 @@ void MainScene::AddTodo() const {
 	if (PRODUCER->GetTodo() == nullptr && PRODUCER->GetTodo<ProduceTodo>() == nullptr) {
 
 		int remainBlankAP = PRODUCER->GetAP().max - PRODUCER->GetAP().current;
+		float AP_persent = (float) PRODUCER->GetAP().max / PRODUCER->GetAP().current;
 
-		if(PRODUCER->GetTodo<ConcertTodo>() != nullptr && remainBlankAP > 16) {
+		if(PRODUCER->GetTodo<ConcertTodo>() != nullptr && AP_persent < 0.3f) {
 			return;
 		}
 

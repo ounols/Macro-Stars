@@ -82,6 +82,10 @@ public:
 			isWait = false;
 		}
 
+		if(isWait){
+			std::cout << "[concert remain time] " << ProducerAI::Millisecond2Min(concertTime) << " : " << ProducerAI::Millisecond2Second(concertTime) << '\n';
+		}
+
 	}
 
 	void SetWait() {
