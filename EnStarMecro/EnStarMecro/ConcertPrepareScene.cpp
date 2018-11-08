@@ -512,7 +512,7 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	int scarceWaitLP = 0;	//시간을 지내서 얻는 최선의 부족한 LP
 	int waitCount = 0;
 	bool isUsingDiaUntilFullLv = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT);
-	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 50 : 0; //limiting time when concert process is slow
+	int limitedMinutes = (PRODUCER->GetStatus() == ProducerAI::EVENT_IMPORTANT) ? 30 : 0; //limiting time when concert process is slow
 
 	todo->limitedTime = limitedMinutes;
 	std::cout << "limitedTime = " << limitedMinutes << '\n';

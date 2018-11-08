@@ -33,7 +33,7 @@ MainProc::MainProc() {
 	//�ӽ�
 	//namedWindow("sample", cv::WINDOW_GUI_NORMAL);
 	//namedWindow("����", cv::WINDOW_AUTOSIZE);
-	PRODUCER->SetStatus(ProducerAI::EVENT_IMPORTANT);
+	PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
 
 	//ProduceTodo* todo = new ProduceTodo();
 	//todo->type = ProduceTodo::LIMIT;
