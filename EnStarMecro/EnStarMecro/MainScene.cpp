@@ -220,10 +220,10 @@ bool MainScene::ReadData() {
 	}
 
 	//선물함 갱신 요망
-	if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
-		m_pos = cvPoint(83, 393);
-		return true;
-	}
+	// if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
+	// 	m_pos = cvPoint(83, 393);
+	// 	return true;
+	// }
 
 	//미션 갱신 요망
 	if (RESMGR->CheckRGB(nullptr, 1570, 608, 223, 33, 53, 7)) {
