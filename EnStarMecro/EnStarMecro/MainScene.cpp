@@ -518,7 +518,7 @@ void MainScene::ReadPopUp() {
 			//m_pos = cvPoint(420, 376);
 			GAME->SetMouseClick(420, 376);
 			Sleep(1000);
-			GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
+			// GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
 			Sleep(1000);
 
 			PRODUCER->b_isGetGift = true;
