@@ -537,12 +537,14 @@ void MainScene::ReadPopUp() {
 		int min_x = 999;
 		int min_y = 999;
 		for(auto point : points) {
-			if(point.x <= min_x && point.y <= min_y) {
+			if((int)point.x/10 <= (int)min_x/10 && (int)point.y/10 <= (int)min_y/10) {
 				point_first = cvPoint(330 + points[0].x + 76, 288 + points[0].y + 32);
 			}
 		}
 		int y = points.size() / 6;
 		int x = points.size() - y * 6;
+
+
 
 		GAME->SetMouseClick(point_first.x + x * 210, point_first.y + y * 210);
 		Sleep(1000);
@@ -579,7 +581,7 @@ void MainScene::ReadPopUp() {
 	}
 
 	GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
-	
+
 	return;
 }
 
