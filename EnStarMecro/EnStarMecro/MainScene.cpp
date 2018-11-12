@@ -577,6 +577,9 @@ void MainScene::ReadPopUp() {
 	if(cancel_pos.x + cancel_pos.y <= 0) {
 		SetSkiped(true);
 	}
+
+	GAME->SendAdbCommand("adb shell input keyevent KEYCODE_BACK");
+	
 	return;
 }
 
