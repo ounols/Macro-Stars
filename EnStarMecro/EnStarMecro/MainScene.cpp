@@ -537,7 +537,7 @@ void MainScene::ReadPopUp() {
 		int min_x = 999;
 		int min_y = 999;
 		for(auto point : points) {
-			if((int)point.x/10 <= (int)min_x/10 && (int)point.y/10 <= (int)min_y/10) {
+			if(point.x + point.y <= min_x + min_y) {
 				point_first = cvPoint(330 + points[0].x + 76, 288 + points[0].y + 32);
 			}
 		}
