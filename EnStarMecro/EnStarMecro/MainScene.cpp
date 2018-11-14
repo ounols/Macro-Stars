@@ -532,15 +532,27 @@ void MainScene::ReadPopUp() {
 			//return;
 		}
 
+		std::cout << "체크된 수 : " << points.size() << '\n';
+
 		//첫번째 체크표시
 		CvPoint point_first = cvPoint(0, 0);
-		int min_x = 999;
-		int min_y = 999;
+		int min_x = 9999;
+		int min_y = 9999;
 		for(auto point : points) {
 			if(point.x + point.y <= min_x + min_y) {
-				point_first = cvPoint(330 + points[0].x + 76, 288 + points[0].y + 32);
+				min_x = point.x;
+				min_y = point.y;
 			}
 		}
+
+		if(min_x + min_y >= 9999) {
+			point_first = cvPoint(330 + points[0].x + 76, 288 + points[0].y + 32);
+		} else {
+			point_first = cvPoint(330 + min_x + 76, 288 + min_y + 32);
+		}
+
+
+		std::cout << "가장 가까운 위치 : (" << min_x << ", " << min_y << ")\n";
 		int y = points.size() / 6;
 		int x = points.size() - y * 6;
 
