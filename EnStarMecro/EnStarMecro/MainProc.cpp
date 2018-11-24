@@ -226,8 +226,8 @@ void MainProc::Update() {
 
 	Scene* currentScene = nullptr;
 
-	cvShowImage("sample", GAME->GetScreenImage());
-	cvWaitKey(1);
+	//cvShowImage("sample", GAME->GetScreenImage());
+	//cvWaitKey(1);
 
 	//����Ÿ �߰�����
 	//�ε��� �����ʰ� Ÿ�Ӿƿ��� ���ѵ� Ƚ���� �Ѿ��ٸ�
