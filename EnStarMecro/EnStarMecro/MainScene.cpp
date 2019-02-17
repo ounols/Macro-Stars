@@ -214,10 +214,10 @@ bool MainScene::ReadData() {
 	}
 
 	//콘서트 보상 갱신
-	if (RESMGR->CheckRGB(nullptr, 1806, 276, 221, 34, 53, 7)) {
-		m_pos = cvPoint(1482, 385);
-		return true;
-	}
+	// if (RESMGR->CheckRGB(nullptr, 1806, 276, 221, 34, 53, 7)) {
+	// 	m_pos = cvPoint(1482, 385);
+	// 	return true;
+	// }
 
 	//선물함 갱신 요망
 	if (RESMGR->CheckRGB(nullptr, 145, 340, 223, 31, 52, 7)) {
