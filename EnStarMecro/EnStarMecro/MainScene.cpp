@@ -703,7 +703,7 @@ void MainScene::AddTodo() const {
 		int remainBlankAP = PRODUCER->GetAP().max - PRODUCER->GetAP().current;
 		float AP_persent = (float) PRODUCER->GetAP().max / PRODUCER->GetAP().current;
 
-		if(PRODUCER->GetTodo<ConcertTodo>() != nullptr && AP_persent < 0.5f) {
+		if(PRODUCER->GetTodo<ConcertTodo>() != nullptr && /*AP_persent < 0.5f*/ remainBlankAP > PRODUCER->GetAP().max/2) {
 			return;
 		}
 
