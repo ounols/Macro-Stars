@@ -483,15 +483,15 @@ void MainScene::ReadPopUp() {
 		return;
 	}
 
-	points = RESMGR->FindImages(nullptr, "main_pop_giftbox", 0.98, 1, true, cvRect(756, 92, 411, 165));
-	//giftbox
-	if (!points.empty()) {
+	// points = RESMGR->FindImages(nullptr, "main_pop_giftbox", 0.98, 1, true, cvRect(756, 92, 411, 165));
+	// //giftbox
+	// if (!points.empty()) {
 
-		std::cout << "[선물함]\n";
+	// 	std::cout << "[선물함]\n";
 
-		m_pos = cvPoint(1194, 920);
-		return;
-	}
+	// 	m_pos = cvPoint(1194, 920);
+	// 	return;
+	// }
 
 	points = RESMGR->FindImages(nullptr, "main_pop_check_item", 0.98, 1, true, cvRect(756, 92, 411, 165));
 	//check_item
