@@ -129,7 +129,7 @@ bool SelectProduceScene::CheckSelectChapter() {
 			PRODUCER->SetStatus(ProducerAI::NOMAL);
 			todo->type = ProduceTodo::DAILY;
 		} else if (PRODUCER->GetStatus() == ProducerAI::NOMAL && RESMGR->CheckRGB(nullptr, 100, 625, 225, 174, 41, 10)) {
-			PRODUCER->SetStatus(ProducerAI::EVENT_IMPORTANT);
+			PRODUCER->SetStatus(ProducerAI::EVENT_LIGHT);
 			todo->type = ProduceTodo::LIMIT;
 		}
 
