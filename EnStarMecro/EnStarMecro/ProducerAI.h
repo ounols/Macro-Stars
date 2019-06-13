@@ -117,6 +117,7 @@ private:
 public:
 	//юс╫ц
 	bool b_isGetGift = false;
+	int m_introSceneCount = -1;
 };
 
 

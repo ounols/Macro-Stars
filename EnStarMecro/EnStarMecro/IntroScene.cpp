@@ -8,7 +8,7 @@
 #include "windows_for_linux.h"
 #endif
 #include "GameClientMgr.h"
-
+#include "ProducerAI.h"
 
 IntroScene::IntroScene() {
 	
@@ -69,12 +69,25 @@ bool IntroScene::CheckScene() {
 		return false;
 	}
 
+	if(PRODUCER->m_introSceneCount > -1) {
+		PRODUCER->m_introSceneCount++;
+		if(PRODUCER->m_introSceneCount > 20) {
+			isQuit = true;
+		}
+	}
+
 	return true;
 
 }
 
 
 void IntroScene::ActionDecision() {
+
+	if(isQuit) {
+		#ifdef __linux__
+		system("killall -s SIGKILL anbox");
+		#endif
+	}
 
 	if (isLogo) return;
 
@@ -83,7 +96,8 @@ void IntroScene::ActionDecision() {
 	}else {
 		GAME->SetMouseClick(1850, 70);
 		Sleep(1000);
-		GAME->SendAdbCommand("adb shell am force-stop org.hola");
+		PRODUCER->m_introSceneCount = 0;
+		//GAME->SendAdbCommand("adb shell am force-stop org.hola");
 		Sleep(1000);
 	}
 

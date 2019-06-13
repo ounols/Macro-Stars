@@ -13,5 +13,6 @@ public:
 private:
 	bool isPopUp = false;
 	bool isLogo = false;
+	bool isQuit = false;
 };
 
