@@ -54,7 +54,17 @@ bool IntroScene::CheckScene() {
 
 	if(!isPopUp) {
 		auto points = RESMGR->FindImages(nullptr, "intro_title_live_2d", 0.99, 1, true, cvRect(1557, 966, 342, 107));
-		if (!points.empty()) return true;
+		if (!points.empty()) {
+			 
+			if(PRODUCER->m_introSceneCount > -1) {
+				PRODUCER->m_introSceneCount++;
+				std::cout << "사용불가 판정까지 " << (20 - PRODUCER->m_introSceneCount) << "번 남음\n";
+				if(PRODUCER->m_introSceneCount > 20) {
+					isQuit = true;
+				}
+			} 
+			return true;
+		}
 
 		points = RESMGR->FindImages(nullptr, "intro_logo", 0.98, 1, true, cvRect(390, 278, 471, 471));
 		if (points.empty()) return false;
@@ -63,19 +73,15 @@ bool IntroScene::CheckScene() {
 
 	} else {
 		auto points = RESMGR->FindImages(nullptr, "intro_kakao_close", 0.98, 1, true, cvRect(1800, 30, 80, 74));
-		if (!points.empty()) return true;
-		
+		if (!points.empty()) {
+			PRODUCER->m_introSceneCount = 0;
+			return true;
+		}
 
 		return false;
 	}
 
-	if(PRODUCER->m_introSceneCount > -1) {
-		PRODUCER->m_introSceneCount++;
-		std::cout << "사용불가 판정까지 " << (20 - PRODUCER->m_introSceneCount) << "번 남음\n";
-		if(PRODUCER->m_introSceneCount > 20) {
-			isQuit = true;
-		}
-	}
+
 
 	return true;
 
