@@ -71,6 +71,7 @@ bool IntroScene::CheckScene() {
 
 	if(PRODUCER->m_introSceneCount > -1) {
 		PRODUCER->m_introSceneCount++;
+		std::cout << "사용불가 판정까지 " << (20 - PRODUCER->m_introSceneCount) << "번 남음\n";
 		if(PRODUCER->m_introSceneCount > 20) {
 			isQuit = true;
 		}
