@@ -684,8 +684,8 @@ ConcertPrepareScene::DECISION ConcertPrepareScene::DecisionConcert(ConcertTodo* 
 	//다이아도 안쓰면 포기
 	if (!isNeedDia) {
 		std::cout << "돈 쓰기를 포기함" << std::endl;
-		todo->isGiveUp = true;
-		isQuitConcert = true;
+		// todo->isGiveUp = true;
+		// isQuitConcert = true;
 		return NO;
 	}
 
@@ -801,7 +801,7 @@ void ConcertPrepareScene::ActionPrepare() {
 		if(todo->isGiveUp)
 			PRODUCER->RemoveTodo(todo);
 		std::cout << "GiveUp (ActionPre)\n";
-		isQuitConcert = true;
+		isGiveUp = true;
 		Sleep(1000);
 		return;
 	}

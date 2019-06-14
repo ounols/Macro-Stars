@@ -235,7 +235,7 @@ std::string ConcertUnitScene::GetNumber(int x, int y, int width, int height) {
 
 		dst = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
 
-		cvErode(img, dst, nullptr, 1);
+		cvErode(img, dst, nullptr, 2);
 		REALLOC(img, dst);
 
 	}
