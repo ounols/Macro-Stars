@@ -17,5 +17,6 @@ private:
 private:
 	bool isDelayLoading = false;
 	bool isFeverResult = false;
+	bool isQuit = false;
 };
 

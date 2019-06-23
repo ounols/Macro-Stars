@@ -6,6 +6,7 @@
 #include "ProducerAI.h"
 #include "ResultProduceScene.h"
 #include "ProduceTodo.h"
+#include "IntroScene.h"
 
 
 LoadingScene::LoadingScene() {
@@ -73,6 +74,12 @@ bool LoadingScene::CheckScene() {
 
 void LoadingScene::ActionDecision() {
 
+	if(isQuit) {
+		#ifdef __linux__
+		system("killall -s SIGKILL anbox");
+		#endif
+	}
+
 	if (isDelayLoading) {
 		Sleep(500);
 		return;
@@ -136,6 +143,13 @@ bool LoadingScene::CheckDelayLoading() {
 	auto points = RESMGR->FindImages(img, "loading_pop_now", 0.80, 1, true);
 	if (!points.empty()) {
 		cvReleaseImage(&img);
+		if(isScene<IntroScene>(SCENE->GetPrevScene()) && PRODUCER->m_introSceneCount > -1) {
+			PRODUCER->m_introSceneCount++;
+			std::cout << "사용불가 판정까지 " << (30 - PRODUCER->m_introSceneCount) << "번 남음\n";
+			if(PRODUCER->m_introSceneCount > 30) {
+				isQuit = true;
+			}
+		} 
 		return true;
 	}
 

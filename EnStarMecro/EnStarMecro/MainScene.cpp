@@ -29,6 +29,7 @@ MainScene::MainScene() {
 	RESMGR->RegisterImage("img/MainScene/pop_login_gift.jpg", "main_pop_login_gift");
 	RESMGR->RegisterImage("img/MainScene/reward_check.jpg", "main_pop_reward_check");
 	RESMGR->RegisterImage("img/MainScene/quest_script.jpg", "main_quest_script");
+	RESMGR->RegisterImage("img/MainScene/pop_check_7days.png", "main_check_7days");
 }
 
 
@@ -583,6 +584,17 @@ void MainScene::ReadPopUp() {
 		m_pos = cvPoint(959, 740);
 		return;
 	}
+
+	points = RESMGR->FindImages(nullptr, "main_check_7days", 0.98, 1, true, cvRect(800, 93, 390, 85));
+	//check_item
+	if (!points.empty()) {
+
+		std::cout << "[7일 출석체크]\n";
+
+		m_pos = cvPoint(90, 90);
+		return;
+	}
+
 
 
 	std::cout << "[unkown]\n";
