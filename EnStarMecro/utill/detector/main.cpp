@@ -23,13 +23,13 @@ int main () {
         if(adb_result.empty()) {
             pclose(fp);
             std::cout << "[매크로 감지기] 매크로가 실행되고 있지 않음. 5초 후 재부팅 실시.\n";
-            usleep(5000);
+            usleep(5000 * 1000);
             system("shutdown -r now");
             return 0;
         }
 
 
-        usleep(10000);
+        usleep(10000 * 1000);
 
         pclose(fp);
     }
